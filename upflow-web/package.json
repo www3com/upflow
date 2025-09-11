@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "author": "Jason Wang <horse.devops@gmail.com>",
+  "scripts": {
+    "dev": "umi dev",
+    "build": "umi build",
+    "postinstall": "umi setup",
+    "setup": "umi setup",
+    "start": "npm run dev"
+  },
+  "dependencies": {
+    "@xyflow/react": "^12.8.4",
+    "umi": "^4.4.12",
+    "valtio": "^2.1.7",
+    "antd": "^5.27.3",
+    "axios": "^1.11.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.33",
+    "@types/react-dom": "^18.0.11",
+    "typescript": "^5.0.3"
+  }
+}
