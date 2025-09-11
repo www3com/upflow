@@ -24,7 +24,7 @@ hs_err_pid*
 replay_pid*
 /upflow-java/.gradle
 /upflow-java/build
-
+/upflow-java/.idea/
 
 /upflow-web/node_modules
 /upflow-web/.env.local
@@ -33,5 +33,7 @@ replay_pid*
 /upflow-web/src/.umi
 /upflow-web/src/.umi-production
 /upflow-web/src/.umi-test
+/upflow-web/.idea/
 /upflow-web/dist
 .swc
+/.idea/
