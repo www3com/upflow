@@ -54,7 +54,7 @@ export default () => {
     }, [nodes, edges]);
 
     return (
-        <div style={{width: '98vw', height: '98vh'}}>
+        <div style={{width: '100%', height: '100%'}}>
             <ReactFlow
                 proOptions={{hideAttribution: true}}
                 nodeTypes={nodeTypes}
