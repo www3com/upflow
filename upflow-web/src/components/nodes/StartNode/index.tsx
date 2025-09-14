@@ -1,9 +1,12 @@
 import {Card, Flex, Space} from "antd";
 import {memo} from "react";
-import {EnvironmentOutlined, HomeOutlined, PartitionOutlined} from "@ant-design/icons";
+import {createFromIconfontCN, EnvironmentOutlined, HomeOutlined, PartitionOutlined} from "@ant-design/icons";
 import {Handle, Position} from "@xyflow/react";
 import styles from './styles.less'
 import {nodeConfig} from "@/pages/flow/initNodes";
+const IconFont = createFromIconfontCN({
+    scriptUrl: '/public/iconfont.js',
+});
 
 interface StartNodeProps {
     data: {
@@ -21,11 +24,11 @@ export default memo(({data}: StartNodeProps) => {
             </Space>
             <Flex vertical gap={5}>
                 <Flex justify="space-between" align="center" className={styles.variable}>
-                    <Space size={3}><EnvironmentOutlined />name</Space>
+                    <Space size={3}><IconFont type="icon-variable" />name</Space>
                     <label className={styles.rules}>required</label>
                 </Flex>
                 <Flex justify="space-between" align="center" className={styles.variable}>
-                    <Space size={3}><EnvironmentOutlined />sex</Space>
+                    <Space size={3}><IconFont type="icon-variable" />sex</Space>
                     <label className={styles.rules}>required</label>
                 </Flex>
             </Flex>

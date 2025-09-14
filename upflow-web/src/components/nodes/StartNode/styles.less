@@ -15,3 +15,21 @@
     color: #a8a8a8;
   }
 }
+
+.type-container {
+  position: relative;
+  &:hover {
+    .hover-buttons {
+      display: flex !important;
+    }
+  }
+}
+
+.hover-buttons {
+  color: var(--ant-color-primary) !important;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: white;
+  display: none;
+}

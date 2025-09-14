@@ -7,13 +7,13 @@ import {
     addEdge, Panel, BackgroundVariant, useNodesState, useEdgesState
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect} from 'react';
 import {nodeTypes} from './initNodes';
 import './xy-theme.css'
 import {Button, Flex, Space} from "antd";
 import {getFlow} from "@/services/flow";
 import styles from './stytles.less'
-import PropsPanel, {AttributePanelProps} from "@/pages/flow/components/AttributePanel";
+import PropsPanel from "@/pages/flow/components/AttributePanel";
 import {useSnapshot} from 'valtio';
 import {flowState, setAttr} from "@/states/flow";
 

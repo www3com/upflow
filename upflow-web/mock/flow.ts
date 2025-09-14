@@ -23,6 +23,18 @@ export default {
                             name: 'sex',
                             type: 'number',
                             value: '100'
+                        }, {
+                            name: 'sex',
+                            type: 'number',
+                            value: '100'
+                        }, {
+                            name: 'sex',
+                            type: 'number',
+                            value: '100'
+                        }, {
+                            name: 'sex',
+                            type: 'number',
+                            value: '100'
                         }]
                     }
                 },
