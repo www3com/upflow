@@ -38,11 +38,11 @@ export default () => {
 
     const onSelectionChange = useCallback(({nodes: selectedNodes}: { nodes: Node[] }) => {
         if (selectedNodes.length == 0) {
-            setOpen(false)
-        } else {
-            setOpen(true)
-            setNode(selectedNodes[0])
+            setOpen(false);
+            return;
         }
+        setOpen(true);
+        setNode(selectedNodes[0]);
     }, []);
 
     const onSave = useCallback(() => {
@@ -50,8 +50,13 @@ export default () => {
         console.log(JSON.stringify(flowData))
     }, [nodes, edges]);
 
-    const onChange = (node: Node) => {
-        console.log("改变的节点", node)
+    const onChange = (updatedNode: Node) => {
+
+        // 更新节点数组中对应的节点
+        setNodes((nds) => nds.map((n) => n.id === updatedNode.id ? updatedNode : n));
+
+        // 同步更新当前选中的节点状态，确保属性面板显示最新数据
+        setNode(updatedNode);
     }
 
     return (

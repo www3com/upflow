@@ -8,12 +8,9 @@ import {
 import './styles.less';
 
 import EditStartDialog from "@/components/nodes/StartNode/EditStartDialog";
-import {openEditStartDialog, startNodeState, Variable} from "@/states/startNode";
-import {useSnapshot} from "valtio/index";
+import {Variable} from "@/states/startNode";
 import {Node} from "@xyflow/react";
-import {useCallback, useEffect, useState} from "react";
-import {subscribeKey} from "valtio/utils";
-
+import {useState} from "react";
 const IconFont = createFromIconfontCN({
     scriptUrl: '/public/iconfont.js',
 });
@@ -56,6 +53,17 @@ export default ({node, onChange}: StartNodeProps) => {
         setOpen(false);
     }
 
+    const onDelete = (variable: Variable) => {
+        let variables = node.data.variables as Variable[] || [];
+        let filteredVariables = variables.filter(v => v.name !== variable.name);
+        let data = {
+            ...node.data,
+            variables: filteredVariables
+        };
+        let startNode = {...node, data};
+        onChange(startNode);
+    }
+
     return (<>
             <List size={"small"}
                   bordered={false}
@@ -91,7 +99,7 @@ export default ({node, onChange}: StartNodeProps) => {
                                       onClick={() => onEdit(item)}
                                   />
                                   <Button type="text" icon={<DeleteOutlined style={{color: token.colorPrimary}}/>}
-                                          size="small" onClick={() => setOpen(false)}/>
+                                          size="small" onClick={() => onDelete(item)}/>
                               </Space>
                           </Flex>
                       </List.Item>

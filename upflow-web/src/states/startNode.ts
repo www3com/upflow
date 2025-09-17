@@ -1,4 +1,3 @@
-import {proxy} from "valtio";
 
 export interface Rule {
     type: string,
@@ -11,14 +10,4 @@ export interface Variable {
     type: string,
     value: string
     rules: Rule[]
-}
-
-export const startNodeState = proxy({
-    open: false,
-    variable: {} as Variable,
-})
-
-export const openEditStartDialog = (open: boolean, variable?: Variable) => {
-    startNodeState.open = open;
-    startNodeState.variable = variable || {} as Variable;
 }
