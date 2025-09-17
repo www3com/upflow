@@ -7,31 +7,30 @@ import {
     addEdge, Panel, BackgroundVariant, useNodesState, useEdgesState
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import {useCallback, useEffect} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {nodeTypes} from './initNodes';
 import './xy-theme.css'
 import {Button, Flex, Space} from "antd";
-import {getFlow} from "@/services/flow";
-import styles from './stytles.less'
-import PropsPanel from "@/pages/flow/components/AttributePanel";
-import {useSnapshot} from 'valtio';
-import {flowState, setAttr} from "@/states/flow";
+import AttributePanel from "@/pages/flow/components/AttributePanel";
+import {getFlowApi} from "@/services/flow";
 
 export default () => {
+    const [open, setOpen] = useState(false);
+    const [node, setNode] = useState<Node>();
+    const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+    const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+
     const init = async () => {
-        var res = await getFlow()
-        var flow = res.data!
-        setNodes(flow.nodes)
-        setEdges(flow.edges)
+        const res = await getFlowApi();
+        setNodes(res.data!.nodes);
+        setEdges(res.data!.edges);
     }
 
     useEffect(() => {
-        init()
+        init();
     }, [])
 
-    const stat = useSnapshot(flowState)
-    const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
-    const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+
     const onConnect = useCallback(
         (params: any) => setEdges((eds: any[]) => addEdge(params, eds)),
         [setEdges]
@@ -39,12 +38,10 @@ export default () => {
 
     const onSelectionChange = useCallback(({nodes: selectedNodes}: { nodes: Node[] }) => {
         if (selectedNodes.length == 0) {
-            setAttr({open: false})
-        }else {
-            setAttr({
-                open: true,
-                node: selectedNodes[0]
-            })
+            setOpen(false)
+        } else {
+            setOpen(true)
+            setNode(selectedNodes[0])
         }
     }, []);
 
@@ -52,6 +49,10 @@ export default () => {
         const flowData = {nodes, edges};
         console.log(JSON.stringify(flowData))
     }, [nodes, edges]);
+
+    const onChange = (node: Node) => {
+        console.log("改变的节点", node)
+    }
 
     return (
         <div style={{width: '100%', height: '100%'}}>
@@ -71,7 +72,7 @@ export default () => {
                         <Button type='primary' onClick={onSave}>保存</Button>
                     </Space>
                 </Panel>
-                <PropsPanel open={stat.attr.open} node={stat.attr.node}/>
+                <AttributePanel open={open} node={node} onChange={onChange}/>
                 <Controls/>
                 <Background variant={BackgroundVariant.Dots} gap={12} size={1}/>
             </ReactFlow>

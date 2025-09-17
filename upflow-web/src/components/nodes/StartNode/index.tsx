@@ -1,6 +1,6 @@
 import {Card, Flex, Space} from "antd";
 import {memo} from "react";
-import {createFromIconfontCN, EnvironmentOutlined, HomeOutlined, PartitionOutlined} from "@ant-design/icons";
+import {createFromIconfontCN} from "@ant-design/icons";
 import {Handle, Position} from "@xyflow/react";
 import styles from './styles.less'
 import {nodeConfig} from "@/pages/flow/initNodes";
@@ -23,14 +23,12 @@ export default memo(({data}: StartNodeProps) => {
                 {data.title}
             </Space>
             <Flex vertical gap={5}>
-                <Flex justify="space-between" align="center" className={styles.variable}>
-                    <Space size={3}><IconFont type="icon-variable" />name</Space>
-                    <label className={styles.rules}>required</label>
-                </Flex>
-                <Flex justify="space-between" align="center" className={styles.variable}>
-                    <Space size={3}><IconFont type="icon-variable" />sex</Space>
-                    <label className={styles.rules}>required</label>
-                </Flex>
+                {data.variables.map((item: any, index: number) => (
+                    <Flex justify="space-between" align="center" className={styles.variable} key={index}>
+                        <Space size={3}><IconFont type="icon-variable" />{item.name}</Space>
+                        <label className={styles.rules}>{item.type}</label>
+                    </Flex>
+                ))}
             </Flex>
             <Handle type="target" position={Position.Right}/>
         </Flex>

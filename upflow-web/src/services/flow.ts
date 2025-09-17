@@ -12,8 +12,6 @@ export interface FlowType {
     };
 }
 
-
-
-export function getFlow(): Promise<R<FlowType>> {
+export async function getFlowApi(): Promise<R<FlowType>> {
         return request.get('/flow')
 }
