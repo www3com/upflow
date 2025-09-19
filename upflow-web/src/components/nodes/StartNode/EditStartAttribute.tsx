@@ -31,7 +31,7 @@ export default ({node, onChange}: StartNodeProps) => {
         setVariable(variable);
     }
     const onUpdate = (variable: Variable) => {
-        let variables = node.data.variables as Variable[] || [];
+        let variables = node.data.input as Variable[] || [];
 
         // 检查是否是更新现有变量还是添加新变量
         const existingIndex = variables.findIndex(v => v.name === variable.name);
@@ -67,7 +67,7 @@ export default ({node, onChange}: StartNodeProps) => {
     return (<>
             <List size={"small"}
                   bordered={false}
-                  dataSource={node.data.variables ? node.data.variables as Variable[] : []}
+                  dataSource={node.data.input ? node.data.input as Variable[] : []}
                   footer={
                       <Button
                           type="dashed"

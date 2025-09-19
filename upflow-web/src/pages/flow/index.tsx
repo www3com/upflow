@@ -105,7 +105,7 @@ const FlowPage = () => {
 
     return (
         <Splitter style={{ height: '100%', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
-            <Splitter.Panel defaultSize="8%" min="8%" max="30%" collapsible={{ start: false, end: true, showCollapsibleIcon: 'auto' }}>
+            <Splitter.Panel defaultSize="155" min='5%' max="20%" collapsible={{ start: false, end: true, showCollapsibleIcon: 'auto' }}>
                 <ComponentPanel onChange={onChange} />
             </Splitter.Panel>
             <Splitter.Panel>
