@@ -6,7 +6,7 @@ import {
     PlusOutlined
 } from "@ant-design/icons";
 import './styles.less';
-import {Rule, Variable} from "@/states/startNode";
+import {Variable} from "@/typings";
 
 const IconFont = createFromIconfontCN({
     scriptUrl: '/public/iconfont.js',

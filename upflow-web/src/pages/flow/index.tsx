@@ -4,21 +4,25 @@ import {
     Background,
     Controls,
     ReactFlow,
-    addEdge, Panel, BackgroundVariant, useNodesState, useEdgesState
+    addEdge, Panel, BackgroundVariant, useNodesState, useEdgesState, useReactFlow, ReactFlowProvider
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import {useCallback, useEffect, useState} from 'react';
-import {nodeTypes} from './initNodes';
+import {useCallback, useEffect, useState, useRef, DragEvent, useMemo} from 'react';
 import './xy-theme.css'
-import {Button, Flex, Space} from "antd";
+import {Button, Space,  Splitter} from "antd";
 import AttributePanel from "@/pages/flow/components/AttributePanel";
+import { nanoid } from 'nanoid';
 import {getFlowApi} from "@/services/flow";
+import {NodeTypes} from "@/utils/constants";
+import ComponentPanel from "@/pages/flow/components/ComponentPanel";
 
-export default () => {
+const FlowPage = () => {
     const [open, setOpen] = useState(false);
     const [node, setNode] = useState<Node>();
     const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+    const reactFlowWrapper = useRef<HTMLDivElement>(null);
+    const { screenToFlowPosition } = useReactFlow();
 
     const init = async () => {
         const res = await getFlowApi();
@@ -59,28 +63,86 @@ export default () => {
         setNode(updatedNode);
     }
 
+    // 拖拽相关事件处理
+    const onDragOver = useCallback((event: DragEvent) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+    }, []);
+
+    const onDrop = useCallback((event: DragEvent) => {
+        event.preventDefault();
+
+        const nodeType = event.dataTransfer.getData('application/reactflow');
+        
+        if (typeof nodeType === 'undefined' || !nodeType) {
+            return;
+        }
+
+        const position = screenToFlowPosition({
+            x: event.clientX,
+            y: event.clientY,
+        });
+
+        const newNode: Node = {
+            id: nanoid(8),
+            type: nodeType,
+            position,
+            data: { 
+                title: NodeTypes[nodeType].title,
+                input: [],
+                variables: []
+            },
+        };
+
+        setNodes((nds) => nds.concat(newNode));
+    }, [screenToFlowPosition, setNodes]);
+
+    const nodeTypes = useMemo(() => {
+        return Object.fromEntries(
+            Object.entries(NodeTypes).map(([key, value]) => [key, value.node])
+        );
+    }, [NodeTypes])
+
     return (
-        <div style={{width: '100%', height: '100%'}}>
-            <ReactFlow
-                proOptions={{hideAttribution: true}}
-                nodeTypes={nodeTypes}
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
-                onSelectionChange={onSelectionChange}
-            >
-                <Panel position="top-right">
-                    <Space>
-                        <Button onClick={onSave} color="primary" variant="outlined">预览</Button>
-                        <Button type='primary' onClick={onSave}>保存</Button>
-                    </Space>
-                </Panel>
-                <AttributePanel open={open} node={node} onChange={onChange}/>
-                <Controls/>
-                <Background variant={BackgroundVariant.Dots} gap={12} size={1}/>
-            </ReactFlow>
-        </div>
+        <Splitter style={{ height: '100%', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+            <Splitter.Panel defaultSize="8%" min="8%" max="30%" collapsible={{ start: false, end: true, showCollapsibleIcon: 'auto' }}>
+                <ComponentPanel onChange={onChange} />
+            </Splitter.Panel>
+            <Splitter.Panel>
+                <div ref={reactFlowWrapper} style={{ width: '100%', height: '100%' }}>
+                    <ReactFlow
+                        proOptions={{hideAttribution: true}}
+                        nodeTypes={nodeTypes}
+                        nodes={nodes}
+                        edges={edges}
+                        onNodesChange={onNodesChange}
+                        onEdgesChange={onEdgesChange}
+                        onConnect={onConnect}
+                        onSelectionChange={onSelectionChange}
+                        onDragOver={onDragOver}
+                        onDrop={onDrop}
+                        style={{ position: 'relative' }}
+                    >
+                    <Panel position="top-right">
+                        <Space>
+                            <Button onClick={onSave} color="primary" variant="outlined">运行</Button>
+                            <Button type='primary' onClick={onSave}>保存</Button>
+                        </Space>
+                    </Panel>
+
+
+                    <AttributePanel open={open} node={node} onChange={onChange}/>
+                    <Controls/>
+                    <Background variant={BackgroundVariant.Dots} gap={12} size={1}/>
+                </ReactFlow>
+                </div>
+            </Splitter.Panel>
+        </Splitter>
     );
 }
+
+export default () => (
+    <ReactFlowProvider>
+        <FlowPage />
+    </ReactFlowProvider>
+);

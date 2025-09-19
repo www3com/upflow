@@ -8,9 +8,9 @@ import {
 import './styles.less';
 
 import EditStartDialog from "@/components/nodes/StartNode/EditStartDialog";
-import {Variable} from "@/states/startNode";
 import {Node} from "@xyflow/react";
 import {useState} from "react";
+import {Variable} from "@/typings";
 const IconFont = createFromIconfontCN({
     scriptUrl: '/public/iconfont.js',
 });
