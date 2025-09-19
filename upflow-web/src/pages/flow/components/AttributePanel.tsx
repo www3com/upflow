@@ -1,9 +1,9 @@
-import {Button, Card, Flex, Space} from "antd";
+import {Button, Card} from "antd";
 import styles from "@/pages/flow/stytles.less";
 import {Node, Panel} from "@xyflow/react";
 import React, {ComponentType, useState} from "react";
-import ResizablePanel from "src/components/ResizablePanel";
-import { ExpandOutlined, CompressOutlined } from '@ant-design/icons';
+import ResizablePanel from "@/components/ResizablePanel";
+import {ExpandOutlined, CompressOutlined} from '@ant-design/icons';
 import {NodeTypes} from "@/utils/constants";
 
 interface AttributePanelProps {
@@ -13,47 +13,45 @@ interface AttributePanelProps {
 }
 
 export default ({open = false, node, onChange}: AttributePanelProps) => {
-    const [isMaximized, setIsMaximized] = useState(false);
-    
-    console.log('属性面板:', open, node)
-    
+    const [maximized, setMaximized] = useState(false);
+
     if (!node || !node.type) return <></>
     // 根据节点类型获取对应的配置
     const config = NodeTypes[node.type]
     const title = config?.title || '属性'
     const EditComponent = config?.attr as ComponentType<{ node: Node, onChange: (node: Node) => void }> | null
-    
+
     const handleMaximizeToggle = () => {
-        setIsMaximized(!isMaximized);
+        setMaximized(!maximized);
     };
 
     const cardExtra = (
-        <Button 
-            type="text" 
+        <Button
+            type="text"
             size="small"
-            icon={isMaximized ? <CompressOutlined /> : <ExpandOutlined />}
+            icon={maximized ? <CompressOutlined/> : <ExpandOutlined/>}
             onClick={handleMaximizeToggle}
-            title={isMaximized ? "还原" : "最大化"}
+            title={maximized ? "还原" : "最大化"}
         />
     );
-    
+
     return <>
-        <Panel 
-            hidden={!open} 
-            position="top-right" 
-            className={`${styles.attrPanel} ${isMaximized ? styles.maximized : ''}`}
+        <Panel
+            hidden={!open}
+            position="top-right"
+            className={`${styles.attrPanel} ${maximized ? styles.maximized : ''}`}
         >
             <ResizablePanel
                 defaultWidth={400}
                 minWidth={200}
                 maxWidth={1200}
-                style={{ height: '100%' }}
-                isMaximized={isMaximized}
+                style={{height: '100%'}}
+                isMaximized={maximized}
             >
-                <Card 
-                    title={title} 
-                    variant='borderless' 
-                    size='small' 
+                <Card
+                    title={title}
+                    variant='borderless'
+                    size='small'
                     className={styles.noBorderCard}
                     extra={cardExtra}
                 >
