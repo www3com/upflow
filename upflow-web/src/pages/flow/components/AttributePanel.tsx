@@ -2,7 +2,7 @@ import {Button, Card, Flex, Space} from "antd";
 import styles from "@/pages/flow/stytles.less";
 import {Node, Panel} from "@xyflow/react";
 import React, {ComponentType, useState} from "react";
-import ResizablePanel from "@/components/ResizablePanel";
+import Index from "@/pages/flow/components/ResizabledPanel";
 import { ExpandOutlined, CompressOutlined } from '@ant-design/icons';
 import {NodeTypes} from "@/utils/constants";
 
@@ -43,7 +43,7 @@ export default ({open = false, node, onChange}: AttributePanelProps) => {
             position="top-right" 
             className={`${styles.attrPanel} ${isMaximized ? styles.maximized : ''}`}
         >
-            <ResizablePanel 
+            <Index
                 defaultWidth={400}
                 minWidth={200}
                 maxWidth={1200}
@@ -59,7 +59,7 @@ export default ({open = false, node, onChange}: AttributePanelProps) => {
                 >
                     {EditComponent && <EditComponent node={node} onChange={onChange}/>}
                 </Card>
-            </ResizablePanel>
+            </Index>
         </Panel>
     </>
 }

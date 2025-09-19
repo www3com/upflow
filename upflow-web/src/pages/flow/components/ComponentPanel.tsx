@@ -21,7 +21,7 @@ interface DraggableNodeProps {
 }
 
 const DraggableNode = ({type, label, icon}: DraggableNodeProps) => {
-    console.log(icon, type, label)
+    // 组件拖拽开始
     const onDragStart = (event: DragEvent, nodeType: string) => {
         event.dataTransfer.setData('application/reactflow', nodeType);
         event.dataTransfer.effectAllowed = 'move';

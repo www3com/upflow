@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, ReactNode } from 'react';
-import styles from './ResizablePanel.less';
+import styles from './styles.less';
 
 interface ResizablePanelProps {
   children: ReactNode;
@@ -11,7 +11,7 @@ interface ResizablePanelProps {
   isMaximized?: boolean;
 }
 
-export default function ResizablePanel({
+export default function Index({
   children,
   defaultWidth = 400,
   minWidth = 200,

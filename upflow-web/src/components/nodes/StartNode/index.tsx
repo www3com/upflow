@@ -33,7 +33,7 @@ export default memo(({type, data}: StartNodeProps) => {
                     </Flex>
                 ))}
             </Flex>
-            <Handle type="target" position={Position.Right}/>
+            <Handle type="source" position={Position.Right}/>
         </Flex>
     )
 });

@@ -7,8 +7,8 @@ export default memo(() => {
     return (
         <>
             <div style={{minWidth:200}}><FunctionOutlined /> 代码执行</div>
-            <Handle type="source" position={Position.Left}/>
-            <Handle type="target" position={Position.Right} id='a' style={{top: 10}} />
+            <Handle type="target" position={Position.Left}/>
+            <Handle type="source" position={Position.Right} id='a' style={{top: 10}} />
         </>
     )
 });

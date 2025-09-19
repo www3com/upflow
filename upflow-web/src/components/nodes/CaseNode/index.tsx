@@ -27,11 +27,11 @@ export default memo(({id, type, data}: CaseNodeProps) => {
         let handles = [];
         let height = 45;
         for (const caseItem of data.detail) {
-            handles.push( <Handle type="target" position={Position.Right} id={caseItem.id} style={{top: height}} key={caseItem.id}/>)
+            handles.push( <Handle type="source" position={Position.Right} id={caseItem.id} style={{top: height}} key={caseItem.id}/>)
             let caseHeight = 19 + caseItem.conditions.length * 26;
             height += caseHeight;
         }
-        handles.push(<Handle type="target" position={Position.Right} id={id} style={{top: height}} key={id}/>)
+        handles.push(<Handle type="source" position={Position.Right} id={id} style={{top: height}} key={id}/>)
         return handles;
     }
 
@@ -49,7 +49,7 @@ export default memo(({id, type, data}: CaseNodeProps) => {
             <Flex justify={'end'}>
                 <span className={styles.keyword}>ELSE</span>
             </Flex>
-            <Handle type="source" position={Position.Left}/>
+            <Handle type="target" position={Position.Left}/>
             {handles()}
         </Flex>
     )

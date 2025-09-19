@@ -83,9 +83,7 @@ export default {
                     data: {title: 'Node 3'}
                 }],
             edges: [
-                {"id": "n1-n2", "source": "n1", "target": "n2"},
-                {"id": "xy-edge__n2-n1", "source": "n2", "target": "n1",},
-                {"id": "xy-edge__n3-n2a", "source": "n3", "target": "n2", "targetHandle": "a"}
+
             ],
             "viewport": {
                 "x": 0,
