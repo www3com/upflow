@@ -44,15 +44,11 @@ export default ({
     }, [minWidth, maxWidth]);
 
     return (
-        <div
-            ref={panelRef}
-            className={styles.resizablePanel}
-            style={{height: '100%', ...(isMaximized ? {} : {width: panelWidth})}}
-        >
-            <div
-                className={`${styles.resizeHandle} ${dragging ? styles.resizeHandleActive : ''}`}
-                onMouseDown={handleMouseDown}
-            />
+        <div ref={panelRef}
+             className={styles.resizablePanel}
+             style={{height: '100%', ...(isMaximized ? {} : {width: panelWidth})}}>
+            <div className={`${styles.resizeHandle} ${dragging ? styles.resizeHandleActive : ''}`}
+                 onMouseDown={handleMouseDown}/>
             {children}
         </div>
     );
