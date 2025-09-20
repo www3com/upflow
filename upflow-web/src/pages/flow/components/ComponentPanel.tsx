@@ -1,18 +1,13 @@
-import {Card, Flex} from "antd";
+import {Card, Flex, theme} from "antd";
 import styles from "@/pages/flow/stytles.less";
-import {Node} from "@xyflow/react";
-import React, {DragEvent} from "react";
+import React, {DragEvent, MouseEvent} from "react";
 import {IconFontUrl, NodeTypes} from "@/utils/constants";
 import {createFromIconfontCN} from "@ant-design/icons";
 
+const {useToken} = theme;
 const IconFont = createFromIconfontCN({
     scriptUrl: IconFontUrl,
 });
-
-interface ComponentPanelProps {
-    node?: Node,
-    onChange: (node: Node) => void
-}
 
 interface DraggableNodeProps {
     type: string;
@@ -21,53 +16,45 @@ interface DraggableNodeProps {
 }
 
 const DraggableNode = ({type, label, icon}: DraggableNodeProps) => {
+    const {token} = useToken();
     // 组件拖拽开始
     const onDragStart = (event: DragEvent, nodeType: string) => {
         event.dataTransfer.setData('application/reactflow', nodeType);
         event.dataTransfer.effectAllowed = 'move';
     };
 
+    const onMouseEnter = (event: MouseEvent<HTMLElement>) => {
+        event.currentTarget.style.backgroundColor = token.colorBgTextHover;
+        event.currentTarget.style.borderColor = token.colorPrimary;
+    }
+
+    const onMouseLeave = (event: MouseEvent<HTMLElement>) => {
+        event.currentTarget.style.backgroundColor = '#fafafa';
+        event.currentTarget.style.borderColor = '#d9d9d9';
+    }
+
     return (
-        <div
-            className={styles.draggableNode}
-            onDragStart={(event) => onDragStart(event, type)}
-            draggable
-            style={{
-                padding: '8px 12px',
-                margin: '4px 0',
-                border: '1px solid #d9d9d9',
-                borderRadius: '6px',
-                cursor: 'grab',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                backgroundColor: '#fafafa',
-                transition: 'all 0.2s',
-            }}
-            onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#e6f7ff';
-                e.currentTarget.style.borderColor = '#1890ff';
-            }}
-            onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#fafafa';
-                e.currentTarget.style.borderColor = '#d9d9d9';
-            }}
+        <Flex vertical draggable align={'center'} justify={'center'} gap={5}
+              className={styles.draggableNode}
+              onDragStart={(event) => onDragStart(event, type)}
+              onMouseEnter={(e) => onMouseEnter(e)}
+              onMouseLeave={(e) => onMouseLeave(e)}
         >
-            <IconFont type={icon} style={{fontSize: '19px', color: '#1890ff'}}/>
-            <span style={{fontSize: '14px'}}>{label}</span>
-        </div>
+            <IconFont type={icon} style={{fontSize: '22px', color: token.colorPrimary}}/>
+            <span style={{fontSize: '12px'}}>{label}</span>
+        </Flex>
     );
 };
 
-export default ({node, onChange}: ComponentPanelProps) => {
+export default () => {
     return (
         <Card title='组件面板' variant='borderless' size='small' className={styles.noBorderCard}>
-            <Flex vertical gap={4}>
+            <Flex wrap gap={4}>
                 {Object.keys(NodeTypes).map((nodeType) => (
                     <DraggableNode
-                        key={NodeTypes[nodeType].title}
                         type={nodeType}
-                        label={NodeTypes[nodeType].title}
+                        key={NodeTypes[nodeType].data.title}
+                        label={NodeTypes[nodeType].data.title}
                         icon={NodeTypes[nodeType].icon}
                     />
                 ))}

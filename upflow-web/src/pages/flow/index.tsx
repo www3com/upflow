@@ -9,9 +9,9 @@ import {
 import '@xyflow/react/dist/style.css';
 import {useCallback, useEffect, useState, useRef, DragEvent, useMemo} from 'react';
 import './xy-theme.css'
-import {Button, Space,  Splitter} from "antd";
+import {Button, Space, Splitter} from "antd";
 import AttributePanel from "@/pages/flow/components/AttributePanel";
-import { nanoid } from 'nanoid';
+import {nanoid} from 'nanoid';
 import {getFlowApi} from "@/services/flow";
 import {NodeTypes} from "@/utils/constants";
 import ComponentPanel from "@/pages/flow/components/ComponentPanel";
@@ -22,7 +22,7 @@ const FlowPage = () => {
     const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
     const reactFlowWrapper = useRef<HTMLDivElement>(null);
-    const { screenToFlowPosition } = useReactFlow();
+    const {screenToFlowPosition} = useReactFlow();
 
     const init = async () => {
         const res = await getFlowApi();
@@ -73,7 +73,7 @@ const FlowPage = () => {
         event.preventDefault();
 
         const nodeType = event.dataTransfer.getData('application/reactflow');
-        
+
         if (typeof nodeType === 'undefined' || !nodeType) {
             return;
         }
@@ -87,11 +87,7 @@ const FlowPage = () => {
             id: nanoid(8),
             type: nodeType,
             position,
-            data: { 
-                title: NodeTypes[nodeType].title,
-                input: [],
-                variables: []
-            },
+            data: {...NodeTypes[nodeType].data},
         };
 
         setNodes((nds) => nds.concat(newNode));
@@ -104,12 +100,13 @@ const FlowPage = () => {
     }, [NodeTypes])
 
     return (
-        <Splitter style={{ height: '100%', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
-            <Splitter.Panel defaultSize="155" min='5%' max="20%" collapsible={{ start: false, end: true, showCollapsibleIcon: 'auto' }}>
-                <ComponentPanel onChange={onChange} />
+        <Splitter style={{height: '100%'}}>
+            <Splitter.Panel defaultSize="160" min='5%' max="20%"
+                            collapsible={{start: false, end: true, showCollapsibleIcon: 'auto'}}>
+                <ComponentPanel/>
             </Splitter.Panel>
             <Splitter.Panel>
-                <div ref={reactFlowWrapper} style={{ width: '100%', height: '100%' }}>
+                <div ref={reactFlowWrapper} style={{width: '100%', height: '100%'}}>
                     <ReactFlow
                         proOptions={{hideAttribution: true}}
                         nodeTypes={nodeTypes}
@@ -121,20 +118,20 @@ const FlowPage = () => {
                         onSelectionChange={onSelectionChange}
                         onDragOver={onDragOver}
                         onDrop={onDrop}
-                        style={{ position: 'relative' }}
+                        style={{position: 'relative'}}
                     >
-                    <Panel position="top-right">
-                        <Space>
-                            <Button onClick={onSave} color="primary" variant="outlined">运行</Button>
-                            <Button type='primary' onClick={onSave}>保存</Button>
-                        </Space>
-                    </Panel>
+                        <Panel position="top-right">
+                            <Space>
+                                <Button onClick={onSave} color="primary" variant="outlined">运行</Button>
+                                <Button type='primary' onClick={onSave}>保存</Button>
+                            </Space>
+                        </Panel>
 
 
-                    <AttributePanel open={open} node={node} onChange={onChange}/>
-                    <Controls/>
-                    <Background variant={BackgroundVariant.Dots} gap={12} size={1}/>
-                </ReactFlow>
+                        <AttributePanel open={open} node={node} onChange={onChange}/>
+                        <Controls/>
+                        <Background variant={BackgroundVariant.Dots} gap={12} size={1}/>
+                    </ReactFlow>
                 </div>
             </Splitter.Panel>
         </Splitter>
@@ -143,6 +140,6 @@ const FlowPage = () => {
 
 export default () => (
     <ReactFlowProvider>
-        <FlowPage />
+        <FlowPage/>
     </ReactFlowProvider>
 );

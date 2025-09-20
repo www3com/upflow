@@ -42,8 +42,8 @@ export default memo(({id, type, data}: CaseNodeProps) => {
                 {data.title}
             </Space>
             <Flex vertical gap={5}>
-                {data.detail.map((item: Case, index: number) => (
-                    <CaseCom key={index} index={index} item={item}/>
+                {data.detail && data.detail.map((item: Case, index: number) => (
+                    <CaseCom key={index} count={data.detail.length} index={index} item={item}/>
                 ))}
             </Flex>
             <Flex justify={'end'}>
@@ -56,11 +56,12 @@ export default memo(({id, type, data}: CaseNodeProps) => {
 });
 
 interface CaseComProps {
+    count: number,
     index: number,
     item: Case,
 }
 
-export const CaseCom = ({index, item}: CaseComProps) => {
+export const CaseCom = ({count, index, item}: CaseComProps) => {
     const {token} = useToken();
     const renderConditions = () => {
         return item.conditions.map((condition, condIndex) => (
@@ -79,7 +80,7 @@ export const CaseCom = ({index, item}: CaseComProps) => {
     return (
         <Flex vertical gap={3}>
             <Flex justify={"space-between"} align={"center"}>
-                <span>CASE {index + 1}</span>
+                <span>{count > 1 && `CASE ` + (index + 1)}</span>
                 {index === 0 && <span className={styles.keyword}>IF</span>}
                 {index > 0 && <span className={styles.keyword}>ELIF</span>}
             </Flex>

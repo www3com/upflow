@@ -18,19 +18,15 @@ export default ({open = false, node, onChange}: AttributePanelProps) => {
     if (!node || !node.type) return <></>
     // 根据节点类型获取对应的配置
     const config = NodeTypes[node.type]
-    const title = config?.title || '属性'
+    const title = config?.data?.title || '属性'
     const EditComponent = config?.attr as ComponentType<{ node: Node, onChange: (node: Node) => void }> | null
-
-    const handleMaximizeToggle = () => {
-        setMaximized(!maximized);
-    };
 
     const cardExtra = (
         <Button
             type="text"
             size="small"
             icon={maximized ? <CompressOutlined/> : <ExpandOutlined/>}
-            onClick={handleMaximizeToggle}
+            onClick={()=> setMaximized(!maximized)}
             title={maximized ? "还原" : "最大化"}
         />
     );

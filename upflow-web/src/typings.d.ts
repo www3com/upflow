@@ -27,10 +27,10 @@ interface NodeDataType {
 }
 
 interface NodeCfgType {
-  title: string
   icon: string
   node: any
   attr?: any
+  data: NodeDataType
 }
 
 /**

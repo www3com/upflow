@@ -3,51 +3,73 @@ import ConditionNode from "@/components/nodes/CaseNode";
 import ScriptNode from "@/components/nodes/ScriptNode";
 import EditStartNode from "@/components/nodes/StartNode/EditStartAttribute";
 import {NodeCfgType, ObjectType} from "@/typings";
+import {nanoid} from "nanoid";
 
 export const IconFontUrl = 'https://at.alicdn.com/t/c/font_5021436_vj8jgnno7i.js';
 
 export const NodeTypes: ObjectType<NodeCfgType> = {
     'start': {
-        title: "开始",
         icon: 'icon-start',
         node: StartNode,
-        attr: EditStartNode
+        attr: EditStartNode,
+        data: {
+            title: '开始',
+            input: []
+        }
     },
     'case': {
-        title: "条件分支",
         icon: 'icon-case',
         node: ConditionNode,
-        attr: null
+        attr: null,
+        data: {
+            title: '条件分支',
+            detail: [{id: nanoid(8), opr: 'and', conditions: []}]
+        }
     },
     'for': {
-        title: "循环",
         icon: 'icon-for',
         node: ScriptNode,
-        attr: null
+        attr: null,
+        data: {
+            title: '循环',
+            input: []
+        }
     },
     'script': {
-        title: "代码执行",
         icon: 'icon-script',
         node: ScriptNode,
-        attr: null
+        attr: null,
+        data: {
+            title: '代码执行',
+            input: []
+        }
     },
     'sql': {
-        title: "SQL脚本",
         icon: 'icon-sql',
         node: ScriptNode,
         attr: null,
+        data: {
+            title: 'SQL脚本',
+            input: []
+        }
     },
     'subflow': {
-        title: "子流程",
         icon: 'icon-subflow',
         node: ScriptNode,
-        attr: null
+        attr: null,
+        data: {
+            title: '子流程',
+            input: []
+        }
     },
     'assign': {
-        title: "变量赋值",
         icon: 'icon-assign',
         node: ScriptNode,
-        attr: null
+        attr: null,
+        data: {
+            title: '变量赋值',
+            input: []
+        }
     },
 }
 
