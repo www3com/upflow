@@ -4,6 +4,7 @@ import ScriptNode from "@/components/nodes/ScriptNode";
 import EditStartNode from "@/components/nodes/StartNode/EditStartAttribute";
 import {NodeCfgType, ObjectType} from "@/typings";
 import {nanoid} from "nanoid";
+import ForNode from "@/components/nodes/ForNode";
 
 export const IconFontUrl = 'https://at.alicdn.com/t/c/font_5021436_vj8jgnno7i.js';
 
@@ -28,7 +29,7 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
     },
     'for': {
         icon: 'icon-for',
-        node: ScriptNode,
+        node: ForNode,
         attr: null,
         data: {
             title: '循环',
