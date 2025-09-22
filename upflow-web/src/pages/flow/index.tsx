@@ -24,9 +24,37 @@ const FlowPage = () => {
     const reactFlowWrapper = useRef<HTMLDivElement>(null);
     const {screenToFlowPosition} = useReactFlow();
 
+    // 确保父节点在子节点之前的排序函数
+    const sortNodesByParentChild = (nodes: Node[]) => {
+        const nodeMap = new Map(nodes.map(node => [node.id, node]));
+        const visited = new Set<string>();
+        const result: Node[] = [];
+        
+        const visit = (nodeId: string) => {
+            if (visited.has(nodeId)) return;
+            
+            const node = nodeMap.get(nodeId);
+            if (!node) return;
+            
+            // 如果有父节点，先访问父节点
+            if (node.parentId && nodeMap.has(node.parentId)) {
+                visit(node.parentId);
+            }
+            
+            visited.add(nodeId);
+            result.push(node);
+        };
+        
+        // 访问所有节点
+        nodes.forEach(node => visit(node.id));
+        
+        return result;
+    };
+
     const init = async () => {
         const res = await getFlowApi();
-        setNodes(res.data!.nodes);
+        const sortedNodes = sortNodesByParentChild(res.data!.nodes);
+        setNodes(sortedNodes);
         setEdges(res.data!.edges);
     }
 
@@ -87,54 +115,59 @@ const FlowPage = () => {
         if (intersectingNodes.length > 0) {
             const targetNode = intersectingNodes[0]; // 取第一个重叠的循环节点
             
-            setNodes((nds) => nds.map((n) => {
-                if (n.id === draggedNode.id) {
-                    // 如果节点已经是这个父节点的子节点，保持当前的相对位置
-                    if (n.parentId === targetNode.id) {
-                        // 对于已经是子节点的情况，draggedNode.position已经是相对坐标
-                        return {
-                            ...n,
-                            position: draggedNode.position
-                        };
-                    }
-                    
-                    // 新建父子关系时，需要将绝对坐标转换为相对坐标
-                    let relativePosition;
-                    if (n.parentId) {
-                        // 如果节点原来有其他父节点，先转换为绝对坐标
-                        const oldParent = nds.find(p => p.id === n.parentId);
-                        if (oldParent) {
-                            const absolutePos = {
-                                x: oldParent.position.x + n.position.x,
-                                y: oldParent.position.y + n.position.y
+            setNodes((nds) => {
+                const updatedNodes = nds.map((n) => {
+                    if (n.id === draggedNode.id) {
+                        // 如果节点已经是这个父节点的子节点，保持当前的相对位置
+                        if (n.parentId === targetNode.id) {
+                            // 对于已经是子节点的情况，draggedNode.position已经是相对坐标
+                            return {
+                                ...n,
+                                position: draggedNode.position
                             };
-                            relativePosition = {
-                                x: absolutePos.x - targetNode.position.x,
-                                y: absolutePos.y - targetNode.position.y
-                            };
+                        }
+                        
+                        // 新建父子关系时，需要将绝对坐标转换为相对坐标
+                        let relativePosition;
+                        if (n.parentId) {
+                            // 如果节点原来有其他父节点，先转换为绝对坐标
+                            const oldParent = nds.find(p => p.id === n.parentId);
+                            if (oldParent) {
+                                const absolutePos = {
+                                    x: oldParent.position.x + n.position.x,
+                                    y: oldParent.position.y + n.position.y
+                                };
+                                relativePosition = {
+                                    x: absolutePos.x - targetNode.position.x,
+                                    y: absolutePos.y - targetNode.position.y
+                                };
+                            } else {
+                                relativePosition = {
+                                    x: draggedNode.position.x - targetNode.position.x,
+                                    y: draggedNode.position.y - targetNode.position.y
+                                };
+                            }
                         } else {
+                            // 节点原来没有父节点，draggedNode.position是绝对坐标
                             relativePosition = {
                                 x: draggedNode.position.x - targetNode.position.x,
                                 y: draggedNode.position.y - targetNode.position.y
                             };
                         }
-                    } else {
-                        // 节点原来没有父节点，draggedNode.position是绝对坐标
-                        relativePosition = {
-                            x: draggedNode.position.x - targetNode.position.x,
-                            y: draggedNode.position.y - targetNode.position.y
-                        };
+                        
+                        return {
+                             ...n,
+                             parentId: targetNode.id,
+                             position: relativePosition,
+                             extent: 'parent' as const
+                         };
                     }
-                    
-                    return {
-                        ...n,
-                        parentId: targetNode.id,
-                        position: relativePosition,
-                        extent: 'parent'
-                    };
-                }
-                return n;
-            }));
+                    return n;
+                });
+                
+                // 重新排序节点数组，确保父节点在子节点之前
+                return sortNodesByParentChild(updatedNodes);
+            });
             
             console.log(`节点 ${draggedNode.id} 已设置父节点为循环节点 ${targetNode.id}`);
         }
@@ -193,14 +226,18 @@ const FlowPage = () => {
             y: event.clientY,
         });
 
+        let node = NodeTypes[nodeType];
+        console.log( node, "ssss")
         const newNode: Node = {
             id: nanoid(8),
             type: nodeType,
+            width: node.width,
+            height: node.height,
             position,
-            data: {...NodeTypes[nodeType].data},
+            data: {...node.data},
         };
 
-        setNodes((nds) => nds.concat(newNode));
+        setNodes((nds) => sortNodesByParentChild(nds.concat(newNode)));
     }, [screenToFlowPosition, setNodes]);
 
     const nodeTypes = useMemo(() => {

@@ -36,12 +36,12 @@ export default memo(({id, type, data}: CaseNodeProps) => {
     }
 
     return (
-        <Flex vertical>
-            <Space className={styles.title} size={5} align={"start"}>
+        <Flex vertical gap={5} className='node-container'>
+            <Flex className='header' gap={5}>
                 <IconFont type={NodeTypes[type].icon} style={{color: token.colorPrimary, fontSize: 16}}/>
                 {data.title}
-            </Space>
-            <Flex vertical gap={5}>
+            </Flex>
+            <Flex vertical gap={10}>
                 {data.detail && data.detail.map((item: Case, index: number) => (
                     <CaseCom key={index} count={data.detail.length} index={index} item={item}/>
                 ))}
@@ -65,7 +65,7 @@ export const CaseCom = ({count, index, item}: CaseComProps) => {
     const {token} = useToken();
     const renderConditions = () => {
         return item.conditions.map((condition, condIndex) => (
-            <Flex key={condition.nodeId} align="center" gap={5} className={styles.conditionItem}>
+            <Flex key={condition.nodeId} align="center" gap={15} className={styles.conditionItem}>
                 {condIndex > 0 && <span className={styles.logicalOpr} style={{color: token.colorPrimary}}>AND</span>}
                 <Space size={3}>
                     <IconFont type="icon-variable" style={{color: token.colorPrimary}}/>

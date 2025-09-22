@@ -41,7 +41,6 @@ export default ({open = false, node, onChange}: AttributePanelProps) => {
                 defaultWidth={400}
                 minWidth={200}
                 maxWidth={1200}
-                style={{height: '100%'}}
                 isMaximized={maximized}
             >
                 <Card

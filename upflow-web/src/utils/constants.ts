@@ -28,6 +28,8 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
         }
     },
     'for': {
+        width: 400,
+        height: 200,
         icon: 'icon-for',
         node: ForNode,
         attr: null,

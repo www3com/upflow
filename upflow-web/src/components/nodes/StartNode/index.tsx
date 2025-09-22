@@ -20,11 +20,11 @@ interface StartNodeProps {
 export default memo(({type, data}: StartNodeProps) => {
     const {token} = useToken();
     return (
-        <Flex vertical >
-            <Space className={styles.title} size={5} align={"start"}>
+        <Flex vertical className='node-container' gap={10}>
+            <Flex className='header' gap={5}>
                 <IconFont type={NodeTypes[type].icon} style={{color: token.colorPrimary, fontSize: 16}}/>
                 {data.title}
-            </Space>
+            </Flex>
             <Flex vertical gap={5}>
                 {data.input.map((item: any, index: number) => (
                     <Flex justify="space-between" align="center" className={styles.variable} key={item.name}>

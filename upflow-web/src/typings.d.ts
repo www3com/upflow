@@ -27,6 +27,8 @@ interface NodeDataType {
 }
 
 interface NodeCfgType {
+  width?: number
+  height?: number
   icon: string
   node: any
   attr?: any
