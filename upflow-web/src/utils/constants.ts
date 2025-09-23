@@ -1,10 +1,10 @@
-import StartNode from "@/components/nodes/StartNode";
-import ConditionNode from "@/components/nodes/CaseNode";
-import ScriptNode from "@/components/nodes/ScriptNode";
-import EditStartNode from "@/components/nodes/StartNode/EditStartAttribute";
+import StartNode from "@/pages/flow/components/nodes/StartNode";
+import ConditionNode from "@/pages/flow/components/nodes/CaseNode";
+import ScriptNode from "@/pages/flow/components/nodes/ScriptNode";
+import EditStartNode from "@/pages/flow/components/nodes/StartNode/EditStartAttribute";
 import {NodeCfgType, ObjectType} from "@/typings";
 import {nanoid} from "nanoid";
-import ForNode from "@/components/nodes/ForNode";
+import ForNode from "@/pages/flow/components/nodes/ForNode";
 
 export const IconFontUrl = 'https://at.alicdn.com/t/c/font_5021436_vj8jgnno7i.js';
 

@@ -5,6 +5,7 @@ import {Handle, Position} from "@xyflow/react";
 import {CompareOprType, NodeTypes} from "@/utils/constants";
 import {createFromIconfontCN} from "@ant-design/icons";
 import {Case} from "@/typings";
+import NodeWrapper from "@/pages/flow/components/NodeWrapper";
 
 
 const {useToken} = theme;
@@ -27,7 +28,8 @@ export default memo(({id, type, data}: CaseNodeProps) => {
         let handles = [];
         let height = 45;
         for (const caseItem of data.detail) {
-            handles.push( <Handle type="source" position={Position.Right} id={caseItem.id} style={{top: height}} key={caseItem.id}/>)
+            handles.push(<Handle type="source" position={Position.Right} id={caseItem.id} style={{top: height}}
+                                 key={caseItem.id}/>)
             let caseHeight = 19 + caseItem.conditions.length * 26;
             height += caseHeight;
         }
@@ -36,22 +38,24 @@ export default memo(({id, type, data}: CaseNodeProps) => {
     }
 
     return (
-        <Flex vertical gap={5} className='node-container'>
-            <Flex className='header' gap={5}>
-                <IconFont type={NodeTypes[type].icon} style={{color: token.colorPrimary, fontSize: 16}}/>
-                {data.title}
+        <NodeWrapper id={id}>
+            <Flex vertical gap={5} className='node-container'>
+                <Flex className='header' gap={5}>
+                    <IconFont type={NodeTypes[type].icon} style={{color: token.colorPrimary, fontSize: 16}}/>
+                    {data.title}
+                </Flex>
+                <Flex vertical gap={10}>
+                    {data.detail && data.detail.map((item: Case, index: number) => (
+                        <CaseCom key={index} count={data.detail.length} index={index} item={item}/>
+                    ))}
+                </Flex>
+                <Flex justify={'end'}>
+                    <span className={styles.keyword}>ELSE</span>
+                </Flex>
+                <Handle type="target" position={Position.Left}/>
+                {handles()}
             </Flex>
-            <Flex vertical gap={10}>
-                {data.detail && data.detail.map((item: Case, index: number) => (
-                    <CaseCom key={index} count={data.detail.length} index={index} item={item}/>
-                ))}
-            </Flex>
-            <Flex justify={'end'}>
-                <span className={styles.keyword}>ELSE</span>
-            </Flex>
-            <Handle type="target" position={Position.Left}/>
-            {handles()}
-        </Flex>
+        </NodeWrapper>
     )
 });
 

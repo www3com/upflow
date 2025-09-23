@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import './styles.less';
 
-import EditStartDialog from "@/components/nodes/StartNode/EditStartDialog";
+import EditStartDialog from "@/pages/flow/components/nodes/StartNode/EditStartDialog";
 import {Node} from "@xyflow/react";
 import {useState} from "react";
 import {Variable} from "@/typings";
