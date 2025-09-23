@@ -42,7 +42,7 @@ export const useFlow = () => {
 
     const onNodeDrag = useCallback((event: any, draggedNode: Node) => {
         const intersectingNodes = getIntersectingNodes(draggedNode).filter(node =>
-            node.type === 'for' && node.id !== draggedNode.id
+            NodeTypes[node.type!].isParent && node.id !== draggedNode.id
         );
         const newDropTarget = intersectingNodes.length > 0 ? intersectingNodes[0].id : null;
         if (newDropTarget !== dropTarget) {
@@ -52,7 +52,7 @@ export const useFlow = () => {
 
     const onNodeDragStop = useCallback((event: any, draggedNode: Node) => {
         const intersectingNodes = getIntersectingNodes(draggedNode).filter(node =>
-            node.type === 'for' && node.id !== draggedNode.id
+            NodeTypes[node.type!].isParent && node.id !== draggedNode.id
         );
 
         if (intersectingNodes.length > 0) {

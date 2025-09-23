@@ -33,6 +33,7 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
         icon: 'icon-for',
         node: ForNode,
         attr: null,
+        isParent: true,
         data: {
             title: '循环',
             input: []
