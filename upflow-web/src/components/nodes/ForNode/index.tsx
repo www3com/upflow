@@ -1,7 +1,7 @@
-import {Button, Dropdown, Flex, Layout, MenuProps, theme} from "antd";
+import {Flex, Layout, theme} from "antd";
 import {memo, useState} from "react";
-import {CopyOutlined, createFromIconfontCN, DeleteOutlined, EllipsisOutlined} from "@ant-design/icons";
-import {Handle, NodeResizeControl, NodeToolbar, Position} from "@xyflow/react";
+import {createFromIconfontCN} from "@ant-design/icons";
+import {Handle, NodeResizeControl, Position} from "@xyflow/react";
 import styles from './styles.less'
 import {NodeTypes} from "@/utils/constants";
 import NodeMenu from "@/components/NodeMenu";
@@ -30,19 +30,15 @@ export default memo(({type, selected, data}: ForNodeProps) => {
     const {token} = useToken();
     const [hovered, setHovered] = useState(false);
 
-    const handleMouseEnter = () => {
-        setHovered(true);
-    };
-
-    const handleMouseLeave = () => {
-        setHovered(false);
+    const onSelect = (key: string) => {
+        console.log('selected', key);
     };
 
     return (
         <>
-            <NodeMenu type={type} selected={selected} data={data}/>
-            <Flex vertical justify={'start'} className={styles.forContainer} onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}>
+            <NodeMenu onSelect={onSelect}/>
+            <Flex vertical justify={'start'} className={styles.forContainer} onMouseEnter={() => setHovered(true)}
+                  onMouseLeave={() => setHovered(false)}>
                 <NodeResizeControl style={controlStyle} minWidth={100} minHeight={50}>
                     {(selected || hovered) && <IconFont type='icon-zoom' style={{
                         color: token.colorPrimary,

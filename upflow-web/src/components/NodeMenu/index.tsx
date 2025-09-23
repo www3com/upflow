@@ -4,22 +4,17 @@ import {CopyOutlined, DeleteOutlined, EllipsisOutlined} from "@ant-design/icons"
 import {NodeToolbar, Position} from "@xyflow/react";
 
 interface NodeMenuProps {
-    type: string,
-    selected: boolean,
-    data: {
-        title: string,
-        input: []
-    }
+    onSelect: (key: string) => void;
 }
 
-export default memo(({type, data}: NodeMenuProps) => {
+export default memo(({onSelect}: NodeMenuProps) => {
 
     const items = [{
-        key: '1',
-        label: <><DeleteOutlined/> 删除</>,
+        key: 'del',
+        label: <div onClick={() => onSelect('del')}><DeleteOutlined/> 删除</div>,
     }, {
-        key: '2',
-        label: <><CopyOutlined/> 复制</>,
+        key: 'copy',
+        label: <div onClick={() => onSelect('copy')}><CopyOutlined/> 复制</div>,
     }];
     return (
         <>
