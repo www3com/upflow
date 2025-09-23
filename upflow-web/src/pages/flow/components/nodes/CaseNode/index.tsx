@@ -16,13 +16,14 @@ const IconFont = createFromIconfontCN({
 interface CaseNodeProps {
     id: string,
     type: string,
+    selected: boolean,
     data: {
         title: string,
         detail: Case[]
     }
 }
 
-export default memo(({id, type, data}: CaseNodeProps) => {
+export default memo(({id, type, selected, data}: CaseNodeProps) => {
     const {token} = useToken();
     const handles = () => {
         let handles = [];
@@ -38,7 +39,7 @@ export default memo(({id, type, data}: CaseNodeProps) => {
     }
 
     return (
-        <NodeWrapper id={id}>
+        <NodeWrapper id={id} selected={selected}>
             <Flex vertical gap={5} className='node-container'>
                 <Flex className='header' gap={5}>
                     <IconFont type={NodeTypes[type].icon} style={{color: token.colorPrimary, fontSize: 16}}/>
