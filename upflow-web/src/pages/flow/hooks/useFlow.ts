@@ -29,6 +29,14 @@ export const useFlow = () => {
         init();
     }, []);
 
+    // 监听节点删除，如果当前打开的节点被删除，则关闭面板
+    useEffect(() => {
+        if (node && !nodes.find(n => n.id === node.id)) {
+            setOpen(false);
+            setNode(undefined);
+        }
+    }, [nodes, node]);
+
     const onNodeDragStart = useCallback((event: any, node: Node) => {
         isDraggingRef.current = true;
     }, []);
