@@ -1,38 +1,41 @@
+import {useCallback, useEffect, useMemo} from "react";
 import {
-    Background,
-    Controls,
-    ReactFlow,
-    Panel, BackgroundVariant, ReactFlowProvider, Edge
-} from '@xyflow/react';
+    changeConnect,
+    changeEdges,
+    changeNodes,
+    init,
+    state
+} from "@/states/flow";
+import {useSnapshot} from "valtio";
 import '@xyflow/react/dist/style.css';
-import './xy-theme.css'
 import {Button, Space, Splitter} from "antd";
-import AttributePanel from "@/pages/flow/components/AttributePanel";
 import ComponentPanel from "@/pages/flow/components/ComponentPanel";
-import {useFlow} from "@/pages/flow/hooks/useFlow";
-import {flowActions} from "@/states/flow";
+import {Background, BackgroundVariant, Controls, Edge, Panel, ReactFlow} from "@xyflow/react";
+import AttributePanel from "@/pages/flow/components/AttributePanel";
+import {NodeTypes} from "@/utils/constants";
 
-const FlowPage = () => {
-    const {
-        open,
-        node,
-        nodes,
-        edges,
-        reactFlowWrapper,
-        onNodeClick,
-        onPaneClick,
-        onNodeDragStart,
-        onNodeDrag,
-        onNodeDragStop,
-        onDragOver,
-        onDrop,
-        onSave,
-        onChange,
-        nodeTypes,
-        dropTarget
-    } = useFlow();
+export default function Flow1() {
 
-    const {onNodesChange, onEdgesChange, onConnect} = flowActions;
+    const {nodes, edges} = useSnapshot(state);
+
+    useEffect(() => {
+        init()
+    }, []);
+
+    const nodeTypes = useMemo(() => {
+        return Object.fromEntries(
+            Object.entries(NodeTypes).map(([key, value]) => [key, value.node])
+        );
+    }, []);
+
+    const onNodesChange = useCallback(changeNodes, []);
+    const onEdgesChange = useCallback(changeEdges, []);
+    const onConnect = useCallback(changeConnect, []);
+
+    const onSave = useCallback(() => {
+        const flowData = {nodes, edges};
+        console.log(JSON.stringify(flowData));
+    }, [nodes, edges]);
 
     return (
         <Splitter style={{height: '100%'}}>
@@ -41,48 +44,26 @@ const FlowPage = () => {
                 <ComponentPanel/>
             </Splitter.Panel>
             <Splitter.Panel>
-                <div ref={reactFlowWrapper} style={{width: '100%', height: '100%'}}>
-                    <ReactFlow
-                        proOptions={{hideAttribution: true}}
-                        nodeTypes={nodeTypes}
-                        nodes={nodes.map(node => ({
-                            ...node,
-                            className: `${node.className || ''} ${dropTarget === node.id ? 'drop-target' : ''}`.trim()
-                        }))}
-                        edges={edges as Edge[]}
-                        onNodesChange={onNodesChange}
-                        onEdgesChange={onEdgesChange}
-                        onConnect={onConnect}
-                        onNodeClick={onNodeClick}
-                        onPaneClick={onPaneClick}
-                        onNodeDragStart={onNodeDragStart}
-                        onNodeDrag={onNodeDrag}
-                        onNodeDragStop={onNodeDragStop}
-                        onDragOver={onDragOver}
-                        onDrop={onDrop}
-                        selectNodesOnDrag={false}
-                        style={{position: 'relative'}}
-                    >
-                        <Panel position="top-right">
-                            <Space>
-                                <Button onClick={onSave} color="primary" variant="outlined">运行</Button>
-                                <Button type='primary' onClick={onSave}>保存</Button>
-                            </Space>
-                        </Panel>
-
-
-                        <AttributePanel open={open} node={node} onChange={onChange}/>
-                        <Controls/>
-                        <Background variant={BackgroundVariant.Dots} gap={12} size={1}/>
-                    </ReactFlow>
-                </div>
+                <ReactFlow
+                    proOptions={{hideAttribution: true}}
+                    nodeTypes={nodeTypes}
+                    nodes={nodes as any}
+                    edges={edges as Edge[]}
+                    onNodesChange={onNodesChange}
+                    onEdgesChange={onEdgesChange}
+                    onConnect={onConnect}
+                    fitView
+                >
+                    <Panel position="top-right">
+                        <Space>
+                            <Button onClick={onSave} color="primary" variant="outlined">运行</Button>
+                            <Button type='primary' onClick={onSave}>保存</Button>
+                        </Space>
+                    </Panel>
+                    <Controls/>
+                    <Background variant={BackgroundVariant.Dots} gap={12} size={1}/>
+                </ReactFlow>
             </Splitter.Panel>
         </Splitter>
     );
 }
-
-export default () => (
-    <ReactFlowProvider>
-        <FlowPage/>
-    </ReactFlowProvider>
-);
