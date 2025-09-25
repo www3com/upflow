@@ -23,7 +23,7 @@ import {
     SelectionMode, useReactFlow
 } from "@xyflow/react";
 import {NodeTypes} from "@/utils/constants";
-import {DnDProvider, useDnD} from "@/pages/DnDContext";
+import {DnDProvider, useDnD} from "@/pages/flow/components/DnDContext";
 
 const FlowPage = () => {
 
