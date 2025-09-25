@@ -1,0 +1,55 @@
+.noBorderCard {
+  border: none !important;
+  box-shadow: none !important;
+  width: 100% !important;
+
+  .ant-card-head {
+    border-bottom: none !important;
+  }
+
+  .ant-card-body {
+    border: none !important;
+  }
+}
+
+.draggableNode {
+  width: 65px;
+  height: 65px;
+  background-color: #fafafa;
+  user-select: none;
+
+  &:active {
+    cursor: grabbing !important;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.nodeWrapper {
+  width: 100%;
+  border-radius: 8px;
+
+  // 头部
+  .nodeHeader {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: white;
+    padding: 3px 5px;
+  }
+
+  // 默认隐藏按钮
+  .nodeActionBtn {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  // hover时显示按钮
+  &:hover {
+    .nodeActionBtn {
+      opacity: 1;
+    }
+  }
+}
