@@ -33,11 +33,19 @@
     align-items: flex-start;
     text-align: left;
     font-size: 12px;
-    min-width: 200px;
+    min-width: 220px;
     flex-direction: column;
     border: var(--xy-node-border-default);
     color: var(--xy-node-color-default);
 }
+
+/* 节点交叉样式 */
+.react-flow__node.highlight {
+    border: 2px dashed #1890ff !important;
+    background-color: rgba(24, 144, 255, 0.1) !important;
+    box-shadow: 0 0 10px rgba(24, 144, 255, 0.3) !important;
+}
+
 
 .react-flow__node.selectable:focus {
     box-shadow: 0px 0px 0px 4px var(--xy-theme-color-focus);

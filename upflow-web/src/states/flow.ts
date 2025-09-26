@@ -6,6 +6,7 @@ import {proxy} from "valtio";
 import {nanoid} from "nanoid";
 import {getFlowApi} from "@/services/flow";
 import {NodeTypes} from "@/utils/constants";
+import {sortNodes} from "@/utils/flow";
 
 export const state = proxy({
     nodes: [] as Node[],
@@ -18,6 +19,11 @@ export const init = async () => {
     state.edges = res.data!.edges;
 }
 
+export const saveFlow = () => {
+    const flowData = {nodes: state.nodes, edges: state.edges};
+    console.log(JSON.stringify(flowData));
+}
+
 export const addNode = (type: string, position: { x: number, y: number }) => {
     let node = NodeTypes[type];
     const newNode: Node = {
@@ -25,10 +31,19 @@ export const addNode = (type: string, position: { x: number, y: number }) => {
         type: type,
         width: node.width,
         height: node.height,
-        position,
         data: {...node.data},
+        extent: 'parent',
+        position,
     };
     state.nodes = state.nodes.concat(newNode);
+}
+export const updateNode = (node: Node) => {
+    let nodes = state.nodes.map(n => n.id === node.id ? node : n);
+    state.nodes = sortNodes(nodes)
+}
+
+export const setNodes = (nodes: Node[]) => {
+    state.nodes = nodes;
 }
 
 export const changeNodes = (changes: NodeChange[]) => {

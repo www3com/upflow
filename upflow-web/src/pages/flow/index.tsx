@@ -1,10 +1,10 @@
-import React, {useCallback, useEffect, useMemo} from "react";
+import React, {type MouseEvent as ReactMouseEvent, useCallback, useEffect, useMemo, useState} from "react";
 import {
     changeConnect,
     changeEdges,
     changeNodes,
     init, addNode,
-    state
+    state, saveFlow, updateNode
 } from "@/states/flow";
 import {useSnapshot} from "valtio";
 import '@xyflow/react/dist/style.css';
@@ -23,13 +23,13 @@ import {
     SelectionMode, useReactFlow
 } from "@xyflow/react";
 import {NodeTypes} from "@/utils/constants";
-import {DnDProvider, useDnD} from "@/pages/flow/components/DnDContext";
+import {useFlow} from "@/pages/flow/components/hooks/useFlow";
+
 
 const FlowPage = () => {
 
     const snap = useSnapshot(state);
-    const {screenToFlowPosition} = useReactFlow();
-    const [type, setType] = useDnD();
+    const {onDrop, onDragOver, onNodeDrag, onNodeDragStop, dropNodeIds} = useFlow();
 
     useEffect(() => {
         init()
@@ -41,28 +41,6 @@ const FlowPage = () => {
         );
     }, []);
 
-    const onNodesChange = useCallback(changeNodes, []);
-    const onEdgesChange = useCallback(changeEdges, []);
-    const onConnect = useCallback(changeConnect, []);
-    const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
-        event.dataTransfer!.dropEffect = 'move';
-    }, []);
-
-    const onDrop = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
-        const nodeType = event.dataTransfer?.getData('application/reactflow');
-        if (typeof nodeType === 'undefined' || !nodeType) {
-            return;
-        }
-        addNode(nodeType, screenToFlowPosition({x: event.clientX, y: event.clientY}));
-    }, [screenToFlowPosition, type]);
-
-    const onSave = useCallback(() => {
-        const flowData = {nodes: snap.nodes, edges: snap.edges};
-        console.log(JSON.stringify(flowData));
-    }, [snap.nodes, snap.edges]);
-
     return (
         <Splitter style={{height: '100%'}}>
             <Splitter.Panel defaultSize="160" min='5%' max="20%"
@@ -73,19 +51,25 @@ const FlowPage = () => {
                 <ReactFlow
                     proOptions={{hideAttribution: true}}
                     nodeTypes={nodeTypes}
-                    nodes={snap.nodes as any}
+                    nodes={snap.nodes.map(node => ({
+                        ...node,
+                        className: `${node.className} ${dropNodeIds?.includes(node.id) ? 'highlight' : ''}`
+                    } as Node))}
                     edges={snap.edges as Edge[]}
-                    onNodesChange={onNodesChange}
-                    onEdgesChange={onEdgesChange}
-                    onConnect={onConnect}
+                    onNodeDrag={onNodeDrag}
+                    onNodeDragStop={onNodeDragStop}
+                    onNodesChange={useCallback(changeNodes, [])}
+                    onEdgesChange={useCallback(changeEdges, [])}
+                    onConnect={useCallback(changeConnect, [])}
                     onDrop={onDrop}
                     onDragOver={onDragOver}
                     selectionMode={SelectionMode.Partial}
+                    selectNodesOnDrag={false}
                 >
                     <Panel position="top-right">
                         <Space>
-                            <Button onClick={onSave} color="primary" variant="outlined">运行</Button>
-                            <Button type='primary' onClick={onSave}>保存</Button>
+                            <Button onClick={saveFlow} color="primary" variant="outlined">运行</Button>
+                            <Button type='primary' onClick={saveFlow}>保存</Button>
                         </Space>
                     </Panel>
                     <Controls showInteractive={false} orientation={"horizontal"}/>
@@ -98,8 +82,6 @@ const FlowPage = () => {
 
 export default () => (
     <ReactFlowProvider>
-        <DnDProvider>
-            <FlowPage/>
-        </DnDProvider>
+        <FlowPage/>
     </ReactFlowProvider>
 );
