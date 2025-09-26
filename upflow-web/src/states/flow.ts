@@ -2,8 +2,8 @@ import {Node, Edge} from '@xyflow/react';
 import {proxy} from "valtio";
 import {nanoid} from "nanoid";
 import {getFlowApi} from "@/services/flow";
-import {NodeTypes} from "@/utils/constants";
-import {sortNodes} from "@/utils/flow";
+import {NODE_TYPE, NodeTypes} from "@/utils/constants";
+import {getAllChildrenIds, newId, sortNodes} from "@/utils/flow";
 import {message} from "antd/lib";
 
 export const state = proxy({
@@ -23,23 +23,12 @@ export const saveFlow = () => {
 }
 
 export const addNode = (type: string, position: { x: number, y: number }) => {
-    let startNode = state.nodes.find(n => n.type === 'start');
-    if (type === 'start' && startNode) {
+    let startNode = state.nodes.find(n => n.type === NODE_TYPE.START);
+    if (type === NODE_TYPE.START && startNode) {
         message.info('流程中只能有一个开始节点！');
         return;
     }
-
-    let node = NodeTypes[type];
-    const newNode: Node = {
-        id: nanoid(8),
-        type: type,
-        width: node.width,
-        height: node.height,
-        data: {...node.data},
-        extent: 'parent',
-        position,
-    };
-    state.nodes = state.nodes.concat(newNode);
+    createNode(type, position);
 }
 export const updateNode = (node: Node) => {
     let nodes = state.nodes.map(n => n.id === node.id ? node : n);
@@ -47,7 +36,8 @@ export const updateNode = (node: Node) => {
 }
 
 export const deleteNode = (nodeId: string) => {
-    let nodes = state.nodes.filter(n => n.id !== nodeId);
+    let childrenNodes = getAllChildrenIds(nodeId, state.nodes);
+    let nodes = state.nodes.filter(n => n.id !== nodeId && !childrenNodes.includes(n.id));
     let edges = state.edges.filter(e => e.source !== nodeId && e.target !== nodeId);
     state.nodes = nodes;
     state.edges = edges;
@@ -95,4 +85,31 @@ export const setEdges = (edges: Edge[]) => {
     state.edges = edges;
 }
 
+const createNode = (type: string, position: { x: number, y: number }) => {
+    let node = NodeTypes[type];
+    let id = newId();
+    let nodes: Node[] = [];
+    const newNode: Node = {
+        id, type, position,
+        width: node.width,
+        height: node.height,
+        data: {...node.data},
+        extent: 'parent',
+    };
+    nodes.push(newNode);
 
+    if (type === NODE_TYPE.FOR) {
+        let forStartNodeCfg = NodeTypes[NODE_TYPE.FOR_START];
+        const forStartNode = {
+            ...forStartNodeCfg,
+            type: NODE_TYPE.FOR_START,
+            position: forStartNodeCfg.position!,
+            data: {...forStartNodeCfg.data},
+            id: newId(),
+            parentId: id
+        };
+        nodes.push(forStartNode);
+    }
+
+    state.nodes.push(...nodes);
+}

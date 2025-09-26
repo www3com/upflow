@@ -2,8 +2,6 @@ import {Flex, Layout, theme} from "antd";
 import {memo, useState} from "react";
 import {createFromIconfontCN} from "@ant-design/icons";
 import {Handle,  Position} from "@xyflow/react";
-import styles from './styles.less'
-import {NodeTypes} from "@/utils/constants";
 import NodeWrapper from "@/pages/flow/components/NodeWrapper";
 import NodeResizeControl from "@/pages/flow/components/NodeResizeControl";
 
@@ -26,7 +24,7 @@ export default memo((props: ForNodeProps) => {
     const {token} = useToken();
     const [hovered, setHovered] = useState(false);
     return (
-        <NodeWrapper id={props.id} type={props.type} selected={props.selected} title={props.data.title}>
+        <NodeWrapper id={props.id} type={props.type} title={props.data.title}>
                 <NodeResizeControl/>
 
                 <Handle type="source" position={Position.Right}/>

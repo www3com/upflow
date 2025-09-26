@@ -49,7 +49,7 @@ export const useFlow = () => {
         // 获取拖拽节点的所有子节点ID
         const childrenIds = getAllChildrenIds(draggedNode.id, snap.nodes as readonly Node[]);
         const intersectingNodes = getIntersectingNodes(draggedNode).filter(node =>
-            NodeTypes[node.type!].isParent &&
+            NodeTypes[node.type!]?.isParent === true &&
             node.id !== draggedNode.id &&
             !childrenIds.includes(node.id)
         );
@@ -63,7 +63,7 @@ export const useFlow = () => {
         // 获取拖拽节点的所有子节点ID
         const childrenIds = getAllChildrenIds(draggedNode.id, snap.nodes as readonly Node[]);
         const intersectingNodes = getIntersectingNodes(draggedNode).filter(node =>
-            NodeTypes[node.type!].isParent &&
+            NodeTypes[node.type!]?.isParent === true &&
             node.id !== draggedNode.id &&
             !childrenIds.includes(node.id)
         );

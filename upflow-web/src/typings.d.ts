@@ -21,7 +21,7 @@ export interface Variable {
 }
 
 interface NodeDataType {
-    title: string
+    title?: string
     input?: Variable[]
     output?: Variable
     detail?: any
@@ -30,11 +30,13 @@ interface NodeDataType {
 interface NodeCfgType {
     width?: number
     height?: number
+    position?: { x: number, y: number }
     icon: string
     node: any
     attr?: any
     data: NodeDataType
     isParent?: boolean
+    draggable?: boolean
 }
 
 /**

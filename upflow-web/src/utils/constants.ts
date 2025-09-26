@@ -5,20 +5,34 @@ import EditStartNode from "@/pages/flow/components/nodes/StartNode/EditStartAttr
 import {NodeCfgType, ObjectType} from "@/typings";
 import {nanoid} from "nanoid";
 import ForNode from "@/pages/flow/components/nodes/ForNode";
+import ForStartNode from "@/pages/flow/components/nodes/ForNode/ForStartNode";
 
 export const IconFontUrl = 'https://at.alicdn.com/t/c/font_5021436_vj8jgnno7i.js';
 
+// 节点类型 key 常量
+export const NODE_TYPE = {
+    START: 'start',
+    CASE: 'case',
+    FOR: 'for',
+    FOR_START: 'for-start',
+    SCRIPT: 'script',
+    SQL: 'sql',
+    SUBFLOW: 'subflow',
+    ASSIGN: 'assign'
+} as const;
+
 export const NodeTypes: ObjectType<NodeCfgType> = {
-    'start': {
+    [NODE_TYPE.START]: {
         icon: 'icon-start',
         node: StartNode,
         attr: EditStartNode,
+        width: 220,
         data: {
             title: '开始',
             input: []
         }
     },
-    'case': {
+    [NODE_TYPE.CASE]: {
         icon: 'icon-case',
         node: ConditionNode,
         attr: null,
@@ -27,7 +41,7 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
             detail: [{id: nanoid(8), opr: 'and', conditions: []}]
         }
     },
-    'for': {
+    [NODE_TYPE.FOR]: {
         width: 400,
         height: 200,
         icon: 'icon-for',
@@ -39,7 +53,20 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
             input: []
         }
     },
-    'script': {
+    [NODE_TYPE.FOR_START]: {
+        icon: 'icon-start',
+        node: ForStartNode,
+        attr: null,
+        width: 30,
+        height: 30,
+        position: {
+            x: 10,
+            y: 50
+        },
+        data: {},
+        draggable: false
+    },
+    [NODE_TYPE.SCRIPT]: {
         icon: 'icon-script',
         node: ScriptNode,
         attr: null,
@@ -48,7 +75,7 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
             input: []
         }
     },
-    'sql': {
+    [NODE_TYPE.SQL]: {
         icon: 'icon-sql',
         node: ScriptNode,
         attr: null,
@@ -57,7 +84,7 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
             input: []
         }
     },
-    'subflow': {
+    [NODE_TYPE.SUBFLOW]: {
         icon: 'icon-subflow',
         node: ScriptNode,
         attr: null,
@@ -66,7 +93,7 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
             input: []
         }
     },
-    'assign': {
+    [NODE_TYPE.ASSIGN]: {
         icon: 'icon-assign',
         node: ScriptNode,
         attr: null,

@@ -1,4 +1,9 @@
 import {Node} from '@xyflow/react';
+import {nanoid} from "nanoid";
+
+export const newId = () => {
+    return nanoid(8);
+}
 
 // 确保父节点在子节点之前的排序函数（高性能、稳定顺序）
 export const sortNodes = (nodes: Node[]) => {
@@ -68,12 +73,12 @@ export const getAllChildrenIds = (nodeId: string, nodes: readonly Node[]): strin
 export const getNodeAbsolutePosition = (nodeId: string, nodes: readonly Node[]): { x: number; y: number } => {
     const node = nodes.find(n => n.id === nodeId);
     if (!node) {
-        return { x: 0, y: 0 };
+        return {x: 0, y: 0};
     }
 
     // 如果没有父节点，直接返回当前位置
     if (!node.parentId) {
-        return { x: node.position.x, y: node.position.y };
+        return {x: node.position.x, y: node.position.y};
     }
 
     // 递归计算父节点的绝对位置，然后加上当前节点的相对位置

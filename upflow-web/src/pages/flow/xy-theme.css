@@ -33,7 +33,6 @@
     align-items: flex-start;
     text-align: left;
     font-size: 12px;
-    min-width: 220px;
     flex-direction: column;
     border: var(--xy-node-border-default);
     color: var(--xy-node-color-default);
@@ -73,8 +72,9 @@
 
 /* 句柄 */
 .react-flow__handle {
-    width: 12px;
-    height: 12px;
+    border-radius: 2px;
+    width: 2px;
+    height: 10px;
     background-color: var(--xy-handle-background-color-default);
 }
 

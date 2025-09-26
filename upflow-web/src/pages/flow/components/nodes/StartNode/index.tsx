@@ -4,9 +4,10 @@ import {createFromIconfontCN} from "@ant-design/icons";
 import {Handle, Position} from "@xyflow/react";
 import styles from './styles.less'
 import NodeWrapper from "@/pages/flow/components/NodeWrapper";
+import {IconFontUrl} from "@/utils/constants";
 
 const IconFont = createFromIconfontCN({
-    scriptUrl: '/public/iconfont.js',
+    scriptUrl: IconFontUrl,
 });
 const {useToken} = theme;
 

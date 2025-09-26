@@ -79,12 +79,13 @@ export default {
                 "selected": false
             },  {
                 "id": "n1",
+                "type": "start",
+                "parentId": "n3",
+                "width": 220,
                 "position": {
                     "x": 100,
                     "y": 200
                 },
-                "type": "start",
-                "parentId": "n3",
                 "data": {
                     "title": "开始",
                     "input": [{
@@ -111,7 +112,7 @@ export default {
                     }]
                 },
                 "measured": {
-                    "width": 220,
+                    "width": 620,
                     "height": 115
                 },
                 "selected": false
