@@ -37,7 +37,7 @@ export default memo(({id, type, selected, data}: CaseNodeProps) => {
     }
 
     return (
-        <NodeWrapper id={id} selected={selected} type={type} title={data.title}>
+        <NodeWrapper id={id} type={type} data={data}>
             <Flex vertical gap={5} className='node-container'>
                 <Flex vertical gap={10}>
                     {data.detail && data.detail.map((item: Case, index: number) => (

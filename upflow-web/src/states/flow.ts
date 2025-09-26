@@ -6,10 +6,19 @@ import {NODE_TYPE, NodeTypes} from "@/utils/constants";
 import {getAllChildrenIds, newId, sortNodes} from "@/utils/flow";
 import {message} from "antd/lib";
 
+interface NodeSize {
+    id: string;
+    width: number,
+    height: number
+}
+
+const NodeSizeMap: Record<string, NodeSize> = {};
+
 export const state = proxy({
     nodes: [] as Node[],
     edges: [] as Edge[],
 });
+
 
 export const init = async () => {
     const res = await getFlowApi();
@@ -17,8 +26,26 @@ export const init = async () => {
     state.edges = res.data!.edges;
 }
 
+
 export const saveFlow = () => {
-    const flowData = {nodes: state.nodes, edges: state.edges};
+    // 根据 NodeSizeMap 更新 nodes 的尺寸
+    const updatedNodes = state.nodes.map(node => {
+        const savedSize = NodeSizeMap[node.id];
+        if (savedSize) {
+            return {
+                ...node,
+                width: savedSize.width,
+                height: savedSize.height
+            };
+        }
+        return node;
+    });
+
+    const flowData = {
+        nodes: updatedNodes,
+        edges: state.edges,
+        nodeSizeMap: NodeSizeMap
+    };
     console.log(JSON.stringify(flowData));
 }
 
@@ -83,6 +110,80 @@ export const setNodes = (nodes: Node[]) => {
 
 export const setEdges = (edges: Edge[]) => {
     state.edges = edges;
+}
+
+export const extendNode = (nodeId: string) => {
+    let currentNode = state.nodes.find(n => n.id === nodeId);
+    if (!currentNode) {
+        console.warn(`Node with id ${nodeId} not found`);
+        return;
+    }
+
+    let childrenNodeIds = getAllChildrenIds(nodeId, state.nodes);
+
+    // 获取当前展开状态，默认为true（展开）
+    const currentExpanded = currentNode.data?.expanded !== false;
+    const newExpanded = !currentExpanded;
+
+    // 获取节点类型配置
+    const nodeConfig = NodeTypes[currentNode.type!];
+
+    // 更新当前节点的展开状态和尺寸
+    const updatedNode = {
+        ...currentNode,
+        data: {
+            ...currentNode.data,
+            expanded: newExpanded
+        }
+    };
+
+
+    // 如果是容器节点，处理尺寸变化
+    if (nodeConfig?.isContainer) {
+        if (newExpanded) {
+            // 展开：从 map 中恢复尺寸，如果没有则使用默认尺寸
+            const savedSize = NodeSizeMap[nodeId];
+            if (savedSize) {
+                updatedNode.width = savedSize.width;
+                updatedNode.height = savedSize.height;
+            } else {
+                updatedNode.width = nodeConfig.width || currentNode.width;
+                updatedNode.height = nodeConfig.height || currentNode.height;
+            }
+        } else {
+
+            // 收起：先记录当前尺寸到 map 中，再缩小尺寸
+            NodeSizeMap[nodeId] = {
+                id: nodeId,
+                width: currentNode.width || nodeConfig.width || 220,
+                height: currentNode.height || nodeConfig.height || 100
+            };
+
+            // 缩小尺寸，只显示标题栏
+            updatedNode.width = Math.min(currentNode.width || 220, 220);
+            updatedNode.height = 40; // 只保留标题栏高度
+        }
+    }
+
+    // 更新所有子节点的隐藏状态
+    const updatedNodes = state.nodes.map(node => {
+        if (node.id === nodeId) {
+            return updatedNode;
+        }
+
+        // 处理子节点的显示/隐藏
+        if (childrenNodeIds.includes(node.id)) {
+            return {
+                ...node,
+                hidden: !newExpanded // 收起时隐藏子节点，展开时显示子节点
+            };
+        }
+
+        return node;
+    });
+
+    // 更新状态
+    state.nodes = updatedNodes;
 }
 
 const createNode = (type: string, position: { x: number, y: number }) => {

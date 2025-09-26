@@ -22,6 +22,7 @@ export interface Variable {
 
 interface NodeDataType {
     title?: string
+    isContainer: boolean
     input?: Variable[]
     output?: Variable
     detail?: any
@@ -35,7 +36,7 @@ interface NodeCfgType {
     node: any
     attr?: any
     data: NodeDataType
-    isParent?: boolean
+    isContainer?: boolean
     draggable?: boolean
 }
 

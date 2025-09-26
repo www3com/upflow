@@ -14,7 +14,7 @@ interface ScriptNodeProps {
 
 export default memo(({id, type, data}: ScriptNodeProps) => {
     return (
-        <NodeWrapper id={id} type={type} title={data.title}>
+        <NodeWrapper id={id} type={type} data={data}>
             <Handle type="target" position={Position.Left}/>
             <Handle type="source" position={Position.Right}/>
             无内容

@@ -69,7 +69,8 @@ export default {
                 "width": 936,
                 "height": 695,
                 "data": {
-                    "title": "循环对象"
+                    "title": "循环对象",
+                    "isContainer": true
                 },
                 "measured": {
                     "width": 936,
@@ -123,7 +124,8 @@ export default {
                 "height": 200,
                 "data": {
                     "title": "循环",
-                    "input": []
+                    "input": [],
+                    "isContainer": true
                 },
                 "position": {
                     "x": 344,

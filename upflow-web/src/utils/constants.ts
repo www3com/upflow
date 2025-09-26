@@ -29,7 +29,8 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
         width: 220,
         data: {
             title: '开始',
-            input: []
+            input: [],
+            isContainer: false,
         }
     },
     [NODE_TYPE.CASE]: {
@@ -38,7 +39,8 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
         attr: null,
         data: {
             title: '条件分支',
-            detail: [{id: nanoid(8), opr: 'and', conditions: []}]
+            detail: [{id: nanoid(8), opr: 'and', conditions: []}],
+            isContainer: false,
         }
     },
     [NODE_TYPE.FOR]: {
@@ -47,10 +49,11 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
         icon: 'icon-for',
         node: ForNode,
         attr: null,
-        isParent: true,
+        isContainer: true,
         data: {
             title: '循环',
-            input: []
+            input: [],
+            isContainer: true,
         }
     },
     [NODE_TYPE.FOR_START]: {
@@ -63,7 +66,7 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
             x: 10,
             y: 50
         },
-        data: {},
+        data: {isContainer: false,},
         draggable: false
     },
     [NODE_TYPE.SCRIPT]: {
@@ -72,7 +75,8 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
         attr: null,
         data: {
             title: '代码执行',
-            input: []
+            input: [],
+            isContainer: false,
         }
     },
     [NODE_TYPE.SQL]: {
@@ -81,7 +85,8 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
         attr: null,
         data: {
             title: 'SQL脚本',
-            input: []
+            input: [],
+            isContainer: false,
         }
     },
     [NODE_TYPE.SUBFLOW]: {
@@ -90,7 +95,8 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
         attr: null,
         data: {
             title: '子流程',
-            input: []
+            input: [],
+            isContainer: false,
         }
     },
     [NODE_TYPE.ASSIGN]: {
@@ -99,7 +105,8 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
         attr: null,
         data: {
             title: '变量赋值',
-            input: []
+            input: [],
+            isContainer: false,
         }
     },
 }

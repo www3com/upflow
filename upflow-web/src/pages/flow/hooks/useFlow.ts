@@ -16,9 +16,9 @@ import {getAllChildrenIds, getNodeAbsolutePosition} from "@/utils/flow";
 
 export const useFlow = () => {
     const snap = useSnapshot(state);
+    const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
     const {screenToFlowPosition, getIntersectingNodes} = useReactFlow();
     const [dropNodeIds, setDropNodeIds] = useState<string[] | null>(null);
-    const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
 
     const onNodesChange = useCallback((changes: NodeChange[]) => {
         setNodes(applyNodeChanges(changes, state.nodes));
@@ -53,7 +53,7 @@ export const useFlow = () => {
         // 获取拖拽节点的所有子节点ID
         const childrenIds = getAllChildrenIds(draggedNode.id, snap.nodes as readonly Node[]);
         const intersectingNodes = getIntersectingNodes(draggedNode).filter(node =>
-            NodeTypes[node.type!]?.isParent === true &&
+            NodeTypes[node.type!]?.isContainer === true &&
             node.id !== draggedNode.id &&
             !childrenIds.includes(node.id)
         );
@@ -67,7 +67,7 @@ export const useFlow = () => {
         // 获取拖拽节点的所有子节点ID
         const childrenIds = getAllChildrenIds(draggedNode.id, snap.nodes as readonly Node[]);
         const intersectingNodes = getIntersectingNodes(draggedNode).filter(node =>
-            NodeTypes[node.type!]?.isParent === true &&
+            NodeTypes[node.type!]?.isContainer === true &&
             node.id !== draggedNode.id &&
             !childrenIds.includes(node.id)
         );
@@ -121,8 +121,9 @@ export const useFlow = () => {
 
 
     return {
-        dropNodeIds,
         hoveredNodeId,
+        setHoveredNodeId,
+        dropNodeIds,
         onNodesChange,
         onEdgesChange,
         onConnect,
