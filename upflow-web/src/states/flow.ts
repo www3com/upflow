@@ -7,6 +7,7 @@ import {nanoid} from "nanoid";
 import {getFlowApi} from "@/services/flow";
 import {NodeTypes} from "@/utils/constants";
 import {sortNodes} from "@/utils/flow";
+import {message} from "antd/lib";
 
 export const state = proxy({
     nodes: [] as Node[],
@@ -25,6 +26,13 @@ export const saveFlow = () => {
 }
 
 export const addNode = (type: string, position: { x: number, y: number }) => {
+    let startNode = state.nodes.find(n => n.type === 'start');
+    console.log('state', startNode, type)
+    if (type === 'start' && startNode) {
+        message.info('流程中只能有一个开始节点！');
+        return;
+    }
+
     let node = NodeTypes[type];
     const newNode: Node = {
         id: nanoid(8),
