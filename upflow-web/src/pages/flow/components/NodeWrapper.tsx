@@ -3,6 +3,7 @@ import React, {memo, useState} from "react";
 import {CopyOutlined, createFromIconfontCN, DeleteOutlined, EllipsisOutlined} from "@ant-design/icons";
 import {IconFontUrl, NodeTypes} from "@/utils/constants";
 import styles from '../styles.less'
+import {cloneNode, deleteNode} from "@/states/flow";
 
 const {useToken} = theme;
 
@@ -20,24 +21,22 @@ interface NodeWrapperProps {
 
 export default memo(({children, ...restProps}: NodeWrapperProps) => {
 
-    const onDelete = (e: React.MouseEvent) => {
-        e.stopPropagation();
-
-    }
-    const onCopy = (e: React.MouseEvent) => {
-        e.stopPropagation();
-
-    }
-
     const {token} = useToken();
-
+    const onDelete = (event: React.MouseEvent<HTMLDivElement>) => {
+        deleteNode(restProps.id);
+        event.stopPropagation();
+    }
+    const onClone = (event: React.MouseEvent<HTMLDivElement>) => {
+        cloneNode(restProps.id);
+        event.stopPropagation();
+    }
     const items = [
         {key: 'del', label: <div onClick={onDelete}><DeleteOutlined/> 删除</div>},
-        {key: 'copy', label: <div onClick={onCopy}><CopyOutlined/> 拷贝</div>}];
+        {key: 'copy', label: <div onClick={onClone}><CopyOutlined/> 拷贝</div>}];
 
     return (
         <Flex vertical className={styles.nodeWrapper}>
-            <Flex justify={'space-between'} className={styles.nodeHeader}>
+            <Flex align="center" justify={'space-between'} className={styles.nodeHeader}>
                 <Flex align='center' gap={5} style={{height: 32}}>
                     <IconFont type={NodeTypes[restProps.type].icon} style={{color: token.colorPrimary, fontSize: 16}}/>
                     <span>{restProps.title}</span>

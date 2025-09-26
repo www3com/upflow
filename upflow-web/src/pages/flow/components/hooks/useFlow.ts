@@ -1,6 +1,15 @@
-import {Node, useReactFlow} from "@xyflow/react";
+import {
+    addEdge,
+    applyEdgeChanges,
+    applyNodeChanges,
+    Connection,
+    EdgeChange,
+    Node,
+    NodeChange,
+    useReactFlow
+} from "@xyflow/react";
 import React, {type MouseEvent as ReactMouseEvent, useCallback, useState} from "react";
-import {addNode, state, updateNode} from "@/states/flow";
+import {addNode, setEdges, setNodes, state, updateNode} from "@/states/flow";
 import {NodeTypes} from "@/utils/constants";
 import {useSnapshot} from "valtio";
 import {getAllChildrenIds, getNodeAbsolutePosition} from "@/utils/flow";
@@ -9,6 +18,18 @@ export const useFlow = () => {
     const snap = useSnapshot(state);
     const {screenToFlowPosition, getIntersectingNodes} = useReactFlow();
     const [dropNodeIds, setDropNodeIds] = useState<string[] | null>(null);
+
+    const onNodesChange = useCallback((changes: NodeChange[]) => {
+        setNodes(applyNodeChanges(changes, state.nodes));
+    }, []);
+
+    const onEdgesChange = useCallback((changes: EdgeChange[]) => {
+        setEdges(applyEdgeChanges(changes, state.edges));
+    }, []);
+
+    const onConnect = useCallback((connection: Connection) => {
+        setEdges(addEdge(connection, state.edges));
+    }, []);
 
     const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -89,7 +110,10 @@ export const useFlow = () => {
 
     return {
         dropNodeIds,
-        onDrop ,
+        onNodesChange,
+        onEdgesChange,
+        onConnect,
+        onDrop,
         onDragOver,
         onNodeDrag,
         onNodeDragStop,

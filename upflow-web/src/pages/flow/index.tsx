@@ -1,10 +1,7 @@
 import React, {type MouseEvent as ReactMouseEvent, useCallback, useEffect, useMemo, useState} from "react";
 import {
-    changeConnect,
-    changeEdges,
-    changeNodes,
-    init, addNode,
-    state, saveFlow, updateNode
+    init,
+    state, saveFlow,
 } from "@/states/flow";
 import {useSnapshot} from "valtio";
 import '@xyflow/react/dist/style.css';
@@ -29,7 +26,16 @@ import {useFlow} from "@/pages/flow/components/hooks/useFlow";
 const FlowPage = () => {
 
     const snap = useSnapshot(state);
-    const {onDrop, onDragOver, onNodeDrag, onNodeDragStop, dropNodeIds} = useFlow();
+    const {
+        onNodesChange,
+        onEdgesChange,
+        onConnect,
+        onDrop,
+        onDragOver,
+        onNodeDrag,
+        onNodeDragStop,
+        dropNodeIds
+    } = useFlow();
 
     useEffect(() => {
         init()
@@ -58,9 +64,9 @@ const FlowPage = () => {
                     edges={snap.edges as Edge[]}
                     onNodeDrag={onNodeDrag}
                     onNodeDragStop={onNodeDragStop}
-                    onNodesChange={useCallback(changeNodes, [])}
-                    onEdgesChange={useCallback(changeEdges, [])}
-                    onConnect={useCallback(changeConnect, [])}
+                    onNodesChange={onNodesChange}
+                    onEdgesChange={onEdgesChange}
+                    onConnect={onConnect}
                     onDrop={onDrop}
                     onDragOver={onDragOver}
                     selectionMode={SelectionMode.Partial}

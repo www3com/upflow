@@ -1,7 +1,4 @@
-import {
-    Node,
-    Edge, applyNodeChanges, NodeChange, EdgeChange, applyEdgeChanges, Connection, addEdge
-} from '@xyflow/react';
+import {Node, Edge} from '@xyflow/react';
 import {proxy} from "valtio";
 import {nanoid} from "nanoid";
 import {getFlowApi} from "@/services/flow";
@@ -27,7 +24,6 @@ export const saveFlow = () => {
 
 export const addNode = (type: string, position: { x: number, y: number }) => {
     let startNode = state.nodes.find(n => n.type === 'start');
-    console.log('state', startNode, type)
     if (type === 'start' && startNode) {
         message.info('流程中只能有一个开始节点！');
         return;
@@ -50,18 +46,53 @@ export const updateNode = (node: Node) => {
     state.nodes = sortNodes(nodes)
 }
 
+export const deleteNode = (nodeId: string) => {
+    let nodes = state.nodes.filter(n => n.id !== nodeId);
+    let edges = state.edges.filter(e => e.source !== nodeId && e.target !== nodeId);
+    state.nodes = nodes;
+    state.edges = edges;
+}
+
+export const cloneNode = (nodeId: string) => {
+    // 找到要克隆的节点
+    const sourceNode = state.nodes.find(n => n.id === nodeId);
+    if (!sourceNode) {
+        message.error('未找到要克隆的节点！');
+        return;
+    }
+
+    // 检查是否为开始节点，开始节点不能克隆
+    if (sourceNode.type === 'start') {
+        message.info('开始节点不能被克隆！');
+        return;
+    }
+
+    // 深拷贝节点数据
+    const clonedData = JSON.parse(JSON.stringify(sourceNode.data));
+
+    // 创建克隆节点，位置稍微偏移避免重叠
+    const clonedNode: Node = {
+        ...sourceNode,
+        id: nanoid(8),
+        data: clonedData,
+        zIndex: sourceNode.zIndex! + 1,
+        selected: false,
+        position: {
+            x: sourceNode.position.x + 50, // 向右偏移50px
+            y: sourceNode.position.y + 50  // 向下偏移50px
+        }
+    };
+
+    // 添加克隆节点到状态中
+    state.nodes = state.nodes.concat(clonedNode);
+}
+
 export const setNodes = (nodes: Node[]) => {
     state.nodes = nodes;
 }
 
-export const changeNodes = (changes: NodeChange[]) => {
-    state.nodes = applyNodeChanges(changes, state.nodes);
+export const setEdges = (edges: Edge[]) => {
+    state.edges = edges;
 }
 
-export const changeEdges = (changes: EdgeChange[]) => {
-    state.edges = applyEdgeChanges(changes, state.edges);
-}
 
-export const changeConnect = (connection: Connection) => {
-    state.edges = addEdge(connection, state.edges);
-}

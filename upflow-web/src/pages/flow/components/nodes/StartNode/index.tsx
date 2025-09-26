@@ -22,6 +22,9 @@ interface StartNodeProps {
 
 export default memo(({id, type, data}: StartNodeProps) => {
     const {token} = useToken();
+    if (data.input.length == 0) {
+        return <NodeWrapper id={id} type={type} title={data.title}/>
+    }
     return (
         <NodeWrapper id={id} type={type} title={data.title}>
             <Flex vertical className='node-container' gap={10}>
