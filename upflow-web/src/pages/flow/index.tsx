@@ -66,7 +66,7 @@ const FlowPage = () => {
                     } as Node))}
                     edges={snap.edges.map(edge => ({
                         ...edge,
-                        className: `${edge.className} ${snap.hoveredNodeId && (edge.source === hoveredNodeId || edge.target === hoveredNodeId) && 'edge-hovered'}`
+                        className: `${edge.className} ${hoveredNodeId && (edge.source === hoveredNodeId || edge.target === hoveredNodeId) && 'edge-hovered'}`
                     } as Edge))}
                     onNodeDrag={onNodeDrag}
                     onNodeDragStop={onNodeDragStop}
