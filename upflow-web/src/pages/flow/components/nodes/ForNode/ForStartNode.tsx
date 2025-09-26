@@ -1,5 +1,5 @@
 import {createFromIconfontCN} from "@ant-design/icons";
-import {Flex, Space, theme} from "antd";
+import {Flex,  theme} from "antd";
 import {IconFontUrl} from "@/utils/constants";
 import {Handle, Position} from "@xyflow/react";
 
