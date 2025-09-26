@@ -20,7 +20,7 @@ import {
     SelectionMode
 } from "@xyflow/react";
 import {NodeTypes} from "@/utils/constants";
-import {useFlow} from "@/pages/flow/components/hooks/useFlow";
+import {useFlow} from "@/pages/flow/hooks/useFlow";
 
 
 const FlowPage = () => {
@@ -34,7 +34,10 @@ const FlowPage = () => {
         onDragOver,
         onNodeDrag,
         onNodeDragStop,
-        dropNodeIds
+        onNodeMouseEnter,
+        onNodeMouseLeave,
+        dropNodeIds,
+        hoveredNodeId
     } = useFlow();
 
     useEffect(() => {
@@ -59,11 +62,16 @@ const FlowPage = () => {
                     nodeTypes={nodeTypes}
                     nodes={snap.nodes.map(node => ({
                         ...node,
-                        className: `${node.className} ${dropNodeIds?.includes(node.id) ? 'highlight' : ''}`
+                        className: `${node.className} ${dropNodeIds?.includes(node.id) ? 'highlight' : ''} ${hoveredNodeId === node.id ? 'node-hovered' : ''}`
                     } as Node))}
-                    edges={snap.edges as Edge[]}
+                    edges={snap.edges.map(edge => ({
+                        ...edge,
+                        className: `${edge.className || ''} ${hoveredNodeId && (edge.source === hoveredNodeId || edge.target === hoveredNodeId) ? 'edge-hovered' : ''}`
+                    } as Edge))}
                     onNodeDrag={onNodeDrag}
                     onNodeDragStop={onNodeDragStop}
+                    onNodeMouseEnter={onNodeMouseEnter}
+                    onNodeMouseLeave={onNodeMouseLeave}
                     onNodesChange={onNodesChange}
                     onEdgesChange={onEdgesChange}
                     onConnect={onConnect}

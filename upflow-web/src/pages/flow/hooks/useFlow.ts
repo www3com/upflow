@@ -18,6 +18,7 @@ export const useFlow = () => {
     const snap = useSnapshot(state);
     const {screenToFlowPosition, getIntersectingNodes} = useReactFlow();
     const [dropNodeIds, setDropNodeIds] = useState<string[] | null>(null);
+    const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
 
     const onNodesChange = useCallback((changes: NodeChange[]) => {
         setNodes(applyNodeChanges(changes, state.nodes));
@@ -46,6 +47,9 @@ export const useFlow = () => {
     }, [screenToFlowPosition]);
 
     const onNodeDrag = useCallback((event: any, draggedNode: Node) => {
+        // 清除悬停状态，移除 node-hovered 样式
+        setHoveredNodeId(null);
+        
         // 获取拖拽节点的所有子节点ID
         const childrenIds = getAllChildrenIds(draggedNode.id, snap.nodes as readonly Node[]);
         const intersectingNodes = getIntersectingNodes(draggedNode).filter(node =>
@@ -107,9 +111,18 @@ export const useFlow = () => {
         console.log('onNodeDragStop3', draggedNode)
     }, [snap.nodes]);
 
+    const onNodeMouseEnter = useCallback((event: ReactMouseEvent, node: Node) => {
+        setHoveredNodeId(node.id);
+    }, []);
+
+    const onNodeMouseLeave = useCallback((event: ReactMouseEvent, node: Node) => {
+        setHoveredNodeId(null);
+    }, []);
+
 
     return {
         dropNodeIds,
+        hoveredNodeId,
         onNodesChange,
         onEdgesChange,
         onConnect,
@@ -117,5 +130,7 @@ export const useFlow = () => {
         onDragOver,
         onNodeDrag,
         onNodeDragStop,
+        onNodeMouseEnter,
+        onNodeMouseLeave,
     }
 }

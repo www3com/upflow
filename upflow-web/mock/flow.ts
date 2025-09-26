@@ -69,7 +69,7 @@ export default {
                 "width": 936,
                 "height": 695,
                 "data": {
-                    "title": "Node 3"
+                    "title": "循环对象"
                 },
                 "measured": {
                     "width": 936,

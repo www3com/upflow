@@ -65,19 +65,72 @@
     box-shadow: var(--xy-node-boxshadow-default);
 }
 
+/* 边 */
+
 .react-flow__edge.selectable:hover .react-flow__edge-path,
 .react-flow__edge.selectable.selected .react-flow__edge-path {
     stroke: var(--xy-theme-edge-hover);
 }
 
+/* 节点hover时连接边的样式 */
+.react-flow__edge.edge-hovered .react-flow__edge-path {
+    stroke: var(--xy-theme-edge-hover);
+    stroke-width: 1px;
+    /* filter: drop-shadow(0 0 6px rgba(22, 119, 255, 0.4));
+    transition: all 0.2s ease; */
+}
+
+.react-flow__edge.edge-hovered .react-flow__edge-text {
+    fill: var(--xy-theme-edge-hover);
+    font-weight: 600;
+}
+
 /* 句柄 */
 .react-flow__handle {
     border-radius: 2px;
+    min-width: 1px!important;
     width: 2px;
     height: 10px;
-    background-color: var(--xy-handle-background-color-default);
+    background-color: var(--xy-theme-edge-hover);
+    border: 1px solid var(--xy-theme-edge-hover);
+    transition: all 0.2s ease;
 }
 
+/* 端点往外移动2px */
+.react-flow__handle.react-flow__handle-top {
+    top: -2px;
+}
+
+.react-flow__handle.react-flow__handle-bottom {
+    bottom: -2px;
+}
+
+.react-flow__handle.react-flow__handle-left {
+    left: -2px;
+}
+
+.react-flow__handle.react-flow__handle-right {
+    right: -2px;
+}
+
+/* 节点hover时的端点样式 */
+.react-flow__node.node-hovered .react-flow__handle {
+    background-color: var(--xy-theme-edge-hover);;
+    border-color: var(--xy-theme-edge-hover);
+    width: 16px;
+    height: 16px;
+    /* color: fff; */
+    background-image: url('../../../public/node-hanle-hovered.svg');
+    background-size: 10px 10px;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    /* box-shadow: 0 0 8px rgba(22, 119, 255, 0.4); */        
+}
+.react-flow__node .react-flow__handle:hover{
+    width: 20px;
+    height: 20px;
+}
 
 .react-flow__handle.connectionindicator:hover {
     pointer-events: all;
