@@ -1,9 +1,8 @@
-import {Card, Flex, Space, theme} from "antd";
+import {Flex, Space, theme} from "antd";
 import {memo} from "react";
 import {createFromIconfontCN} from "@ant-design/icons";
 import {Handle, Position} from "@xyflow/react";
 import styles from './styles.less'
-import {NodeTypes} from "@/utils/constants";
 import NodeWrapper from "@/pages/flow/components/NodeWrapper";
 
 const IconFont = createFromIconfontCN({
@@ -29,7 +28,7 @@ export default memo(({id, type, data}: StartNodeProps) => {
         <NodeWrapper id={id} type={type} title={data.title}>
             <Flex vertical className='node-container' gap={10}>
                 <Flex vertical gap={5}>
-                    {data.input.map((item: any, index: number) => (
+                    {data.input.map((item: any) => (
                         <Flex justify="space-between" align="center" className={styles.variable} key={item.name}>
                             <Space size={3}><IconFont type="icon-variable"
                                                       style={{color: token.colorPrimary}}/>{item.name}</Space>

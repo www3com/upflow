@@ -1,4 +1,4 @@
-import React, {type MouseEvent as ReactMouseEvent, useCallback, useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo} from "react";
 import {
     init,
     state, saveFlow,
@@ -17,7 +17,7 @@ import {
     Panel,
     ReactFlow,
     ReactFlowProvider,
-    SelectionMode, useReactFlow
+    SelectionMode
 } from "@xyflow/react";
 import {NodeTypes} from "@/utils/constants";
 import {useFlow} from "@/pages/flow/components/hooks/useFlow";
