@@ -1,11 +1,8 @@
-import {theme} from "antd";
-import {memo, useState} from "react";
-import {createFromIconfontCN} from "@ant-design/icons";
+import {memo} from "react";
 import {Handle,  Position} from "@xyflow/react";
 import NodeWrapper from "@/pages/flow/components/NodeWrapper";
 import NodeResizeControl from "@/pages/flow/components/NodeResizeControl";
 
-const {useToken} = theme;
 
 interface ForNodeProps {
     id: string,
