@@ -9,10 +9,11 @@ import {
     useReactFlow
 } from "@xyflow/react";
 import React, {type MouseEvent as ReactMouseEvent, useCallback, useState} from "react";
-import {addNode, setEdges, setNodes, state, updateNode} from "@/states/flow";
+import {addNode, setEdges, setNodes, setSelectedNode, state, updateNode} from "@/states/flow";
 import {NodeTypes} from "@/utils/constants";
 import {useSnapshot} from "valtio";
 import {getAllChildrenIds, getNodeAbsolutePosition} from "@/utils/flow";
+import {NodeType} from "@/typings";
 
 export const useFlow = () => {
     const snap = useSnapshot(state);
@@ -21,6 +22,25 @@ export const useFlow = () => {
     const [dropNodeIds, setDropNodeIds] = useState<string[] | null>(null);
 
     const onNodesChange = useCallback((changes: NodeChange[]) => {
+        // 检测选择状态变化
+        const selectChanges = changes.filter(change => change.type === 'select');
+        
+        if (selectChanges.length > 0) {
+            // 找到被选中的节点
+            const selectedChange = selectChanges.find(change => change.selected === true);
+            
+            if (selectedChange) {
+                // 找到对应的节点并更新 selectedNode
+                const selectedNode = state.nodes.find(node => node.id === selectedChange.id);
+                if (selectedNode) {
+                    setSelectedNode(selectedNode as NodeType);
+                }
+            } else {
+                // 如果没有节点被选中，清空 selectedNode
+                setSelectedNode(null);
+            }
+        }
+        
         setNodes(applyNodeChanges(changes, state.nodes));
     }, []);
 
@@ -53,7 +73,7 @@ export const useFlow = () => {
         // 获取拖拽节点的所有子节点ID
         const childrenIds = getAllChildrenIds(draggedNode.id, snap.nodes as readonly Node[]);
         const intersectingNodes = getIntersectingNodes(draggedNode).filter(node =>
-            NodeTypes[node.type!]?.isContainer === true &&
+            NodeTypes[node.type!]?.data.group === true &&
             node.id !== draggedNode.id &&
             !childrenIds.includes(node.id)
         );
@@ -67,7 +87,7 @@ export const useFlow = () => {
         // 获取拖拽节点的所有子节点ID
         const childrenIds = getAllChildrenIds(draggedNode.id, snap.nodes as readonly Node[]);
         const intersectingNodes = getIntersectingNodes(draggedNode).filter(node =>
-            NodeTypes[node.type!]?.isContainer === true &&
+            NodeTypes[node.type!]?.data.group === true &&
             node.id !== draggedNode.id &&
             !childrenIds.includes(node.id)
         );

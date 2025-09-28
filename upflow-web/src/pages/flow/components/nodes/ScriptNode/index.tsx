@@ -1,20 +1,11 @@
 import {memo} from "react";
-import {FunctionOutlined} from "@ant-design/icons";
 import {Handle, Position} from "@xyflow/react";
 import NodeWrapper from "@/pages/flow/components/NodeWrapper";
+import {NodeType} from "@/typings";
 
-interface ScriptNodeProps {
-    id: string;
-    type: string;
-    data: {
-        title: string,
-        input: []
-    }
-}
-
-export default memo(({id, type, data}: ScriptNodeProps) => {
+export default memo((node: NodeType) => {
     return (
-        <NodeWrapper id={id} type={type} data={data}>
+        <NodeWrapper node={node}>
             <Handle type="target" position={Position.Left}/>
             <Handle type="source" position={Position.Right}/>
             无内容

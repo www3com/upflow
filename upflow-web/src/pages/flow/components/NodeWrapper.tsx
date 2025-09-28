@@ -10,6 +10,7 @@ import {
 import {IconFontUrl, NodeTypes} from "@/utils/constants";
 import styles from '../styles.less'
 import {cloneNode, deleteNode, extendNode} from "@/states/flow";
+import {NodeType} from "@/typings";
 
 
 const {useToken} = theme;
@@ -20,32 +21,28 @@ const IconFont = createFromIconfontCN({
 
 
 interface NodeWrapperProps {
-    id: string,
-    type: string,
+    node: NodeType,
     children?: React.ReactNode,
-    data?: any, // 添加data属性以获取节点状态
-    onExpand?: (expanded: boolean) => void,
 }
 
-export default memo(({children, ...restProps}: NodeWrapperProps) => {
+export default memo(({node, children}: NodeWrapperProps) => {
+    console.log('NodeWrapper render', node);
     // 从节点数据中获取展开状态，默认为true（展开）
-    const expanded = restProps.data?.expanded !== false;
+    const expanded = node.data.expanded !== false;
     const {token} = useToken();
     
     const onDelete = (event: React.MouseEvent<HTMLDivElement>) => {
-        deleteNode(restProps.id);
+        deleteNode(node.id);
         event.stopPropagation();
     }
     const onClone = (event: React.MouseEvent<HTMLDivElement>) => {
-        cloneNode(restProps.id);
+        cloneNode(node.id);
         event.stopPropagation();
     }
     
     // 处理展开/收起点击
     const onToggleExpand = (event: React.MouseEvent<HTMLButtonElement>) => {
-        // setHoveredNodeId(null)
-        extendNode(restProps.id);
-        restProps.onExpand?.(expanded);
+        extendNode(node.id);
         event.stopPropagation();
     }
     
@@ -62,11 +59,11 @@ export default memo(({children, ...restProps}: NodeWrapperProps) => {
         <Flex vertical className={styles.nodeWrapper}>
             <Flex align="center" justify={'space-between'} className={styles.nodeHeader}>
                 <Flex align='center' gap={5} style={{height: 32}}>
-                    <IconFont type={NodeTypes[restProps.type].icon} style={{color: token.colorPrimary, fontSize: 16}}/>
-                    <span>{restProps.data.title}</span>
+                    <IconFont type={NodeTypes[node.type].icon} style={{color: token.colorPrimary, fontSize: 16}}/>
+                    <span>{node.data.title}</span>
                 </Flex>
                 <Space size={0} className={styles.nodeActionBtn}>
-                    {restProps.data.isContainer && expandNode}
+                    {node.data.group && expandNode}
                     <Dropdown menu={{items}} placement="bottom" arrow>
                         <Button type='text' size='small' icon={<EllipsisOutlined/>}/>
                     </Dropdown>

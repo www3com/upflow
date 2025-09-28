@@ -7,6 +7,41 @@ interface ListItemType {
     value: number | string
 }
 
+interface NodeDataType {
+    title?: string
+    input?: Variable[]
+    output?: Variable
+    detail?: any
+    group?: boolean
+    expanded?: boolean
+}
+
+interface NodeType {
+    id: string
+    type: string
+    position: { x: number, y: number }
+    data: NodeDataType
+    width?: number
+    height?: number
+    dragging?: boolean
+    draggable?: boolean
+}
+
+interface NodeCfgType {
+    icon: string
+    node: any
+    data: NodeDataType
+    width?: number
+    height?: number
+    position?: { x: number, y: number }
+    attr?: any
+    dragging?: boolean
+    draggable?: boolean
+}
+
+/**
+ * 开始节点
+ */
 export interface Rule {
     type: string,
     value?: string | boolean,
@@ -18,26 +53,6 @@ export interface Variable {
     type: string,
     value: string
     rules?: Rule[]
-}
-
-interface NodeDataType {
-    title?: string
-    isContainer: boolean
-    input?: Variable[]
-    output?: Variable
-    detail?: any
-}
-
-interface NodeCfgType {
-    width?: number
-    height?: number
-    position?: { x: number, y: number }
-    icon: string
-    node: any
-    attr?: any
-    data: NodeDataType
-    isContainer?: boolean
-    draggable?: boolean
 }
 
 /**

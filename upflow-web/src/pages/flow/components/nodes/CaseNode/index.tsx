@@ -1,47 +1,39 @@
-import {Card, Flex, Input, Space, theme} from "antd";
+import { Flex, Space, theme} from "antd";
 import React, {memo} from "react";
 import styles from "./styles.less";
 import {Handle, Position} from "@xyflow/react";
-import {CompareOprType, NodeTypes} from "@/utils/constants";
+import {CompareOprType} from "@/utils/constants";
 import {createFromIconfontCN} from "@ant-design/icons";
-import {Case} from "@/typings";
+import {Case, NodeType} from "@/typings";
 import NodeWrapper from "@/pages/flow/components/NodeWrapper";
+
 const {useToken} = theme;
 const IconFont = createFromIconfontCN({
     scriptUrl: '/public/iconfont.js',
 });
 
-interface CaseNodeProps {
-    id: string,
-    type: string,
-    selected: boolean,
-    data: {
-        title: string,
-        detail: Case[]
-    }
-}
 
-export default memo(({id, type, selected, data}: CaseNodeProps) => {
+export default memo((node: NodeType) => {
     const {token} = useToken();
     const handles = () => {
         let handles = [];
         let height = 45;
-        for (const caseItem of data.detail) {
+        for (const caseItem of node.data.detail) {
             handles.push(<Handle type="source" position={Position.Right} id={caseItem.id} style={{top: height}}
                                  key={caseItem.id}/>)
             let caseHeight = 19 + caseItem.conditions.length * 26;
             height += caseHeight;
         }
-        handles.push(<Handle type="source" position={Position.Right} id={id} style={{top: height}} key={id}/>)
+        handles.push(<Handle type="source" position={Position.Right} id={node.id} style={{top: height}} key={node.id}/>)
         return handles;
     }
 
     return (
-        <NodeWrapper id={id} type={type} data={data}>
+        <NodeWrapper node={node}>
             <Flex vertical gap={5} className='node-container'>
                 <Flex vertical gap={10}>
-                    {data.detail && data.detail.map((item: Case, index: number) => (
-                        <CaseCom key={index} count={data.detail.length} index={index} item={item}/>
+                    {node.data.detail && node.data.detail.map((item: Case, index: number) => (
+                        <CaseCom key={index} count={node.data.detail.length} index={index} item={item}/>
                     ))}
                 </Flex>
                 <Flex justify={'end'}>

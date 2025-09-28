@@ -21,6 +21,7 @@ import {
 } from "@xyflow/react";
 import {NodeTypes} from "@/utils/constants";
 import {useFlow} from "@/pages/flow/hooks/useFlow";
+import AttributePanel from "@/pages/flow/components/AttributePanel";
 
 
 const FlowPage = () => {
@@ -86,6 +87,7 @@ const FlowPage = () => {
                             <Button type='primary' onClick={saveFlow}>保存</Button>
                         </Space>
                     </Panel>
+                    <AttributePanel/>
                     <Controls showInteractive={false} orientation={"horizontal"}/>
                     <Background variant={BackgroundVariant.Dots} gap={12} size={1}/>
                 </ReactFlow>

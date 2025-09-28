@@ -45,7 +45,6 @@
     box-shadow: 0 0 10px rgba(24, 144, 255, 0.3) !important;
 }
 
-
 .react-flow__node.selectable:focus {
     box-shadow: 0 0 0 4px var(--xy-theme-color-focus);
     border-color: #d9d9d9;

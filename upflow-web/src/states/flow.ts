@@ -5,6 +5,7 @@ import {getFlowApi} from "@/services/flow";
 import {NODE_TYPE, NodeTypes} from "@/utils/constants";
 import {getAllChildrenIds, newId, sortNodes} from "@/utils/flow";
 import {message} from "antd/lib";
+import {NodeType} from "@/typings";
 
 interface NodeSize {
     id: string;
@@ -17,6 +18,7 @@ const NodeSizeMap: Record<string, NodeSize> = {};
 export const state = proxy({
     nodes: [] as Node[],
     edges: [] as Edge[],
+    selectedNode: null as NodeType | null,
 });
 
 
@@ -26,6 +28,9 @@ export const init = async () => {
     state.edges = res.data!.edges;
 }
 
+export const setSelectedNode = (node: NodeType | null) => {
+    state.selectedNode = node;
+}
 
 export const saveFlow = () => {
     // 根据 NodeSizeMap 更新 nodes 的尺寸
@@ -139,7 +144,7 @@ export const extendNode = (nodeId: string) => {
 
 
     // 如果是容器节点，处理尺寸变化
-    if (nodeConfig?.isContainer) {
+    if (nodeConfig?.data.group) {
         if (newExpanded) {
             // 展开：从 map 中恢复尺寸，如果没有则使用默认尺寸
             const savedSize = NodeSizeMap[nodeId];
