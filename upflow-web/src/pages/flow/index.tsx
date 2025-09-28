@@ -1,7 +1,7 @@
-import React, {useEffect, useMemo} from "react";
+import React, {useEffect, useMemo, useState, useCallback} from "react";
 import {
     init,
-    state, saveFlow,
+    state, saveFlow, addNode, addComment, exportDSL, importDSL,
 } from "@/states/flow";
 import {useSnapshot} from "valtio";
 import '@xyflow/react/dist/style.css';
@@ -16,15 +16,23 @@ import {
     Panel,
     ReactFlow,
     ReactFlowProvider,
-    SelectionMode
+    SelectionMode,
+    useReactFlow
 } from "@xyflow/react";
-import {NodeTypes} from "@/utils/constants";
+import {NodeTypes} from "@/utils/nodeTypes";
 import {useFlow} from "@/pages/flow/hooks/useFlow";
 import AttributePanel from "@/pages/flow/components/AttributePanel";
 import ZoomControl from "@/pages/flow/components/ZoomControl";
+import ContextMenu from "@/pages/flow/components/ContextMenu";
 
 
 const FlowPage = () => {
+    const [contextMenu, setContextMenu] = useState({
+        visible: false,
+        position: {x: 0, y: 0},
+    });
+
+    const {screenToFlowPosition} = useReactFlow();
 
     const snap = useSnapshot(state);
     const {
@@ -51,6 +59,25 @@ const FlowPage = () => {
             Object.entries(NodeTypes).map(([key, value]) => [key, value.node])
         );
     }, []);
+
+    const handleContextMenu = useCallback((event: React.MouseEvent) => {
+        event.preventDefault();
+        setContextMenu({visible: true, position: {x: event.clientX, y: event.clientY}});
+    }, []);
+
+    const handleCloseContextMenu = useCallback(() => {
+        setContextMenu({visible: false, position: {x: 0, y: 0}});
+    }, []);
+
+    const handleAddNode = useCallback((nodeType: string) => {
+        const flowPosition = screenToFlowPosition(contextMenu.position);
+        addNode(nodeType, flowPosition);
+    }, [screenToFlowPosition, contextMenu.position]);
+
+    const handleAddComment = useCallback(() => {
+        const flowPosition = screenToFlowPosition(contextMenu.position);
+        addComment(flowPosition);
+    }, [screenToFlowPosition, contextMenu.position]);
 
     return (
         <Splitter style={{height: '100%'}}>
@@ -82,6 +109,7 @@ const FlowPage = () => {
                     isValidConnection={onValidConnection}
                     selectionMode={SelectionMode.Partial}
                     selectNodesOnDrag={false}
+                    onContextMenu={handleContextMenu}
                 >
                     <Panel position="top-right">
                         <Space>
@@ -93,6 +121,16 @@ const FlowPage = () => {
                     <ZoomControl/>
                     <Background variant={BackgroundVariant.Dots} gap={12} size={1}/>
                 </ReactFlow>
+                <ContextMenu
+                    visible={contextMenu.visible}
+                    position={contextMenu.position}
+                    onClose={handleCloseContextMenu}
+                    onContextMenu={handleContextMenu}
+                    onAddNode={handleAddNode}
+                    onAddComment={handleAddComment}
+                    onExportDSL={exportDSL}
+                    onImportDSL={importDSL}
+                />
             </Splitter.Panel>
         </Splitter>
     );

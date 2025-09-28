@@ -10,7 +10,7 @@ import {
 } from "@xyflow/react";
 import React, {type MouseEvent as ReactMouseEvent, useCallback, useState} from "react";
 import {addNode, setEdges, setNodes, setSelectedNode, state, updateNode} from "@/states/flow";
-import {NodeTypes} from "@/utils/constants";
+import {NodeTypes} from "@/utils/nodeTypes";
 import {useSnapshot} from "valtio";
 import {getAllChildrenIds, getNodeAbsolutePosition} from "@/utils/flow";
 import {NodeType} from "@/typings";

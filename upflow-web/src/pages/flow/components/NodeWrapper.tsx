@@ -7,7 +7,8 @@ import {
     DownCircleOutlined,
     EllipsisOutlined, UpCircleOutlined
 } from "@ant-design/icons";
-import {IconFontUrl, NodeTypes} from "@/utils/constants";
+import {NodeTypes} from "@/utils/nodeTypes";
+import {IconFontUrl} from "@/utils/constants";
 import styles from '../styles.less'
 import {cloneNode, deleteNode, extendNode} from "@/states/flow";
 import {NodeType} from "@/typings";
@@ -26,7 +27,6 @@ interface NodeWrapperProps {
 }
 
 export default memo(({node, children}: NodeWrapperProps) => {
-    console.log('NodeWrapper render', node);
     // 从节点数据中获取展开状态，默认为true（展开）
     const expanded = node.data.expanded !== false;
     const {token} = useToken();
