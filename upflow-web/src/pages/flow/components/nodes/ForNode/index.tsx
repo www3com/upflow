@@ -8,7 +8,7 @@ import {NodeType} from "@/typings";
 export default memo((node: NodeType) => {
     return (
         <NodeWrapper node={node}>
-            {node.data.expanded && (<NodeResizeControl/>)}
+            {node.data.group && (<NodeResizeControl/>)}
             <Handle type="source" position={Position.Right}/>
             <Handle type="target" position={Position.Left}/>
             <Handle type="source" position={Position.Right}/>
