@@ -12,7 +12,6 @@ import {
     Node,
     Background,
     BackgroundVariant,
-    Controls,
     Edge,
     Panel,
     ReactFlow,
@@ -22,6 +21,7 @@ import {
 import {NodeTypes} from "@/utils/constants";
 import {useFlow} from "@/pages/flow/hooks/useFlow";
 import AttributePanel from "@/pages/flow/components/AttributePanel";
+import ZoomControl from "@/pages/flow/components/ZoomControl";
 
 
 const FlowPage = () => {
@@ -37,6 +37,7 @@ const FlowPage = () => {
         onNodeDragStop,
         onNodeMouseEnter,
         onNodeMouseLeave,
+        onValidConnection,
         dropNodeIds,
         hoveredNodeId
     } = useFlow();
@@ -78,6 +79,7 @@ const FlowPage = () => {
                     onConnect={onConnect}
                     onDrop={onDrop}
                     onDragOver={onDragOver}
+                    isValidConnection={onValidConnection}
                     selectionMode={SelectionMode.Partial}
                     selectNodesOnDrag={false}
                 >
@@ -88,7 +90,7 @@ const FlowPage = () => {
                         </Space>
                     </Panel>
                     <AttributePanel/>
-                    <Controls showInteractive={false} orientation={"horizontal"}/>
+                    <ZoomControl/>
                     <Background variant={BackgroundVariant.Dots} gap={12} size={1}/>
                 </ReactFlow>
             </Splitter.Panel>

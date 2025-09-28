@@ -2,8 +2,8 @@ import {
     addEdge,
     applyEdgeChanges,
     applyNodeChanges,
-    Connection,
-    EdgeChange,
+    Connection, Edge,
+    EdgeChange, getOutgoers,
     Node,
     NodeChange,
     useReactFlow
@@ -24,11 +24,11 @@ export const useFlow = () => {
     const onNodesChange = useCallback((changes: NodeChange[]) => {
         // 检测选择状态变化
         const selectChanges = changes.filter(change => change.type === 'select');
-        
+
         if (selectChanges.length > 0) {
             // 找到被选中的节点
             const selectedChange = selectChanges.find(change => change.selected === true);
-            
+
             if (selectedChange) {
                 // 找到对应的节点并更新 selectedNode
                 const selectedNode = state.nodes.find(node => node.id === selectedChange.id);
@@ -40,7 +40,7 @@ export const useFlow = () => {
                 setSelectedNode(null);
             }
         }
-        
+
         setNodes(applyNodeChanges(changes, state.nodes));
     }, []);
 
@@ -69,7 +69,7 @@ export const useFlow = () => {
     const onNodeDrag = useCallback((event: any, draggedNode: Node) => {
         // 清除悬停状态，移除 node-hovered 样式
         setHoveredNodeId(null);
-        
+
         // 获取拖拽节点的所有子节点ID
         const childrenIds = getAllChildrenIds(draggedNode.id, snap.nodes as readonly Node[]);
         const intersectingNodes = getIntersectingNodes(draggedNode).filter(node =>
@@ -139,6 +139,23 @@ export const useFlow = () => {
         setHoveredNodeId(null);
     }, []);
 
+    const onValidConnection = useCallback((connection: Edge | Connection) => {
+        const target = snap.nodes.find((node) => node.id === connection.target);
+        if (!target) return false;
+        const hasCycle = (node: Node, visited = new Set()) => {
+            if (visited.has(node.id)) return false;
+
+            visited.add(node.id);
+
+            for (const outgoer of getOutgoers(node, snap.nodes as Node[], snap.edges as Edge[])) {
+                if (outgoer.id === connection.source) return true;
+                if (hasCycle(outgoer, visited)) return true;
+            }
+        };
+
+        if (target.id === connection.source) return false;
+        return !hasCycle(target as Node);
+    }, [snap.nodes, snap.edges])
 
     return {
         hoveredNodeId,
@@ -153,5 +170,6 @@ export const useFlow = () => {
         onNodeDragStop,
         onNodeMouseEnter,
         onNodeMouseLeave,
+        onValidConnection,
     }
 }

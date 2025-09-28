@@ -49,7 +49,6 @@ export const saveFlow = () => {
     const flowData = {
         nodes: updatedNodes,
         edges: state.edges,
-        nodeSizeMap: NodeSizeMap
     };
     console.log(JSON.stringify(flowData));
 }
