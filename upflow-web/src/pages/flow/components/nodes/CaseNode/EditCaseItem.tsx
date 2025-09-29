@@ -239,7 +239,7 @@ export default function EditCaseItem({
         >
             <Form form={currentForm} onValuesChange={handleFormChange}>
                 <Form.List name="conditions">
-                    {(fields, {_, remove}) => (
+                    {(fields, {remove}) => (
                         <Flex vertical gap={5}>
                             {fields.length === 0 ? (
                                 <span style={{color: token.colorTextSecondary, fontStyle: 'italic'}}>

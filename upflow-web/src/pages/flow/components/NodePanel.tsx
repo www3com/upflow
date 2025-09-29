@@ -26,7 +26,9 @@ export default () => {
     return (
         <Card title='组件面板' variant='borderless' size='small' className={styles.noBorderCard}>
             <Flex wrap gap={4}>
-                {Object.keys(NodeTypes).map((nodeType) => (
+                {Object.keys(NodeTypes)
+                    .filter(nodeType => !NodeTypes[nodeType].data.hidden)
+                    .map((nodeType) => (
                     <Flex vertical draggable align={'center'} justify={'center'} gap={5} key={nodeType}
                           className={styles.draggableNode}
                           onDragStart={(event) => onDragStart(event, nodeType)}
