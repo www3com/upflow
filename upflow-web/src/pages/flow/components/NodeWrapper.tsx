@@ -10,7 +10,7 @@ import {
 import {NodeTypes} from "@/utils/nodeTypes";
 import {IconFontUrl} from "@/utils/constants";
 import styles from '../styles.less'
-import {cloneNode, deleteNode, extendNode} from "@/states/flow";
+import {cloneNode, deleteNode, extendNode, setHoveredNodeId} from "@/states/flow";
 import {NodeType} from "@/typings";
 
 
@@ -43,6 +43,8 @@ export default memo(({node, children}: NodeWrapperProps) => {
     // 处理展开/收起点击
     const onToggleExpand = (event: React.MouseEvent<HTMLButtonElement>) => {
         extendNode(node.id);
+        // 清除 hover 状态，确保端点样式正确消失
+        setHoveredNodeId(null);
         event.stopPropagation();
     }
     

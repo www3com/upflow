@@ -19,6 +19,7 @@ export const state = proxy({
     nodes: [] as Node[],
     edges: [] as Edge[],
     selectedNode: null as NodeType | null,
+    hoveredNodeId: null as string | null,
 });
 
 
@@ -30,6 +31,10 @@ export const init = async () => {
 
 export const setSelectedNode = (node: NodeType | null) => {
     state.selectedNode = node;
+}
+
+export const setHoveredNodeId = (nodeId: string | null) => {
+    state.hoveredNodeId = nodeId;
 }
 
 export const saveFlow = () => {

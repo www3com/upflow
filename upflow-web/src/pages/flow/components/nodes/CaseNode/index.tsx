@@ -37,7 +37,7 @@ export default memo((node: NodeType) => {
         if (!element) {
             return 0;
         }
-        return element.offsetTop + element.offsetHeight / 2;
+        return element.offsetTop + element.offsetHeight / 2 - 1;
     };
 
     const handles = [];
