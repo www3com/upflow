@@ -1,11 +1,6 @@
 import {memo} from "react";
 import {NodeResizeControl} from "@xyflow/react";
-import {createFromIconfontCN} from "@ant-design/icons";
-import {IconFontUrl} from "@/utils/constants";
-
-const IconFont = createFromIconfontCN({
-    scriptUrl: IconFontUrl,
-});
+import IconFont from '@/components/IconFont';
 
 export default memo(() => {
     return <>

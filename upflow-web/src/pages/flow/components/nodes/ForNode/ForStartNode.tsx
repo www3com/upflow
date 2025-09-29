@@ -1,11 +1,7 @@
-import {createFromIconfontCN} from "@ant-design/icons";
 import {Flex,  theme} from "antd";
-import {IconFontUrl} from "@/utils/constants";
+import IconFont from '@/components/IconFont';
 import {Handle, Position} from "@xyflow/react";
 
-const IconFont = createFromIconfontCN({
-    scriptUrl: IconFontUrl,
-});
 const {useToken} = theme;
 
 export default () => {

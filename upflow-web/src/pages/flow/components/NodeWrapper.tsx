@@ -2,23 +2,18 @@ import {Button, Dropdown, Flex, Space, theme} from "antd";
 import React, {memo, useMemo} from "react";
 import {
     CopyOutlined,
-    createFromIconfontCN,
     DeleteOutlined,
     DownCircleOutlined,
     EllipsisOutlined, UpCircleOutlined
 } from "@ant-design/icons";
 import {NodeTypes} from "@/utils/nodeTypes";
-import {IconFontUrl} from "@/utils/constants";
+import IconFont from '@/components/IconFont';
 import styles from '../styles.less'
 import {cloneNode, deleteNode, extendNode, setHoveredNodeId} from "@/states/flow";
 import {NodeType} from "@/typings";
 
 
 const {useToken} = theme;
-
-const IconFont = createFromIconfontCN({
-    scriptUrl: IconFontUrl,
-});
 
 
 interface NodeWrapperProps {

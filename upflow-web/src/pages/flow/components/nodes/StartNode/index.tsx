@@ -1,15 +1,11 @@
 import {Flex, Space, theme} from "antd";
 import {memo} from "react";
-import {createFromIconfontCN} from "@ant-design/icons";
 import {Handle, Position} from "@xyflow/react";
 import styles from './styles.less'
 import NodeWrapper from "@/pages/flow/components/NodeWrapper";
-import {IconFontUrl} from "@/utils/constants";
+import IconFont from '@/components/IconFont';
 import {NodeType} from "@/typings";
 
-const IconFont = createFromIconfontCN({
-    scriptUrl: IconFontUrl,
-});
 const {useToken} = theme;
 
 

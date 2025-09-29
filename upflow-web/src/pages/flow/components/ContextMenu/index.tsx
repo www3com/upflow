@@ -1,13 +1,8 @@
-import React, { useRef, useEffect, useCallback } from 'react';
-import { Dropdown, Menu } from 'antd';
+import React, { useRef} from 'react';
+import {  Menu } from 'antd';
 import type { MenuProps } from 'antd';
-import { NodeTypes, NODE_TYPE } from '@/utils/nodeTypes';
-import { IconFontUrl } from '@/utils/constants';
-import { createFromIconfontCN } from '@ant-design/icons';
-
-const IconFont = createFromIconfontCN({
-  scriptUrl: IconFontUrl,
-});
+import { NodeTypes } from '@/utils/nodeTypes';
+import IconFont from '@/components/IconFont';
 
 interface ContextMenuProps {
   visible: boolean;
@@ -49,7 +44,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 
   // 节点类型子菜单
   const nodeTypeMenuItems: MenuProps['items'] = Object.entries(NodeTypes)
-    .filter(([key, value]) =>  !value.data.hidden)
+    .filter(([_, value]) =>  !value.data.hidden)
     .map(([key, config]) => ({
       key: `node-${key}`,
       label: config.data.title,
