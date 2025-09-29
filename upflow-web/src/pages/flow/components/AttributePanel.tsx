@@ -1,4 +1,4 @@
-import {Button, Card} from "antd";
+import {Button, Card, Flex, theme} from "antd";
 import styles from "@/pages/flow/styles.less";
 import {Panel} from "@xyflow/react";
 import React, {ComponentType, useState} from "react";
@@ -8,16 +8,26 @@ import {NodeTypes} from "@/utils/nodeTypes";
 import {state} from '@/states/flow';
 import {useSnapshot} from "valtio";
 import {NodeType} from "@/typings";
+import IconFont from "@/components/IconFont";
 
+const {useToken} = theme;
 
 export default () => {
     const [maximized, setMaximized] = useState(false);
     const snap = useSnapshot(state);
+    const {token} = useToken();
 
     if (!snap.selectedNode) return <></>
     // 根据节点类型获取对应的配置
     const config = NodeTypes[snap.selectedNode.type!]
-    const title = snap.selectedNode.data.title || '属性'
+    const titleText = snap.selectedNode.data.title || '属性'
+    const titleIcon = config?.icon
+    const title = (
+        <Flex align="center" gap={8}>
+            {titleIcon && <IconFont type={titleIcon} style={{ color: token.colorPrimary }} />}
+            {titleText}
+        </Flex>
+    )
     const EditComponent = config?.attr as ComponentType<{ node: NodeType, onChange?: (node: NodeType) => void }> | null
 
     const cardExtra = (

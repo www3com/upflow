@@ -113,7 +113,7 @@ export const CaseCom = ({count, index, item, keywordRef}: {
                 {index > 0 && <span className={styles.keyword} ref={keywordRef}>ELIF</span>}
             </Flex>
 
-            <Flex vertical gap={2}>
+            <Flex vertical gap={3}>
                 {item.conditions.map((condition, condIndex) => (
                     <Flex key={condition.nodeId} align="center" gap={15} className={styles.conditionItem}>
                         {condIndex > 0 &&
