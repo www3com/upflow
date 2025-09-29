@@ -7,6 +7,13 @@ interface ListItemType {
     value: number | string
 }
 
+export interface Variable {
+    name: string,
+    type: string,
+    value: string
+    rules?: Rule[]
+}
+
 interface NodeDataType {
     title?: string
     input?: Variable[]
@@ -47,13 +54,6 @@ export interface Rule {
     type: string,
     value?: string | boolean,
     message?: string
-}
-
-export interface Variable {
-    name: string,
-    type: string,
-    value: string
-    rules?: Rule[]
 }
 
 /**

@@ -2,6 +2,7 @@ import StartNode from "@/pages/flow/components/nodes/StartNode";
 import ConditionNode from "@/pages/flow/components/nodes/CaseNode";
 import ScriptNode from "@/pages/flow/components/nodes/ScriptNode";
 import EditStartNode from "@/pages/flow/components/nodes/StartNode/EditStartAttribute";
+import EditCaseNode from "@/pages/flow/components/nodes/CaseNode/EditCaseAttribute";
 import {NodeCfgType, ObjectType} from "@/typings";
 import {nanoid} from "nanoid";
 import ForNode from "@/pages/flow/components/nodes/ForNode";
@@ -36,7 +37,7 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
     [NODE_TYPE.CASE]: {
         icon: 'icon-case',
         node: ConditionNode,
-        attr: null,
+        attr: EditCaseNode,
         data: {
             title: '条件分支',
             detail: [{id: nanoid(8), opr: 'and', conditions: []}],
