@@ -1,16 +1,14 @@
 import React from 'react';
 import {Button, Form, Input, List, Modal, Select, Space, theme} from "antd";
 import {
-    createFromIconfontCN,
     MinusCircleOutlined,
     PlusOutlined
 } from "@ant-design/icons";
+import IconFont from '@/components/IconFont';
 import './styles.less';
 import {Variable} from "@/typings";
 
-const IconFont = createFromIconfontCN({
-    scriptUrl: '/public/iconfont.js',
-});
+
 
 const {useToken} = theme;
 

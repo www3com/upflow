@@ -49,7 +49,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 
   // 节点类型子菜单
   const nodeTypeMenuItems: MenuProps['items'] = Object.entries(NodeTypes)
-    .filter(([key]) => key !== NODE_TYPE.FOR_START)
+    .filter(([key, value]) =>  !value.data.hidden)
     .map(([key, config]) => ({
       key: `node-${key}`,
       label: config.data.title,

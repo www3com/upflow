@@ -14,6 +14,7 @@ interface NodeDataType {
     detail?: any
     group?: boolean
     expanded?: boolean
+    hidden?: boolean
 }
 
 interface NodeType {

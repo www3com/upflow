@@ -66,7 +66,7 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
             x: 10,
             y: 50
         },
-        data: {group: false},
+        data: {group: false, hidden: true},
 
     },
     [NODE_TYPE.SCRIPT]: {
@@ -119,6 +119,7 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
             title: '注释',
             detail: '请输入注释内容...',
             group: false,
+            hidden: true
         }
     },
 }

@@ -1,19 +1,17 @@
 import {Button, Flex, List, Space, theme} from "antd";
 import {
-    createFromIconfontCN,
     DeleteOutlined,
     EditOutlined,
     PlusOutlined
 } from "@ant-design/icons";
+import IconFont from '@/components/IconFont';
 import './styles.less';
 
 import EditStartDialog from "@/pages/flow/components/nodes/StartNode/EditStartDialog";
 import {Node} from "@xyflow/react";
 import {useState} from "react";
 import {Variable} from "@/typings";
-const IconFont = createFromIconfontCN({
-    scriptUrl: '/public/iconfont.js',
-});
+
 
 const {useToken} = theme;
 
