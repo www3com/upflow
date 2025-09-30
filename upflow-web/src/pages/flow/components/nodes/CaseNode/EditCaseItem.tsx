@@ -1,7 +1,9 @@
-import {Button, Flex, Card, Select, Input, Space, Form, Divider} from "antd";
+import {Button, Flex, Card, Select, Input, Space, Form, Divider, Tag} from "antd";
 import {
+    CloseCircleOutlined,
     DeleteOutlined,
-    PlusOutlined
+    PlusOutlined,
+    SearchOutlined
 } from "@ant-design/icons";
 import IconFont from '@/components/IconFont';
 import {theme} from "antd";
@@ -28,13 +30,13 @@ interface EditCaseItemProps {
 }
 
 export default function EditCaseItem({
-                                          caseItem,
-                                          index,
-                                          variablesWithNode,
-                                          onDeleteCase,
-                                          onUpdateCase,
-                                          form
-                                      }: EditCaseItemProps) {
+                                         caseItem,
+                                         index,
+                                         variablesWithNode,
+                                         onDeleteCase,
+                                         onUpdateCase,
+                                         form
+                                     }: EditCaseItemProps) {
     const {token} = useToken();
     const [localForm] = Form.useForm();
     const currentForm = form || localForm;
@@ -99,61 +101,80 @@ export default function EditCaseItem({
                                     borderRadius: '6px'
                                 }}
                                 labelRender={(option) => {
+                                    // 如果没有选择，显示请选择变量
+                                    if (!option || !option.value) {
+                                        return (
+                                            <span style={{color: token.colorTextPlaceholder}}>
+                                                请选择变量
+                                            </span>
+                                        );
+                                    }
+
                                     // 查找变量所属的节点
                                     const variable = variablesWithNode.find(v => v.varName === option.value);
                                     const nodeName = variable?.nodeName || '';
                                     const nodeIcon = variable?.nodeIcon || 'icon-default';
-                                    
+
                                     return (
-                                        <Space size={4}>
-                                            <IconFont type={nodeIcon}/>
-                                            <span style={{fontWeight: 500}}>
-                                                {nodeName} 
-                                            </span>
-                                            <span style={{color: token.colorText}}>
-                                                /
-                                            </span>
-                                            <span style={{color: token.colorPrimary, fontWeight: 500}}>
+                                        <Flex gap={5}>
+                                            {variable && <Flex>
+                                                <IconFont type={nodeIcon}/>
+                                                <span style={{fontWeight: 500}}> {nodeName}</span>
+                                            </Flex>}
+                                            {variable && <span style={{color: token.colorText}}>/</span>}
+                                            <Flex style={{color: token.colorPrimary, fontWeight: 500}} gap={3}>
+                                                <IconFont type="icon-variable" style={{color: token.colorPrimary}}/>
                                                 {option.value}
-                                            </span>
-                                        </Space>
+                                            </Flex>
+                                            {!variable && <CloseCircleOutlined style={{color: 'red'}}/>}
+                                        </Flex>
                                     );
                                 }}
                             >
                                 {// 按节点名称分组
-                                Object.entries(
-                                    variablesWithNode.reduce((groups, variable) => {
-                                        if (!groups[variable.nodeName]) {
-                                            groups[variable.nodeName] = [];
-                                        }
-                                        groups[variable.nodeName].push(variable);
-                                        return groups;
-                                    }, {} as { [nodeName: string]: Array<{ nodeId: string; nodeName: string; varName: string; varType: string; nodeIcon: string }> })
-                                ).map(([nodeName, variables]) => {
-                                    const nodeIcon = variables[0]?.nodeIcon || 'icon-default';
-                                    return (
-                                        <Select.OptGroup 
-                                            key={nodeName} 
-                                            label={
-                                                <Space>
-                                                    <IconFont type={nodeIcon} style={{color: token.colorPrimary}}/>
-                                                    {nodeName}
-                                                </Space>
+                                    Object.entries(
+                                        variablesWithNode.reduce((groups, variable) => {
+                                            if (!groups[variable.nodeName]) {
+                                                groups[variable.nodeName] = [];
                                             }
-                                        >
-                                            {variables.map((variable) => (
-                                                <Select.Option key={variable.varName} value={variable.varName}>
+                                            groups[variable.nodeName].push(variable);
+                                            return groups;
+                                        }, {} as {
+                                            [nodeName: string]: Array<{
+                                                nodeId: string;
+                                                nodeName: string;
+                                                varName: string;
+                                                varType: string;
+                                                nodeIcon: string
+                                            }>
+                                        })
+                                    ).map(([nodeName, variables]) => {
+                                        const nodeIcon = variables[0]?.nodeIcon || 'icon-default';
+                                        return (
+                                            <Select.OptGroup
+                                                key={nodeName}
+                                                label={
                                                     <Space>
-                                                        <IconFont type="icon-variable" style={{color: token.colorPrimary}}/>
-                                                        {variable.varName}
+                                                        <IconFont type={nodeIcon} style={{color: token.colorPrimary}}/>
+                                                        {nodeName}
                                                     </Space>
-                                                </Select.Option>
-                                            ))}
-                                        </Select.OptGroup>
-                                    );
-                                })}
+                                                }
+                                            >
+                                                {variables.map((variable) => (
+                                                    <Select.Option key={variable.varName} value={variable.varName}>
+                                                        <Space>
+                                                            <IconFont type="icon-variable"
+                                                                      style={{color: token.colorPrimary}}/>
+                                                            {variable.varName}
+                                                        </Space>
+                                                    </Select.Option>
+                                                ))}
+                                            </Select.OptGroup>
+                                        );
+                                    })}
                             </Select>
                         </Form.Item>
+
 
                         <Form.Item
                             {...restField}
@@ -217,9 +238,14 @@ export default function EditCaseItem({
             variant={'borderless'}
             title={
                 <Flex justify="space-between" align="center">
-                    <span style={{fontWeight: 'bold'}}>
+                    <Flex gap={5}>
+                        <span style={{fontWeight: 'bold'}}>
                         {index === 0 ? 'IF' : `ELIF ${index}`}
-                    </span>
+                        </span>
+                        <Button size={'small'} type="dashed" icon={<IconFont type={'icon-qiehuan'}/>} iconPosition={'end'}>
+                            AND
+                        </Button>
+                    </Flex>
                     <Flex gap={5} align="center">
                         <Button
                             type="text"

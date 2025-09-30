@@ -107,22 +107,30 @@ export default ({node, onChange}: CaseNodeProps) => {
     );
 
     return (
-        <List 
-            size="small"
-            bordered={false}
-            dataSource={cases}
-            footer={
-                <Button
-                    type="dashed"
-                    icon={<PlusOutlined/>}
-                    style={{width: "100%"}}
-                    size="small"
-                    onClick={onAddCase}
-                >
-                    添加条件分支
-                </Button>
-            }
-            renderItem={renderCase}
-        />
+        <div>
+            <List 
+                size="small"
+                bordered={false}
+                dataSource={cases}
+                footer={
+                    <Button
+                        type="dashed"
+                        icon={<PlusOutlined/>}
+                        style={{width: "100%"}}
+                        size="small"
+                        onClick={onAddCase}
+                    >
+                        添加条件分支
+                    </Button>
+                }
+                renderItem={renderCase}
+            />
+            <div style={{ marginTop: 16, padding: 8, backgroundColor: '#f5f5f5', borderRadius: 4 }}>
+                <strong>Else</strong>
+                <div style={{ fontSize: 12, color: '#666', marginTop: 4 }}>
+                    用于定义当 if 条件不满足时应执行的逻辑。
+                </div>
+            </div>
+        </div>
     );
 };
