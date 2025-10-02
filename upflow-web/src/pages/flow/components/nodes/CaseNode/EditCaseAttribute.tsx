@@ -56,11 +56,12 @@ export default ({node, onChange}: CaseNodeProps) => {
         onChange(updatedNode);
     };
 
-    const onUpdateCase = (caseIndex: number, conditions: Condition[]) => {
+    const onUpdateCase = (caseIndex: number, conditions: Condition[], logicalOperator?: string) => {
         const newCases = cases.map((caseItem, cIndex) => {
             if (cIndex === caseIndex) {
                 return {
                     ...caseItem,
+                    opr: logicalOperator || caseItem.opr, // 更新逻辑操作符
                     conditions: conditions.map(condition => {
                         // 确保每个条件都有 nodeId
                         if (!condition.nodeId) {

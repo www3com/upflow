@@ -9,7 +9,7 @@
     "start": "npm run dev"
   },
   "dependencies": {
-    "@xyflow/react": "^12.8.5",
+    "@xyflow/react": "^12.8.6",
     "umi": "^4.4.12",
     "valtio": "^2.1.7",
     "antd": "^5.27.3",

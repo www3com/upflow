@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import IconFont from '@/components/IconFont';
 import {theme} from "antd";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {Case, Condition} from "@/typings";
 import {CompareOprType} from "@/utils/constants";
 import {nanoid} from "nanoid";
@@ -25,7 +25,7 @@ interface EditCaseItemProps {
     index: number;
     variablesWithNode: { nodeId: string; nodeName: string; varName: string; varType: string; nodeIcon: string }[];
     onDeleteCase: (index: number) => void;
-    onUpdateCase: (caseIndex: number, conditions: Condition[]) => void;
+    onUpdateCase: (caseIndex: number, conditions: Condition[], logicalOperator?: string) => void;
     form?: any;
 }
 
@@ -40,18 +40,32 @@ export default function EditCaseItem({
     const {token} = useToken();
     const [localForm] = Form.useForm();
     const currentForm = form || localForm;
+    
+    // 添加逻辑操作符状态管理
+    const [logicalOperator, setLogicalOperator] = useState<string>(caseItem.opr || 'and');
 
     // 初始化表单数据
     useEffect(() => {
         currentForm.setFieldsValue({
             conditions: caseItem.conditions || []
         });
-    }, [caseItem.conditions, currentForm]);
+        // 同步逻辑操作符状态
+        setLogicalOperator(caseItem.opr || 'and');
+    }, [caseItem.conditions, caseItem.opr, currentForm]);
 
     // 监听表单变化并更新父组件
     const handleFormChange = () => {
         const conditions = currentForm.getFieldValue('conditions') || [];
-        onUpdateCase(index, conditions);
+        onUpdateCase(index, conditions, logicalOperator);
+    };
+
+    // 逻辑操作符切换函数
+    const handleLogicalOperatorToggle = () => {
+        const newOperator = logicalOperator === 'and' ? 'or' : 'and';
+        setLogicalOperator(newOperator);
+        // 立即更新父组件
+        const conditions = currentForm.getFieldValue('conditions') || [];
+        onUpdateCase(index, conditions, newOperator);
     };
 
     // 添加条件的函数
@@ -242,8 +256,14 @@ export default function EditCaseItem({
                         <span style={{fontWeight: 'bold'}}>
                         {index === 0 ? 'IF' : `ELIF ${index}`}
                         </span>
-                        <Button size={'small'} type="dashed" icon={<IconFont type={'icon-qiehuan'}/>} iconPosition={'end'}>
-                            AND
+                        <Button 
+                            size={'small'} 
+                            type="dashed" 
+                            icon={<IconFont type={'icon-qiehuan'}/>} 
+                            iconPosition={'end'}
+                            onClick={handleLogicalOperatorToggle}
+                        >
+                            {logicalOperator.toUpperCase()}
                         </Button>
                     </Flex>
                     <Flex gap={5} align="center">

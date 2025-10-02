@@ -10,17 +10,18 @@ import {useSnapshot} from "valtio";
 import {NodeType} from "@/typings";
 import IconFont from "@/components/IconFont";
 
-const handleNodeChange = (_: NodeType) => {
+const handleNodeChange = (node: NodeType) => {
+    console.log('node', node)
     // 更新节点数据的逻辑
-    // const nodeIndex = state.nodes.findIndex(n => n.id === node.id);
-    // if (nodeIndex !== -1) {
-    //     state.nodes[nodeIndex] = {
-    //         ...state.nodes[nodeIndex],
-    //         data: node.data as any
-    //     };
-    //     // 同时更新选中的节点
-    //     state.selectedNode = node;
-    // }
+    const nodeIndex = state.nodes.findIndex(n => n.id === node.id);
+    if (nodeIndex !== -1) {
+        state.nodes[nodeIndex] = {
+            ...state.nodes[nodeIndex],
+            data: node.data as any
+        };
+        // 同时更新选中的节点
+        state.selectedNode = node;
+    }
 };
 
 const {useToken} = theme;

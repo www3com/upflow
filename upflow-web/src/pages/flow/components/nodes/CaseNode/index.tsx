@@ -116,8 +116,11 @@ export const CaseCom = ({count, index, item, keywordRef}: {
             <Flex vertical gap={3}>
                 {item.conditions.map((condition, condIndex) => (
                     <Flex key={condition.nodeId} align="center" gap={15} className={styles.conditionItem}>
-                        {condIndex > 0 &&
-                            <span className={styles.logicalOpr} style={{color: token.colorPrimary}}>AND</span>}
+                        {condIndex > 0 && (
+                            <span className={styles.logicalOpr} style={{ color: token.colorPrimary }}>
+                                {(item.opr || 'and').toUpperCase()}
+                            </span>
+                        )}
                         <Space size={3}>
                             <IconFont type="icon-variable" style={{color: token.colorPrimary}}/>
                             <span style={{color: token.colorPrimary}}>{condition.varName}</span>
