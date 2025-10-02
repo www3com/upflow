@@ -100,6 +100,7 @@ export default ({node, onChange}: CaseNodeProps) => {
             <EditCaseItem
                 caseItem={caseItem}
                 index={index}
+                totalCases={cases.length}
                 variablesWithNode={variablesWithNode}
                 onDeleteCase={onDeleteCase}
                 onUpdateCase={onUpdateCase}

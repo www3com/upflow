@@ -1,9 +1,8 @@
-import {Button, Flex, Card, Select, Input, Space, Form, Divider, Tag} from "antd";
+import {Button, Flex, Card, Select, Input, Space, Form, Divider} from "antd";
 import {
     CloseCircleOutlined,
     DeleteOutlined,
     PlusOutlined,
-    SearchOutlined
 } from "@ant-design/icons";
 import IconFont from '@/components/IconFont';
 import {theme} from "antd";
@@ -23,6 +22,7 @@ const OPERATOR_OPTIONS = Object.entries(CompareOprType).map(([value, label]) => 
 interface EditCaseItemProps {
     caseItem: Case;
     index: number;
+    totalCases: number;
     variablesWithNode: { nodeId: string; nodeName: string; varName: string; varType: string; nodeIcon: string }[];
     onDeleteCase: (index: number) => void;
     onUpdateCase: (caseIndex: number, conditions: Condition[], logicalOperator?: string) => void;
@@ -32,6 +32,7 @@ interface EditCaseItemProps {
 export default function EditCaseItem({
                                          caseItem,
                                          index,
+                                         totalCases,
                                          variablesWithNode,
                                          onDeleteCase,
                                          onUpdateCase,
@@ -104,7 +105,6 @@ export default function EditCaseItem({
                             style={{marginBottom: 0}}
                         >
                             <Select
-                                labelInValue={true}
                                 variant="borderless"
                                 popupMatchSelectWidth={false}
                                 onChange={handleFormChange}
@@ -114,9 +114,12 @@ export default function EditCaseItem({
                                     backgroundColor: '#ffffff',
                                     borderRadius: '6px'
                                 }}
-                                labelRender={(option) => {
+                                labelRender={() => {
+                                    // 获取当前选中的值
+                                    const currentValue = currentForm.getFieldValue(['conditions', name, 'varName']);
+                                    
                                     // 如果没有选择，显示请选择变量
-                                    if (!option || !option.value) {
+                                    if (!currentValue) {
                                         return (
                                             <span style={{color: token.colorTextPlaceholder}}>
                                                 请选择变量
@@ -125,7 +128,7 @@ export default function EditCaseItem({
                                     }
 
                                     // 查找变量所属的节点
-                                    const variable = variablesWithNode.find(v => v.varName === option.value);
+                                    const variable = variablesWithNode.find(v => v.varName === currentValue);
                                     const nodeName = variable?.nodeName || '';
                                     const nodeIcon = variable?.nodeIcon || 'icon-default';
 
@@ -138,7 +141,7 @@ export default function EditCaseItem({
                                             {variable && <span style={{color: token.colorText}}>/</span>}
                                             <Flex style={{color: token.colorPrimary, fontWeight: 500}} gap={3}>
                                                 <IconFont type="icon-variable" style={{color: token.colorPrimary}}/>
-                                                {option.value}
+                                                {currentValue}
                                             </Flex>
                                             {!variable && <CloseCircleOutlined style={{color: 'red'}}/>}
                                         </Flex>
@@ -254,7 +257,7 @@ export default function EditCaseItem({
                 <Flex justify="space-between" align="center">
                     <Flex gap={5}>
                         <span style={{fontWeight: 'bold'}}>
-                        {index === 0 ? 'IF' : `ELIF ${index}`}
+                        {totalCases === 1 ? 'IF' : `CASE ${index + 1}`}
                         </span>
                         <Button 
                             size={'small'} 
