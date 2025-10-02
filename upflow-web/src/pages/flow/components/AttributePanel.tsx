@@ -1,4 +1,4 @@
-import {Button, Card, Flex, theme} from "antd";
+import {Button, Flex, Layout, theme} from "antd";
 import styles from "@/pages/flow/styles.less";
 import {Panel} from "@xyflow/react";
 import React, {ComponentType, useState} from "react";
@@ -25,6 +25,7 @@ const handleNodeChange = (node: NodeType) => {
 };
 
 const {useToken} = theme;
+const {Header, Content} = Layout;
 
 export default () => {
     const [maximized, setMaximized] = useState(false);
@@ -66,15 +67,24 @@ export default () => {
                 maxWidth={1200}
                 isMaximized={maximized}
             >
-                <Card
-                    title={title}
-                    variant='borderless'
-                    size='small'
-                    className={styles.noBorderCard}
-                    extra={cardExtra}
-                >
-                    {EditComponent && <EditComponent node={snap.selectedNode as NodeType} onChange={handleNodeChange}/>}
-                </Card>
+                <Layout className={styles.attributeLayout}>
+                    {/* Header部分 - 固定高度 */}
+                    <Header className={styles.attributeHeader}>
+                        <Flex justify="space-between" align="center" className={styles.attributeHeaderContent}>
+                            <div className={styles.attributeTitle}>
+                                {title}
+                            </div>
+                            <div>
+                                {cardExtra}
+                            </div>
+                        </Flex>
+                    </Header>
+                    
+                    {/* Content部分 - 可滚动 */}
+                    <Content className={styles.attributeContent}>
+                        {EditComponent && <EditComponent node={snap.selectedNode as NodeType} onChange={handleNodeChange}/>}
+                    </Content>
+                </Layout>
             </ResizablePanel>
         </Panel>
     </>

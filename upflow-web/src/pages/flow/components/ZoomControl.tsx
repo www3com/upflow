@@ -24,21 +24,26 @@ const items: MenuProps['items'] = [
         key: '0.5',
         label: '50%',
         extra: '⌘ 5',
-    }, {
-        key: '0.25',
-        label: '25%',
     }
 ];
 
-export default memo(() => {
+interface ZoomControlProps {
+    currentZoom?: number;
+}
+
+export default memo(({currentZoom}: ZoomControlProps) => {
 
     const {zoomIn, zoomOut, fitView, getZoom, zoomTo} = useReactFlow();
     const [zoom, setZoom] = useState(1);
 
-    // 初始同步 zoom 值
+    // 使用传入的 currentZoom 或者获取当前缩放值
     useEffect(() => {
-        setZoom(getZoom());
-    }, [getZoom]);
+        if (currentZoom !== undefined) {
+            setZoom(currentZoom);
+        } else {
+            setZoom(getZoom());
+        }
+    }, [currentZoom, getZoom]);
 
     // 处理菜单点击事件
     const handleMenuClick: MenuProps['onClick'] = useCallback(({key}: { key: string }) => {

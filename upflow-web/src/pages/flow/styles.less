@@ -1,5 +1,32 @@
 
-/* 属性面板 */
+/* 属性面板样式 */
+.attributeLayout {
+  height: 100%;
+}
+
+.attributeHeader {
+  padding: 0 16px;
+  background-color: white;
+  height: 48px;
+  line-height: 48px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.attributeHeaderContent {
+  height: 100%;
+}
+
+.attributeTitle {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.attributeContent {
+  padding: 16px;
+  background-color: white;
+  overflow: auto;
+}
+
 .attrPanel {
   margin-top: 60px;
   height: calc(100vh - 60px);
@@ -38,6 +65,7 @@
   }
 }
 
+/* 通用样式 */
 .noBorderCard {
   border: none !important;
   box-shadow: none !important;
@@ -52,6 +80,7 @@
   }
 }
 
+/* 节点样式 */
 .draggableNode {
   width: 65px;
   height: 65px;
@@ -74,22 +103,17 @@
   border-radius: 8px;
   overflow: hidden;
 
-  // 头部
   .nodeHeader {
     background-color: white;
     padding: 3px 5px;
   }
 
-  // 默认隐藏按钮
   .nodeActionBtn {
     opacity: 0;
     transition: opacity 0.2s ease;
   }
 
-  // hover时显示按钮
-  &:hover {
-    .nodeActionBtn {
-      opacity: 1;
-    }
+  &:hover .nodeActionBtn {
+    opacity: 1;
   }
 }

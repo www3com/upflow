@@ -31,6 +31,7 @@ const FlowPage = () => {
         visible: false,
         position: {x: 0, y: 0},
     });
+    const [currentZoom, setCurrentZoom] = useState(1);
 
     const {screenToFlowPosition} = useReactFlow();
 
@@ -79,6 +80,10 @@ const FlowPage = () => {
         addComment(flowPosition);
     }, [screenToFlowPosition, contextMenu.position]);
 
+    const handleViewportChange = useCallback((viewport: { x: number; y: number; zoom: number }) => {
+        setCurrentZoom(viewport.zoom);
+    }, []);
+
     return (
         <Splitter style={{height: '100%'}}>
             <Splitter.Panel defaultSize="160" min='5%' max="20%"
@@ -110,6 +115,7 @@ const FlowPage = () => {
                     selectionMode={SelectionMode.Partial}
                     selectNodesOnDrag={false}
                     onContextMenu={handleContextMenu}
+                    onViewportChange={handleViewportChange}
                 >
                     <Panel position="top-right">
                         <Space>
@@ -118,7 +124,7 @@ const FlowPage = () => {
                         </Space>
                     </Panel>
                     <AttributePanel/>
-                    <ZoomControl/>
+                    <ZoomControl currentZoom={currentZoom}/>
                     <Background variant={BackgroundVariant.Dots} gap={12} size={1}/>
                 </ReactFlow>
                 <ContextMenu
