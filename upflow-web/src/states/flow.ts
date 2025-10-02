@@ -281,6 +281,11 @@ export const deleteNode = (nodeId: string) => {
     let edges = state.edges.filter(e => e.source !== nodeId && e.target !== nodeId);
     state.nodes = nodes;
     state.edges = edges;
+    
+    // 如果被删除的节点是当前选中的节点，清除选中状态
+    if (state.selectedNode && state.selectedNode.id === nodeId) {
+        state.selectedNode = null;
+    }
 }
 
 export const cloneNode = (nodeId: string) => {

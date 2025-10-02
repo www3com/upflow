@@ -40,6 +40,16 @@ export const useFlow = () => {
             }
         }
 
+        // 检测删除节点变化
+        const removeChanges = changes.filter(change => change.type === 'remove');
+        if (removeChanges.length > 0 && state.selectedNode) {
+            // 检查当前选中的节点是否被删除
+            const isSelectedNodeRemoved = removeChanges.some(change => change.id === state.selectedNode?.id);
+            if (isSelectedNodeRemoved) {
+                setSelectedNode(null);
+            }
+        }
+
         setNodes(applyNodeChanges(changes, state.nodes));
     }, []);
 

@@ -94,6 +94,8 @@ const FlowPage = () => {
                 <ReactFlow
                     proOptions={{hideAttribution: true}}
                     nodeTypes={nodeTypes}
+                    minZoom={0.25}
+                    maxZoom={2}
                     nodes={snap.nodes.map(node => ({
                         ...node,
                         className: `${node.className} ${dropNodeIds?.includes(node.id) && 'highlight'} ${hoveredNodeId === node.id && 'node-hovered'}`

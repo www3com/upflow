@@ -57,7 +57,7 @@ export default () => {
 
     return <>
         <Panel
-            hidden={!open}
+            hidden={!snap.selectedNode}
             position="top-right"
             className={`${styles.attrPanel} ${maximized ? styles.maximized : ''}`}
         >

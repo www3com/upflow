@@ -6,7 +6,7 @@ import {
     ZoomOutOutlined
 } from "@ant-design/icons";
 
-import { Button, Divider, Dropdown, Flex, MenuProps, Space } from "antd";
+import { Button, Divider, Dropdown, Flex, MenuProps } from "antd";
 
 const items: MenuProps['items'] = [
     {
@@ -24,6 +24,9 @@ const items: MenuProps['items'] = [
         key: '0.5',
         label: '50%',
         extra: '⌘ 5',
+    }, {
+        key: '0.25',
+        label: '25%',
     }
 ];
 
