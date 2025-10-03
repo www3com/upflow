@@ -88,7 +88,7 @@ export const useFlow = () => {
         );
         const newDropNodeIds = intersectingNodes.map(node => node.id);
         setDropNodeIds(newDropNodeIds);
-    }, [getIntersectingNodes, dropNodeIds, snap.nodes]);
+    }, [getIntersectingNodes, snap.nodes]);
 
     const onNodeDragStop = useCallback((event: ReactMouseEvent, draggedNode: Node) => {
         console.log('onNodeDragStop', draggedNode)

@@ -36,6 +36,10 @@
     flex-direction: column;
     border: var(--xy-node-border-default);
     color: var(--xy-node-color-default);
+    /* 拖动性能优化 */
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
 /* 节点交叉样式 */
