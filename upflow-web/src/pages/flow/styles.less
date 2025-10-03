@@ -1,33 +1,11 @@
 
-/* 属性面板样式 */
-.attributeLayout {
-  height: 100%;
-}
+/* ========================================
+   属性面板样式 (AttributePanel)
+   BEM命名规范: Block__Element--Modifier
+   ======================================== */
 
-.attributeHeader {
-  padding: 0 16px;
-  background-color: white;
-  height: 48px;
-  line-height: 48px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.attributeHeaderContent {
-  height: 100%;
-}
-
-.attributeTitle {
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.attributeContent {
-  padding: 16px;
-  background-color: white;
-  overflow: auto;
-}
-
-.attrPanel {
+/* 属性面板主容器 */
+.attribute-panel {
   margin-top: 60px;
   height: calc(100vh - 60px);
   border: 1px solid #f0f0f0;
@@ -35,7 +13,8 @@
   background-color: white;
   min-width: 200px;
 
-  &.maximized {
+  /* 最大化状态修饰符 */
+  &--maximized {
     position: absolute !important;
     top: 0 !important;
     left: 0 !important;
@@ -59,14 +38,106 @@
       }
     }
 
-    .noBorderCard {
+    .card--borderless {
       width: 100% !important;
     }
   }
 }
 
-/* 通用样式 */
-.noBorderCard {
+/* 属性面板布局容器 */
+.attribute-panel__layout {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 属性面板头部 */
+.attribute-panel__header {
+  padding: 10px 5px 5px 16px;
+  background-color: white;
+  border-bottom: 1px solid #f0f0f0;
+  flex-shrink: 0; /* 防止header被压缩 */
+}
+
+.attribute-panel__header-content {
+  align-items: flex-start;
+}
+
+.attribute-panel__title {
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* 属性面板内容区域 */
+.attribute-panel__content {
+  padding: 16px;
+  background-color: white;
+  overflow: auto;
+  flex: 1; /* 占据剩余空间 */
+}
+
+/* ========================================
+   标题输入组件样式
+   ======================================== */
+
+.title-input {
+  /* 标题输入容器 */
+  &__container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+  }
+
+  /* 标题输入框 */
+  &__field {
+    padding: 0 !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    background-color: transparent !important;
+    flex: 1 !important;
+    border-bottom: 1px solid transparent !important;
+    border-radius: 0 !important;
+    transition: border-bottom-color 0.2s ease !important;
+    margin-right: 8px !important;
+
+    :global(.ant-input) {
+      padding: 2px 0 !important;
+    }
+
+    &:focus-within {
+      border-bottom-color: #1677ff !important;
+    }
+
+    &:hover {
+      border-bottom-color: #1677ff !important;
+    }
+  }
+}
+
+/* ========================================
+   描述输入组件样式
+   ======================================== */
+
+.description-input {
+  /* 描述输入容器 */
+  &__container {
+    display: flex;
+    align-items: stretch;
+    flex: 1;
+    width: 100%;
+  }
+}
+
+/* ========================================
+   通用组件样式
+   ======================================== */
+
+/* 无边框卡片 */
+.card--borderless {
   border: none !important;
   box-shadow: none !important;
   width: 100% !important;
@@ -80,8 +151,12 @@
   }
 }
 
-/* 节点样式 */
-.draggableNode {
+/* ========================================
+   节点相关样式
+   ======================================== */
+
+/* 可拖拽节点 */
+.node--draggable {
   width: 65px;
   height: 65px;
   background-color: #fafafa;
@@ -97,23 +172,26 @@
   }
 }
 
-.nodeWrapper {
+/* 节点包装器 */
+.node-wrapper {
   width: 100%;
   min-width: 210px;
   border-radius: 8px;
   overflow: hidden;
 
-  .nodeHeader {
+  /* 节点头部 */
+  &__header {
     background-color: white;
     padding: 3px 5px;
   }
 
-  .nodeActionBtn {
+  /* 节点操作按钮 */
+  &__action-btn {
     opacity: 0;
     transition: opacity 0.2s ease;
   }
 
-  &:hover .nodeActionBtn {
+  &:hover &__action-btn {
     opacity: 1;
   }
 }

@@ -22,7 +22,7 @@ import {
 import {NodeTypes} from "@/utils/nodeTypes";
 import {useFlow} from "@/pages/flow/hooks/useFlow";
 import AttributePanel from "@/pages/flow/components/AttributePanel";
-import ZoomControl from "@/pages/flow/components/ZoomControl";
+import ZoomControl from "./components/ZoomControl";
 import ContextMenu from "@/pages/flow/components/ContextMenu";
 
 

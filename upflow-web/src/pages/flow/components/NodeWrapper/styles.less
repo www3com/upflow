@@ -1,0 +1,28 @@
+/* ========================================
+   NodeWrapper 组件样式
+   使用简化的CSS模块命名
+   ======================================== */
+
+/* 节点包装器 */
+.wrapper {
+  width: 100%;
+  min-width: 210px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* 节点头部 */
+.header {
+  background-color: white;
+  padding: 3px 5px;
+}
+
+/* 节点操作按钮 */
+.actionBtn {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.wrapper:hover .actionBtn {
+  opacity: 1;
+}

@@ -1,0 +1,36 @@
+/* ========================================
+   NodePanel 组件样式
+   使用简化的CSS模块命名
+   ======================================== */
+
+/* 无边框卡片 */
+.card {
+  border: none !important;
+  box-shadow: none !important;
+  width: 100% !important;
+
+  :global(.ant-card-head) {
+    border-bottom: none !important;
+  }
+
+  :global(.ant-card-body) {
+    border: none !important;
+  }
+}
+
+/* 可拖拽节点 */
+.draggableNode {
+  width: 65px;
+  height: 65px;
+  background-color: #fafafa;
+  user-select: none;
+
+  &:active {
+    cursor: grabbing !important;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}

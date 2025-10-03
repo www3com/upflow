@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 import {NodeTypes} from "@/utils/nodeTypes";
 import IconFont from '@/components/IconFont';
-import styles from '../styles.less'
+import styles from './styles.less'
 import {cloneNode, deleteNode, extendNode, setHoveredNodeId} from "@/states/flow";
 import {NodeType} from "@/typings";
 
@@ -53,13 +53,13 @@ export default memo(({node, children}: NodeWrapperProps) => {
     }, [expanded])
 
     return (
-        <Flex vertical className={styles.nodeWrapper}>
-            <Flex align="center" justify={'space-between'} className={styles.nodeHeader}>
+        <Flex vertical className={styles.wrapper}>
+            <Flex align="center" justify={'space-between'} className={styles.header}>
                 <Flex align='center' gap={5} style={{height: 32}}>
                     <IconFont type={NodeTypes[node.type].icon} style={{color: token.colorPrimary, fontSize: 16}}/>
                     <span>{node.data.title}</span>
                 </Flex>
-                <Space size={0} className={styles.nodeActionBtn}>
+                <Space size={0} className={styles.actionBtn}>
                     {node.data.group && expandNode}
                     <Dropdown menu={{items}} placement="bottom" arrow>
                         <Button type='text' size='small' icon={<EllipsisOutlined/>}/>

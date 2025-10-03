@@ -16,6 +16,7 @@ export interface Variable {
 
 interface NodeDataType {
     title?: string
+    description?: string
     input?: Variable[]
     output?: Variable
     detail?: any
