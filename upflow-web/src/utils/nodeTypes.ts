@@ -5,16 +5,16 @@ import EditStartNode from "@/pages/flow/components/nodes/StartNode/EditStartAttr
 import EditCaseNode from "@/pages/flow/components/nodes/CaseNode/EditCaseAttribute";
 import {NodeCfgType, ObjectType} from "@/typings";
 import {nanoid} from "nanoid";
-import ForNode from "@/pages/flow/components/nodes/ForNode";
-import ForStartNode from "@/pages/flow/components/nodes/ForNode/ForStartNode";
+import LoopNode from "@/pages/flow/components/nodes/LoopNode";
+import LoopStartNode from "@/pages/flow/components/nodes/LoopNode/ForStartNode";
 import CommentNode from "@/pages/flow/components/nodes/CommentNode";
 
 // 节点类型 key 常量
 export const NODE_TYPE = {
     START: 'start',
     CASE: 'case',
-    FOR: 'for',
-    FOR_START: 'for-start',
+    LOOP: 'loop',
+    LOOP_START: 'loop-start',
     SCRIPT: 'script',
     SQL: 'sql',
     SUBFLOW: 'subflow',
@@ -44,11 +44,11 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
             group: false,
         }
     },
-    [NODE_TYPE.FOR]: {
+    [NODE_TYPE.LOOP]: {
         width: 400,
         height: 200,
-        icon: 'icon-for',
-        node: ForNode,
+        icon: 'icon-loop',
+        node: LoopNode,
         attr: null,
         data: {
             title: '循环',
@@ -56,9 +56,9 @@ export const NodeTypes: ObjectType<NodeCfgType> = {
             group: true,
         }
     },
-    [NODE_TYPE.FOR_START]: {
+    [NODE_TYPE.LOOP_START]: {
         icon: 'icon-start',
-        node: ForStartNode,
+        node: LoopStartNode,
         attr: null,
         width: 30,
         height: 30,

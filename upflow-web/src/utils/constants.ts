@@ -1,7 +1,5 @@
 import {ObjectType} from "@/typings";
 
-export const IconFontUrl = 'https://at.alicdn.com/t/c/font_5021436_vj8jgnno7i.js';
-
 export const CompareOprType: ObjectType<string> = {
     'in': "包含",
     'not in': "不包含",

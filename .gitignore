@@ -37,3 +37,4 @@ replay_pid*
 /upflow-web/dist
 .swc
 /.idea/
+.yarn/

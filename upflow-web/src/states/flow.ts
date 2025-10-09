@@ -417,11 +417,11 @@ const createNode = (type: string, position: { x: number, y: number }) => {
     };
     nodes.push(newNode);
 
-    if (type === NODE_TYPE.FOR) {
-        let forStartNodeCfg = NodeTypes[NODE_TYPE.FOR_START];
+    if (type === NODE_TYPE.LOOP) {
+        let forStartNodeCfg = NodeTypes[NODE_TYPE.LOOP_START];
         const forStartNode = {
             ...forStartNodeCfg,
-            type: NODE_TYPE.FOR_START,
+            type: NODE_TYPE.LOOP_START,
             position: forStartNodeCfg.position!,
             data: {...forStartNodeCfg.data},
             id: newId(),

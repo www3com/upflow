@@ -65,7 +65,7 @@ export default {
                     "x": 1000,
                     "y": 200
                 },
-                "type": "for",
+                "type": "loop",
                 "width": 936,
                 "height": 695,
                 "data": {

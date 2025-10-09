@@ -10,15 +10,15 @@
   },
   "dependencies": {
     "@xyflow/react": "^12.8.6",
-    "umi": "^4.4.12",
-    "valtio": "^2.1.7",
-    "antd": "^5.27.3",
+    "antd": "^5.27.4",
     "axios": "^1.12.2",
-    "nanoid": "^5.1.5"
+    "nanoid": "^5.1.6",
+    "umi": "^4.5.1",
+    "valtio": "^2.1.8"
   },
   "devDependencies": {
-    "@types/react": "^18.0.33",
+    "@types/react": "^18.0.38",
     "@types/react-dom": "^18.0.11",
-    "typescript": "^5.0.3"
+    "typescript": "^5.0.4"
   }
 }
