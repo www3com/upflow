@@ -14,7 +14,7 @@ export default memo((node: NodeType) => {
             onMouseLeave={() => setIsHovered(false)}
         >
             <NodeWrapper node={node}>
-                {node.data.group && isHovered && (<NodeResizeControl/>)}
+                {node.data.group && isHovered && node.data.expanded && (<NodeResizeControl/>)}
                 <Handle type="source" position={Position.Right}/>
                 <Handle type="target" position={Position.Left}/>
                 <Handle type="source" position={Position.Right}/>

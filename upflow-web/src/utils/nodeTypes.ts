@@ -6,7 +6,7 @@ import EditCaseNode from "@/pages/flow/components/nodes/CaseNode/EditCaseAttribu
 import {NodeCfgType, ObjectType} from "@/typings";
 import {nanoid} from "nanoid";
 import LoopNode from "@/pages/flow/components/nodes/LoopNode";
-import LoopStartNode from "@/pages/flow/components/nodes/LoopNode/ForStartNode";
+import LoopStartNode from "@/pages/flow/components/nodes/LoopNode/LoopStartNode";
 import CommentNode from "@/pages/flow/components/nodes/CommentNode";
 
 // 节点类型 key 常量
