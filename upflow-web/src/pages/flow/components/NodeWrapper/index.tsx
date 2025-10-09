@@ -45,7 +45,7 @@ export default memo(({node, children}: NodeWrapperProps) => {
     
     const items = [
         {key: 'del', label: <div onClick={onDelete}><DeleteOutlined/> 删除</div>},
-        {key: 'copy', label: <div onClick={onClone}><CopyOutlined/> 拷贝</div>}];
+        {key: 'copy', label: <div onClick={onClone}><CopyOutlined/> 创建副本</div>}];
 
     const expandNode = useMemo(() => {
         return <Button type='text' size='small' icon={expanded ? <DownCircleOutlined/> : <UpCircleOutlined/>}
