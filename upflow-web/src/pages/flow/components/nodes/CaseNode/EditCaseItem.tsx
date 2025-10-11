@@ -5,6 +5,7 @@ import {
     PlusOutlined,
 } from "@ant-design/icons";
 import IconFont from '@/components/IconFont';
+import VariableSelect from '@/components/VariableSelect';
 import {theme} from "antd";
 import {useEffect, useState} from "react";
 import {Case, Condition} from "@/typings";
@@ -104,95 +105,18 @@ export default function EditCaseItem({
                             name={[name, 'varName']}
                             style={{marginBottom: 0}}
                         >
-                            <Select
-                                variant="borderless"
-                                popupMatchSelectWidth={false}
+                            <VariableSelect
+                                variablesWithNode={variablesWithNode}
                                 onChange={handleFormChange}
+                                variant="borderless"
                                 size="small"
                                 suffixIcon={null}
                                 style={{
                                     backgroundColor: '#ffffff',
                                     borderRadius: '6px'
                                 }}
-                                labelRender={() => {
-                                    // 获取当前选中的值
-                                    const currentValue = currentForm.getFieldValue(['conditions', name, 'varName']);
-                                    
-                                    // 如果没有选择，显示请选择变量
-                                    if (!currentValue) {
-                                        return (
-                                            <span style={{color: token.colorTextPlaceholder}}>
-                                                请选择变量
-                                            </span>
-                                        );
-                                    }
-
-                                    // 查找变量所属的节点
-                                    const variable = variablesWithNode.find(v => v.varName === currentValue);
-                                    const nodeName = variable?.nodeName || '';
-                                    const nodeIcon = variable?.nodeIcon || 'icon-default';
-
-                                    return (
-                                        <Flex gap={5}>
-                                            {variable && <Flex>
-                                                <IconFont type={nodeIcon}/>
-                                                <span style={{fontWeight: 500}}> {nodeName}</span>
-                                            </Flex>}
-                                            {variable && <span style={{color: token.colorText}}>/</span>}
-                                            <Flex style={{color: token.colorPrimary, fontWeight: 500}} gap={3}>
-                                                <IconFont type="icon-variable" style={{color: token.colorPrimary}}/>
-                                                {currentValue}
-                                            </Flex>
-                                            {!variable && <CloseCircleOutlined style={{color: 'red'}}/>}
-                                        </Flex>
-                                    );
-                                }}
-                            >
-                                {// 按节点名称分组
-                                    Object.entries(
-                                        variablesWithNode.reduce((groups, variable) => {
-                                            if (!groups[variable.nodeName]) {
-                                                groups[variable.nodeName] = [];
-                                            }
-                                            groups[variable.nodeName].push(variable);
-                                            return groups;
-                                        }, {} as {
-                                            [nodeName: string]: Array<{
-                                                nodeId: string;
-                                                nodeName: string;
-                                                varName: string;
-                                                varType: string;
-                                                nodeIcon: string
-                                            }>
-                                        })
-                                    ).map(([nodeName, variables]) => {
-                                        const nodeIcon = variables[0]?.nodeIcon || 'icon-default';
-                                        return (
-                                            <Select.OptGroup
-                                                key={nodeName}
-                                                label={
-                                                    <Space>
-                                                        <IconFont type={nodeIcon} style={{color: token.colorPrimary}}/>
-                                                        {nodeName}
-                                                    </Space>
-                                                }
-                                            >
-                                                {variables.map((variable) => (
-                                                    <Select.Option key={variable.varName} value={variable.varName}>
-                                                        <Space>
-                                                            <IconFont type="icon-variable"
-                                                                      style={{color: token.colorPrimary}}/>
-                                                            {variable.varName}
-                                                        </Space>
-                                                    </Select.Option>
-                                                ))}
-                                            </Select.OptGroup>
-                                        );
-                                    })}
-                            </Select>
+                            />
                         </Form.Item>
-
-
                         <Form.Item
                             {...restField}
                             name={[name, 'opr']}
@@ -255,7 +179,7 @@ export default function EditCaseItem({
             variant={'borderless'}
             title={
                 <Flex justify="space-between" align="center">
-                    <Flex gap={5}>
+                    <Flex gap={5} align="center">
                         <span style={{fontWeight: 'bold'}}>
                         {totalCases === 1 ? 'IF' : `CASE ${index + 1}`}
                         </span>

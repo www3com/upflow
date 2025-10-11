@@ -7,45 +7,28 @@ interface ListItemType {
     value: number | string
 }
 
-export interface Variable {
-    name: string,
-    type: string,
-    value: string
-    rules?: Rule[]
-}
-
-interface NodeDataType {
-    title?: string
-    description?: string
-    input?: Variable[]
-    output?: Variable
-    detail?: any
-    group?: boolean
-    expanded?: boolean
-    hidden?: boolean
-}
-
+/**
+ * 节点类型
+ */
 interface NodeType {
     id: string
     type: string
     position: { x: number, y: number }
-    data: NodeDataType
+    data: any
     width?: number
     height?: number
     dragging?: boolean
     draggable?: boolean
 }
 
-interface NodeCfgType {
+/**
+ * 节点配置项
+ */
+interface NodeDefineType {
     icon: string
-    node: any
-    data: NodeDataType
-    width?: number
-    height?: number
-    position?: { x: number, y: number }
-    attr?: any
-    dragging?: boolean
-    draggable?: boolean
+    renderComponent: React.ComponentType<any>
+    propertiesEditor?: React.ComponentType<any>
+    defaultConfig?: NodeType
 }
 
 /**
@@ -57,13 +40,29 @@ export interface Rule {
     message?: string
 }
 
+export interface Variable {
+    name: string,
+    type: string,
+    value: string
+    rules?: Rule[]
+}
+
+interface StartNodeType {
+    title?: string
+    description?: string
+    variables?: Variable[]
+    group?: boolean
+    expanded?: boolean
+    hidden?: boolean
+}
+
+
 /**
  * 条件分支 - 条件
  */
 export interface Condition {
     nodeId: string,
     varName: string,
-    varType: string,
     opr: string,
     value: string
 }
@@ -75,4 +74,18 @@ export interface Case {
     id: string,
     opr: string,
     conditions: Condition[],
+}
+
+/**
+ * 循环节点类型
+ */
+export interface LoopNodeType {
+    title?: string
+    description?: string
+    type: 'for' | 'while' | 'forever'
+    forNodeId?: string,
+    forVarName?: string,
+    whileNumber?: number,
+    bodyVarName: string,
+    bodyIndexName: string,
 }

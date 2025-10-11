@@ -1,7 +1,7 @@
 import {Card, Flex, theme} from "antd";
 import styles from "./styles.less";
 import React, {DragEvent, MouseEvent} from "react";
-import {NodeTypes} from "@/utils/nodeTypes";
+import {NodeDefineTypes} from "@/utils/nodeTypes";
 import IconFont from '@/components/IconFont';
 
 const {useToken} = theme;
@@ -26,17 +26,17 @@ export default () => {
     return (
         <Card title='组件面板' variant='borderless' size='small' className={styles.card}>
                     <Flex wrap gap={4}>
-                        {Object.keys(NodeTypes)
-                            .filter(nodeType => !NodeTypes[nodeType].data.hidden)
+                        {Object.keys(NodeDefineTypes)
+                            .filter(nodeType => !NodeDefineTypes[nodeType].defaultConfig?.data.hidden)
                             .map((nodeType) => (
                             <Flex vertical draggable align={'center'} justify={'center'} gap={5} key={nodeType}
                                   className={styles.draggableNode}
                           onDragStart={(event) => onDragStart(event, nodeType)}
                           onMouseEnter={(e) => onMouseEnter(e)}
                           onMouseLeave={(e) => onMouseLeave(e)}>
-                        <IconFont type={NodeTypes[nodeType].icon}
+                        <IconFont type={NodeDefineTypes[nodeType].icon}
                                   style={{fontSize: '22px', color: token.colorPrimary}}/>
-                        <span style={{fontSize: '12px'}}>{NodeTypes[nodeType].data.title}</span>
+                        <span style={{fontSize: '12px'}}>{NodeDefineTypes[nodeType].defaultConfig?.data.title}</span>
                     </Flex>
                 ))}
             </Flex>

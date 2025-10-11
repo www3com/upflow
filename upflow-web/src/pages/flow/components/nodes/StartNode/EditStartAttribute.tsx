@@ -29,7 +29,8 @@ export default ({node, onChange}: StartNodeProps) => {
         setVariable(variable);
     }
     const onUpdate = (variable: Variable) => {
-        let variables = node.data.input as Variable[] || [];
+        // 获取变量数据
+        let variables = (node.data.variables || []) as Variable[];
 
         // 检查是否是更新现有变量还是添加新变量
         const existingIndex = variables.findIndex(v => v.name === variable.name);
@@ -52,7 +53,8 @@ export default ({node, onChange}: StartNodeProps) => {
     }
 
     const onDelete = (variable: Variable) => {
-        let variables = node.data.variables as Variable[] || [];
+        // 获取变量数据
+        let variables = (node.data.variables || []) as Variable[];
         let filteredVariables = variables.filter(v => v.name !== variable.name);
         let data = {
             ...node.data,
@@ -62,10 +64,13 @@ export default ({node, onChange}: StartNodeProps) => {
         onChange(startNode);
     }
 
+    // 获取变量数据
+    const variables = (node.data.variables || []) as Variable[];
+
     return (<>
             <List size={"small"}
                   bordered={false}
-                  dataSource={node.data.input ? node.data.input as Variable[] : []}
+                  dataSource={variables}
                   footer={
                       <Button
                           type="dashed"

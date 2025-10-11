@@ -1,7 +1,7 @@
 import React, { useRef} from 'react';
 import {  Menu } from 'antd';
 import type { MenuProps } from 'antd';
-import { NodeTypes } from '@/utils/nodeTypes';
+import { NodeDefineTypes } from '@/utils/nodeTypes';
 import IconFont from '@/components/IconFont';
 
 interface ContextMenuProps {
@@ -43,11 +43,11 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
   };
 
   // 节点类型子菜单
-  const nodeTypeMenuItems: MenuProps['items'] = Object.entries(NodeTypes)
-    .filter(([_, value]) =>  !value.data.hidden)
+  const nodeTypeMenuItems: MenuProps['items'] = Object.entries(NodeDefineTypes)
+    .filter(([_, value]) =>  !value.defaultConfig?.data.hidden)
     .map(([key, config]) => ({
       key: `node-${key}`,
-      label: config.data.title,
+      label: config.defaultConfig?.data.title,
       icon: <IconFont type={config.icon} style={{ fontSize: 16 }} />,
       onClick: () => {
         onAddNode(key);

@@ -11,17 +11,27 @@ const {useToken} = theme;
 
 export default memo((node: NodeType) => {
     const {token} = useToken();
-    if (node.data.input && node.data.input.length == 0) {
+    // 获取变量数据
+    const variables = node.data.variables || [];
+    
+    if (variables.length === 0) {
         return <NodeWrapper node={node}/>
     }
     return (
         <NodeWrapper node={node}>
             <Flex vertical className='node-container' gap={10}>
                 <Flex vertical gap={5}>
-                    {node.data.input && node.data.input.map((item: any) => (
+                    {variables.map((item: any) => (
                         <Flex justify="space-between" align="center" className={styles.variable} key={item.name}>
-                            <Space size={3}><IconFont type="icon-variable"
-                                                      style={{color: token.colorPrimary}}/>{item.name}</Space>
+                            <Space size={3}>
+                                <IconFont type="icon-variable" style={{color: token.colorPrimary}}/>
+                                {item.name}
+                                {item.rules && item.rules.length > 0 && (
+                                    <label style={{marginLeft: '5px', color: '#1677ff'}}>
+                                        ({item.rules.length} rules)
+                                    </label>
+                                )}
+                            </Space>
                             <label className={styles.rules}>{item.type}</label>
                         </Flex>
                     ))}

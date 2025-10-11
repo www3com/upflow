@@ -6,7 +6,7 @@ import {
     DownCircleOutlined,
     EllipsisOutlined, UpCircleOutlined
 } from "@ant-design/icons";
-import {NodeTypes} from "@/utils/nodeTypes";
+import {NodeDefineTypes} from "@/utils/nodeTypes";
 import IconFont from '@/components/IconFont';
 import styles from './styles.less'
 import {cloneNode, deleteNode, extendNode, setHoveredNodeId} from "@/states/flow";
@@ -56,7 +56,7 @@ export default memo(({node, children}: NodeWrapperProps) => {
         <Flex vertical className={styles.wrapper}>
             <Flex align="center" justify={'space-between'} className={styles.header}>
                 <Flex align='center' gap={5} style={{height: 32}}>
-                    <IconFont type={NodeTypes[node.type].icon} style={{color: token.colorPrimary, fontSize: 16}}/>
+                    <IconFont type={NodeDefineTypes[node.type].icon} style={{color: token.colorPrimary, fontSize: 16}}/>
                     <span>{node.data.title}</span>
                 </Flex>
                 <Space size={0} className={styles.actionBtn}>

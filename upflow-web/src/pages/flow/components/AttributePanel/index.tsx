@@ -5,7 +5,7 @@ import {Panel} from "@xyflow/react";
 import React, {ComponentType, useState, useEffect, useCallback} from "react";
 import ResizablePanel from "@/components/ResizablePanel";
 import {ExpandOutlined, CompressOutlined} from '@ant-design/icons';
-import {NodeTypes} from "@/utils/nodeTypes";
+import {NodeDefineTypes} from "@/utils/nodeTypes";
 import {state} from '@/states/flow';
 import {useSnapshot} from "valtio";
 import {NodeType} from "@/typings";
@@ -67,7 +67,7 @@ export default () => {
     if (!snap.selectedNode) return <></>
     
     // 根据节点类型获取对应的配置
-    const config = NodeTypes[snap.selectedNode.type!]
+    const config = NodeDefineTypes[snap.selectedNode.type!]
     const titleIcon = config?.icon
 
     const title = (
@@ -103,7 +103,7 @@ export default () => {
         </div>
     )
     
-    const EditComponent = config?.attr as ComponentType<{ node: NodeType, onChange?: (node: NodeType) => void }> | null
+    const EditComponent = config?.propertiesEditor as ComponentType<{ node: NodeType, onChange?: (node: NodeType) => void }> | null
 
     const cardExtra = (
         <Button

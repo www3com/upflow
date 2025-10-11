@@ -12,6 +12,7 @@ export default {
                     "y": 200
                 },
                 "type": "case",
+                "width": 250,
                 "data": {
                     "title": "选择分支",
                     "detail": [{
@@ -20,25 +21,21 @@ export default {
                         "conditions": [{
                             "nodeId": "n1",
                             "varName": "name",
-                            "varType": "string",
                             "opr": "in",
                             "value": "张三"
                         }, {
                             "nodeId": "n2",
                             "varName": "sex",
-                            "varType": "string",
                             "opr": "=",
                             "value": "男"
                         }, {
                             "nodeId": "n3",
                             "varName": "sex",
-                            "varType": "string",
                             "opr": "start with",
                             "value": "男"
                         }, {
                             "nodeId": "n4",
                             "varName": "sex",
-                            "varType": "string",
                             "opr": "not in",
                             "value": "男"
                         }]
@@ -48,18 +45,13 @@ export default {
                         "conditions": [{
                             "nodeId": "n5",
                             "varName": "name",
-                            "varType": "string",
                             "opr": ">=",
                             "value": "张三"
                         }]
                     }]
                 },
-                "measured": {
-                    "width": 220,
-                    "height": 268
-                },
                 "selected": false
-            },{
+            }, {
                 "id": "n3",
                 "position": {
                     "x": 1000,
@@ -78,7 +70,7 @@ export default {
                 },
                 "resizing": false,
                 "selected": false
-            },  {
+            }, {
                 "id": "n1",
                 "type": "start",
                 "parentId": "n3",
@@ -89,7 +81,7 @@ export default {
                 },
                 "data": {
                     "title": "开始",
-                    "input": [{
+                    "variables": [{
                         "name": "name",
                         "type": "string",
                         "value": "value",
@@ -119,13 +111,17 @@ export default {
                 "selected": false
             }, {
                 "id": "nB-V1ChR",
-                "type": "for",
-                "width": 400,
+                "type": "loop",
                 "height": 200,
                 "data": {
                     "title": "循环",
-                    "input": [],
-                    "group": true
+                    "group": true,
+                    "type": 'for',
+                    "forNodeId": "n3",
+                    "forVarName": "sex",
+                    "whileNumber": 3,
+                    "bodyVarName": "ssss",
+                    "bodyIndexName": "index"
                 },
                 "position": {
                     "x": 344,

@@ -19,7 +19,7 @@ import {
     SelectionMode,
     useReactFlow
 } from "@xyflow/react";
-import {NodeTypes} from "@/utils/nodeTypes";
+import {NodeDefineTypes} from "@/utils/nodeTypes";
 import {useFlow} from "@/pages/flow/hooks/useFlow";
 import AttributePanel from "@/pages/flow/components/AttributePanel";
 import ZoomControl from "./components/ZoomControl";
@@ -57,7 +57,7 @@ const FlowPage = () => {
 
     const nodeTypes = useMemo(() => {
         return Object.fromEntries(
-            Object.entries(NodeTypes).map(([key, value]) => [key, value.node])
+            Object.entries(NodeDefineTypes).map(([key, value]) => [key, value.renderComponent])
         );
     }, []);
 

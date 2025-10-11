@@ -2,7 +2,7 @@ import {Node, Edge} from '@xyflow/react';
 import {proxy} from "valtio";
 import {nanoid} from "nanoid";
 import {getFlowApi} from "@/services/flow";
-import {NODE_TYPE, NodeTypes} from "@/utils/nodeTypes";
+import {NODE_TYPE, NodeDefineTypes} from "@/utils/nodeTypes";
 import {getAllChildrenIds, newId, sortNodes} from "@/utils/flow";
 import {message} from "antd/lib";
 import {NodeType} from "@/typings";
@@ -344,7 +344,7 @@ export const extendNode = (nodeId: string) => {
     const newExpanded = !currentExpanded;
 
     // 获取节点类型配置
-    const nodeConfig = NodeTypes[currentNode.type!];
+    const nodeConfig = NodeDefineTypes[currentNode.type!];
 
     // 更新当前节点的展开状态和尺寸
     const updatedNode = {
@@ -357,7 +357,7 @@ export const extendNode = (nodeId: string) => {
 
 
     // 如果是容器节点，处理尺寸变化
-    if (nodeConfig?.data.group) {
+    if (nodeConfig?.defaultConfig?.data.group) {
         if (newExpanded) {
             // 展开：从 map 中恢复尺寸，如果没有则使用默认尺寸
             const savedSize = NodeSizeMap[nodeId];
@@ -365,16 +365,16 @@ export const extendNode = (nodeId: string) => {
                 updatedNode.width = savedSize.width;
                 updatedNode.height = savedSize.height;
             } else {
-                updatedNode.width = nodeConfig.width || currentNode.width;
-                updatedNode.height = nodeConfig.height || currentNode.height;
+                updatedNode.width = nodeConfig.defaultConfig?.width || currentNode.width;
+                updatedNode.height = nodeConfig.defaultConfig?.height || currentNode.height;
             }
         } else {
 
             // 收起：先记录当前尺寸到 map 中，再缩小尺寸
             NodeSizeMap[nodeId] = {
                 id: nodeId,
-                width: currentNode.width || nodeConfig.width || 220,
-                height: currentNode.height || nodeConfig.height || 100
+                width: currentNode.width || nodeConfig.defaultConfig?.width || 220,
+                height: currentNode.height || nodeConfig.defaultConfig?.height || 100
             };
 
             // 缩小尺寸，只显示标题栏
@@ -405,25 +405,25 @@ export const extendNode = (nodeId: string) => {
 }
 
 const createNode = (type: string, position: { x: number, y: number }) => {
-    let node = NodeTypes[type];
+    let node = NodeDefineTypes[type];
     let id = newId();
     let nodes: Node[] = [];
     const newNode: Node = {
         id, type, position,
-        width: node.width,
-        height: node.height,
-        data: {...node.data},
+        width: node.defaultConfig?.width,
+        height: node.defaultConfig?.height,
+        data: {...node.defaultConfig?.data},
         extent: 'parent',
     };
     nodes.push(newNode);
 
     if (type === NODE_TYPE.LOOP) {
-        let forStartNodeCfg = NodeTypes[NODE_TYPE.LOOP_START];
+        let forStartNodeCfg = NodeDefineTypes[NODE_TYPE.LOOP_START];
         const forStartNode = {
-            ...forStartNodeCfg,
+            ...forStartNodeCfg.defaultConfig,
             type: NODE_TYPE.LOOP_START,
-            position: forStartNodeCfg.position!,
-            data: {...forStartNodeCfg.data},
+            position: forStartNodeCfg.defaultConfig?.position!,
+            data: {...forStartNodeCfg.defaultConfig?.data},
             id: newId(),
             parentId: id
         };
