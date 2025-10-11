@@ -31,7 +31,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
     [NODE_TYPE.START]: {
         icon: 'icon-start',
         renderComponent: StartNode,
-        propertiesEditor: EditStartNode,
+        attributeEditor: EditStartNode,
         defaultConfig: {
             id: '',
             type: NODE_TYPE.START,
@@ -47,7 +47,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
     [NODE_TYPE.CASE]: {
         icon: 'icon-case',
         renderComponent: ConditionNode,
-        propertiesEditor: EditCaseNode,
+        attributeEditor: EditCaseNode,
         defaultConfig: {
             id: '',
             type: NODE_TYPE.CASE,
@@ -63,7 +63,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
     [NODE_TYPE.LOOP]: {
         icon: 'icon-loop',
         renderComponent: LoopNode,
-        propertiesEditor: EditLoopAttribute,
+        attributeEditor: EditLoopAttribute,
         defaultConfig: {
             id: '',
             type: NODE_TYPE.LOOP,

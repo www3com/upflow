@@ -27,7 +27,7 @@ interface NodeType {
 interface NodeDefineType {
     icon: string
     renderComponent: React.ComponentType<any>
-    propertiesEditor?: React.ComponentType<any>
+    attributeEditor?: React.ComponentType<any>
     defaultConfig?: NodeType
 }
 

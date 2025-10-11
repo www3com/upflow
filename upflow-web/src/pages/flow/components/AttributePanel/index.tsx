@@ -103,7 +103,7 @@ export default () => {
         </div>
     )
     
-    const EditComponent = config?.propertiesEditor as ComponentType<{ node: NodeType, onChange?: (node: NodeType) => void }> | null
+    const EditComponent = config?.attributeEditor as ComponentType<{ node: NodeType, onChange?: (node: NodeType) => void }> | null
 
     const cardExtra = (
         <Button
