@@ -8,7 +8,6 @@ export default memo((node: NodeType) => {
         <NodeWrapper node={node}>
             <Handle type="target" position={Position.Left}/>
             <Handle type="source" position={Position.Right}/>
-            无内容
         </NodeWrapper>
     )
 });

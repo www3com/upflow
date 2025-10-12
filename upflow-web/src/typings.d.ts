@@ -91,3 +91,65 @@ export interface LoopNodeType {
     bodyVarName: string,
     bodyIndexName: string,
 }
+
+/**
+ * 支持的脚本语言类型
+ */
+export type ScriptLanguage = 'javascript' | 'python'
+
+/**
+ * 支持的变量类型
+ */
+export type VariableType = 'string' | 'int' | 'long' | 'list' | 'boolean' | 'object'
+
+/**
+ * 变量引用类型 - 引用其他节点的变量
+ */
+export interface VariableReference {
+    /** 引用的节点ID */
+    nodeId: string
+    /** 引用的变量名 */
+    varName: string
+}
+
+/**
+ * 脚本节点输入变量
+ */
+export interface ScriptInputVariable {
+    /** 在脚本中使用的变量名 */
+    name: string
+    /** 变量引用 */
+    value: VariableReference
+}
+
+/**
+ * 脚本节点输出变量
+ */
+export interface ScriptOutputVariable {
+    /** 变量名 */
+    name: string
+    /** 变量类型 */
+    type: VariableType
+}
+
+/**
+ * 脚本节点类型
+ */
+export interface ScriptNodeType {
+    /** 节点标题 */
+    title?: string
+    /** 节点描述 */
+    description?: string
+    /** 脚本语言类型 */
+    language: ScriptLanguage
+    /** 脚本代码内容 */
+    script: string
+    /** 输入变量列表 */
+    variables?: ScriptInputVariable[]
+    /** 输出变量列表 */
+    output?: ScriptOutputVariable[]
+    /** 脚本执行超时时间（毫秒），默认30秒 */
+    timeout?: number
+    /** 是否启用调试模式 */
+    debug?: boolean
+}

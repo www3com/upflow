@@ -11,6 +11,7 @@ import CommentNode from "@/pages/flow/components/nodes/CommentNode";
 import EditLoopAttribute from "@/pages/flow/components/nodes/LoopNode/EditLoopAttribute";
 import LoopContinueNode from "@/pages/flow/components/nodes/LoopContinueNode";
 import LoopBreakNode from "@/pages/flow/components/nodes/LoopBreakNode";
+import EditScriptAttribute from "@/pages/flow/components/nodes/ScriptNode/EditScriptAttribute";
 
 // 节点类型 key 常量
 export const NODE_TYPE = {
@@ -114,6 +115,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
     [NODE_TYPE.SCRIPT]: {
         icon: 'icon-script',
         renderComponent: ScriptNode,
+        attributeEditor: EditScriptAttribute,
         defaultConfig: {
             id: '',
             type: NODE_TYPE.SCRIPT,

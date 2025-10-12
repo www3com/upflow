@@ -122,7 +122,7 @@ export default () => {
             className={`${styles.panel} ${maximized ? styles.maximized : ''}`}
         >
             <ResizablePanel
-                defaultWidth={400}
+                defaultWidth={500}
                 minWidth={200}
                 maxWidth={1200}
                 isMaximized={maximized}
