@@ -83,8 +83,10 @@ export interface LoopNodeType {
     title?: string
     description?: string
     type: 'for' | 'while' | 'forever'
-    forNodeId?: string,
-    forVarName?: string,
+    forVariable?: {
+        nodeId: string,
+        varName: string
+    }
     whileNumber?: number,
     bodyVarName: string,
     bodyIndexName: string,

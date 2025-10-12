@@ -1,6 +1,5 @@
-import {Button, Flex, Card, Select, Input, Space, Form, Divider} from "antd";
+import {Button, Flex, Card, Select, Input, Form, Divider} from "antd";
 import {
-    CloseCircleOutlined,
     DeleteOutlined,
     PlusOutlined,
 } from "@ant-design/icons";
@@ -10,7 +9,6 @@ import {theme} from "antd";
 import {useEffect, useState} from "react";
 import {Case, Condition} from "@/typings";
 import {CompareOprType} from "@/utils/constants";
-import {nanoid} from "nanoid";
 
 const {useToken} = theme;
 
@@ -40,24 +38,44 @@ export default function EditCaseItem({
                                          form
                                      }: EditCaseItemProps) {
     const {token} = useToken();
-    const [localForm] = Form.useForm();
-    const currentForm = form || localForm;
-    
-    // 添加逻辑操作符状态管理
     const [logicalOperator, setLogicalOperator] = useState<string>(caseItem.opr || 'and');
+
+    // 获取当前表单实例
+    const currentForm = form || Form.useForm()[0];
 
     // 初始化表单数据
     useEffect(() => {
-        currentForm.setFieldsValue({
-            conditions: caseItem.conditions || []
-        });
-        // 同步逻辑操作符状态
-        setLogicalOperator(caseItem.opr || 'and');
-    }, [caseItem.conditions, caseItem.opr, currentForm]);
+        if (caseItem.conditions) {
+            // 将Condition转换为表单可用的结构
+            const formConditions = caseItem.conditions.map(condition => ({
+                variable: condition.nodeId && condition.varName ? {
+                    nodeId: condition.nodeId,
+                    varName: condition.varName
+                } : undefined,
+                opr: condition.opr,
+                value: condition.value
+            }));
+            
+            currentForm.setFieldsValue({
+                conditions: formConditions
+            });
+        }
+    }, [caseItem, currentForm]);
+
+    // 将表单数据转换回Condition结构的辅助函数
+    const convertFormDataToConditions = (formConditions: any[]): Condition[] => {
+        return formConditions.map(formCondition => ({
+            nodeId: formCondition.variable?.nodeId || '',
+            varName: formCondition.variable?.varName || '',
+            opr: formCondition.opr || 'in',
+            value: formCondition.value || ''
+        }));
+    };
 
     // 监听表单变化并更新父组件
     const handleFormChange = () => {
-        const conditions = currentForm.getFieldValue('conditions') || [];
+        const formConditions = currentForm.getFieldValue('conditions') || [];
+        const conditions = convertFormDataToConditions(formConditions);
         onUpdateCase(index, conditions, logicalOperator);
     };
 
@@ -66,24 +84,27 @@ export default function EditCaseItem({
         const newOperator = logicalOperator === 'and' ? 'or' : 'and';
         setLogicalOperator(newOperator);
         // 立即更新父组件
-        const conditions = currentForm.getFieldValue('conditions') || [];
+        const formConditions = currentForm.getFieldValue('conditions') || [];
+        const conditions = convertFormDataToConditions(formConditions);
         onUpdateCase(index, conditions, newOperator);
     };
 
     // 添加条件的函数
     const handleAddCondition = () => {
-        const conditions = currentForm.getFieldValue('conditions') || [];
-        const newCondition = {
-            nodeId: nanoid(),
-            varName: '',
+        const formConditions = currentForm.getFieldValue('conditions') || [];
+        const newFormCondition = {
+            variable: undefined,
             opr: 'in',
             value: ''
         };
         currentForm.setFieldsValue({
-            conditions: [...conditions, newCondition]
+            conditions: [...formConditions, newFormCondition]
         });
-        // 延迟执行以确保表单更新完成
-        setTimeout(handleFormChange, 0);
+        
+        // 更新父组件
+        const updatedFormConditions = [...formConditions, newFormCondition];
+        const conditions = convertFormDataToConditions(updatedFormConditions);
+        onUpdateCase(index, conditions, logicalOperator);
     };
 
     // 渲染单个条件项
@@ -102,12 +123,11 @@ export default function EditCaseItem({
                     <Flex align="center" gap={0} justify={'space-between'}>
                         <Form.Item
                             {...restField}
-                            name={[name, 'varName']}
+                            name={[name, 'variable']}
                             style={{marginBottom: 0}}
                         >
                             <VariableSelect
                                 variablesWithNode={variablesWithNode}
-                                onChange={handleFormChange}
                                 variant="borderless"
                                 size="small"
                                 suffixIcon={null}

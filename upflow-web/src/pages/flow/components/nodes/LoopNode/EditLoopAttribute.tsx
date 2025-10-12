@@ -19,11 +19,10 @@ export default ({node, onChange}: LoopNodeProps) => {
 
     // 初始化表单数据
     useEffect(() => {
-        const nodeData = node.data as any; // 使用 any 来避免类型冲突
+        const nodeData = (node.data as unknown) as LoopNodeType;
         const initialValues = {
             type: nodeData.type || '',
-            forNodeId: nodeData.forNodeId || '',
-            forVarName: nodeData.forVarName || '',
+            forVariable: nodeData.forVariable || undefined,
             whileNumber: nodeData.whileNumber || 1,
             bodyVarName: nodeData.bodyVarName || 'item',
             bodyIndexName: nodeData.bodyIndexName || 'index'
@@ -38,45 +37,61 @@ export default ({node, onChange}: LoopNodeProps) => {
         console.log('Form values:', values);
         
         // 构建更新后的节点数据
-        const updatedData: any = {
+        const updatedData = {
             ...node.data,
             type: values.type,
             bodyVarName: values.bodyVarName,
             bodyIndexName: values.bodyIndexName
-        };
+        } as LoopNodeType;
 
         // 根据循环类型添加特定字段
         if (values.type === 'for') {
-            updatedData.forNodeId = values.forNodeId;
-            updatedData.forVarName = values.forVarName;
-            // 清除 while 相关字段
+            updatedData.forVariable = values.forVariable;
+            // 清除其他类型的字段
             delete updatedData.whileNumber;
         } else if (values.type === 'while') {
             updatedData.whileNumber = values.whileNumber;
-            // 清除 for 相关字段
-            delete updatedData.forNodeId;
-            delete updatedData.forVarName;
+            // 清除其他类型的字段
+            delete updatedData.forVariable;
         } else if (values.type === 'forever') {
-            // 清除 for 和 while 相关字段
-            delete updatedData.forNodeId;
-            delete updatedData.forVarName;
+            // 清除其他类型的字段
+            delete updatedData.forVariable;
             delete updatedData.whileNumber;
         }
 
-        // 创建更新后的节点
-        const updatedNode: Node = {
+        // 更新节点
+        const updatedNode = {
             ...node,
-            data: updatedData
+            data: (updatedData as unknown) as Record<string, unknown>
         };
-
-        // 调用 onChange 回调更新节点
+        
         onChange(updatedNode);
     };
 
-    // 表单值变化时自动保存
+    // 表单值变化处理
     const onValuesChange = (changedValues: any, allValues: any) => {
         // 实时更新节点数据
-        onFinish(allValues);
+        const updatedData = {
+            ...node.data,
+            ...allValues
+        } as LoopNodeType;
+
+        // 根据循环类型清理不相关的字段
+        if (allValues.type === 'for') {
+            delete updatedData.whileNumber;
+        } else if (allValues.type === 'while') {
+            delete updatedData.forVariable;
+        } else if (allValues.type === 'forever') {
+            delete updatedData.forVariable;
+            delete updatedData.whileNumber;
+        }
+
+        const updatedNode = {
+            ...node,
+            data: (updatedData as unknown) as Record<string, unknown>
+        };
+        
+        onChange(updatedNode);
     };
 
     // 获取可用变量列表
@@ -91,8 +106,7 @@ export default ({node, onChange}: LoopNodeProps) => {
 
     const handleLoopTypeChange = (value: string) => {
         setLoopType(value);
-        // 当循环类型改变时，触发表单更新
-        form.setFieldValue('type', value);
+        // 不需要手动设置表单值，Select组件会自动处理
     };
 
     return <>
@@ -120,7 +134,7 @@ export default ({node, onChange}: LoopNodeProps) => {
                     {/* 根据循环类型显示不同内容 */}
                     {loopType === 'for' && (
                         <Form.Item
-                            name="loopCondition"
+                            name="forVariable"
                             label="循环变量"
                             rules={[{required: true, message: '请输入循环条件'}]}
                         >
