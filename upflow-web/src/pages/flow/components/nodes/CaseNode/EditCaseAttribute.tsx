@@ -57,31 +57,12 @@ export default ({node, onChange}: CaseNodeProps) => {
     };
 
     const onUpdateCase = (caseIndex: number, conditions: Condition[], logicalOperator?: string) => {
-        const newCases = cases.map((caseItem, cIndex) => {
-            if (cIndex === caseIndex) {
-                return {
-                    ...caseItem,
-                    opr: logicalOperator || caseItem.opr, // 更新逻辑操作符
-                    conditions: conditions.map(condition => {
-                        // 确保每个条件都有 nodeId
-                        if (!condition.nodeId) {
-                            condition.nodeId = nanoid(8);
-                        }
-                        
-                        // 如果有变量名，自动设置变量类型
-                        if (condition.varName) {
-                            const selectedVar = variablesWithNode.find(v => v.varName === condition.varName);
-                            if (selectedVar) {
-                                condition.varType = selectedVar.varType;
-                            }
-                        }
-                        
-                        return condition;
-                    })
-                };
-            }
-            return { ...caseItem };
-        });
+        const newCases = [...cases];
+        newCases[caseIndex] = {
+            ...newCases[caseIndex],
+            opr: logicalOperator || newCases[caseIndex].opr, // 更新逻辑操作符
+            conditions: conditions
+        };
         
         const updatedNode = {
             ...node,
