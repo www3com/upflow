@@ -418,10 +418,10 @@ const createNode = (type: string, position: { x: number, y: number }) => {
     nodes.push(newNode);
 
     if (type === NODE_TYPE.LOOP) {
-        let forStartNodeCfg = NodeDefineTypes[NODE_TYPE.LOOP_START];
+        let forStartNodeCfg = NodeDefineTypes[NODE_TYPE.GROUP_START];
         const forStartNode = {
             ...forStartNodeCfg.defaultConfig,
-            type: NODE_TYPE.LOOP_START,
+            type: NODE_TYPE.GROUP_START,
             position: forStartNodeCfg.defaultConfig?.position!,
             data: {...forStartNodeCfg.defaultConfig?.data},
             id: newId(),

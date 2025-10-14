@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {Button, Card, Flex, Form, Input, List, Select, Space, theme} from "antd";
+import {Button, Card, Flex, Form, Input, List, Select, Space, theme, Divider, Splitter} from "antd";
 import {DeleteOutlined, PlusOutlined} from "@ant-design/icons";
 import VariableSelect from "@/components/VariableSelect";
 import {getAvailableVariablesWithNode} from "@/utils/variables";
@@ -7,8 +7,7 @@ import {Node} from "@xyflow/react";
 import {useSnapshot} from "valtio";
 import {state} from "@/states/flow";
 import {VariableSelectValue} from "@/components/VariableSelect";
-import IconFont from "@/components/IconFont";
-import MonacoEditor, { CodeValue } from "@/components/MonacoEditor";
+import MonacoEditor from "@/components/MonacoEditor";
 import {
     ScriptNodeType,
     ScriptInputVariable,
@@ -21,7 +20,7 @@ import {
 const {useToken} = theme;
 
 // 变量类型选项 - 使用新的 VariableType
-const VARIABLE_TYPES: Array<{value: VariableType, label: string}> = [
+const VARIABLE_TYPES: Array<{ value: VariableType, label: string }> = [
     {value: "string", label: "字符串"},
     {value: "int", label: "整形"},
     {value: "long", label: "长整型"},
@@ -42,10 +41,11 @@ interface OutputVariableForm extends Omit<ScriptOutputVariable, 'type'> {
 }
 
 // 脚本节点数据接口 - 基于 ScriptNodeType
-interface ScriptNodeData extends Omit<ScriptNodeType, 'inputVariables' | 'outputVariables' | 'script'> {
+interface ScriptNodeData extends Omit<ScriptNodeType, 'inputVariables' | 'outputVariables' | 'language' | 'script'> {
     inputVariables?: InputVariableForm[];
     outputVariables?: OutputVariableForm[];
-    script?: CodeValue;
+    language?: ScriptLanguage;
+    script?: string;
 }
 
 interface ScriptNodeProps {
@@ -58,18 +58,19 @@ export default ({node, onChange}: ScriptNodeProps) => {
     const {token} = useToken();
     const [form] = Form.useForm();
 
+    // 监听 language 字段的变化
+    const language = Form.useWatch('language', form) || 'javascript';
+
     // 初始化表单数据
     useEffect(() => {
         const nodeData = (node.data as unknown) as ScriptNodeData;
         const initialValues = {
             inputVariables: nodeData.inputVariables || [],
-            script: nodeData.script || { 
-                language: (nodeData.language || 'javascript') as ScriptLanguage, 
-                script: '' 
-            },
+            language: nodeData.language || 'javascript',
+            script: nodeData.script || '',
             outputVariables: nodeData.outputVariables || []
         };
-        
+
         form.setFieldsValue(initialValues);
     }, [node.data, form]);
 
@@ -80,16 +81,11 @@ export default ({node, onChange}: ScriptNodeProps) => {
             ...allValues
         } as ScriptNodeData;
 
-        // 如果 script 是 CodeValue 格式，同步 language 字段
-        if (updatedData.script && typeof updatedData.script === 'object' && 'language' in updatedData.script) {
-            updatedData.language = updatedData.script.language as ScriptLanguage;
-        }
-
         const updatedNode = {
             ...node,
             data: (updatedData as unknown) as Record<string, unknown>
         };
-        
+
         onChange(updatedNode);
     };
 
@@ -99,26 +95,26 @@ export default ({node, onChange}: ScriptNodeProps) => {
     }, [node.id, flowState.nodes, flowState.edges]);
 
     return (
-        <Form 
-            form={form} 
+        <Form
+            form={form}
             onValuesChange={onValuesChange}
             layout="vertical"
         >
             <Flex align='center' justify={'center'} vertical>
                 {/* 输入变量 */}
                 <Form.List name="inputVariables">
-                    {(fields, { add, remove }) => (
-                        <Card 
-                            title='输入变量' 
-                            style={{width: "100%", boxShadow: 'none'}} 
-                            size="small" 
+                    {(fields, {add, remove}) => (
+                        <Card
+                            title='输入变量'
+                            style={{width: "100%", boxShadow: 'none'}}
+                            size="small"
                             variant='borderless'
                             extra={
                                 <Button
                                     type="text"
                                     icon={<PlusOutlined/>}
                                     size="small"
-                                    onClick={() => add({ name: '', value: undefined })}
+                                    onClick={() => add({name: '', value: undefined})}
                                 />
                             }
                         >
@@ -129,7 +125,7 @@ export default ({node, onChange}: ScriptNodeProps) => {
                                     split={false}
                                     dataSource={fields}
                                     renderItem={(field) => (
-                                        <List.Item key={field.key} style={{ padding: '2px 0' }}>
+                                        <List.Item key={field.key} style={{padding: '2px 0'}}>
                                             <Flex style={{width: "100%"}} gap={8} align="center">
                                                 <Form.Item
                                                     {...field}
@@ -160,7 +156,7 @@ export default ({node, onChange}: ScriptNodeProps) => {
                                     )}
                                 />
                             ) : (
-                                <div style={{ padding: '16px 0', textAlign: 'center', color: '#999', fontSize: '12px' }}>
+                                <div style={{padding: '16px 0', textAlign: 'center', color: '#999', fontSize: '12px'}}>
                                     暂无输入变量，点击右上角按钮添加
                                 </div>
                             )}
@@ -168,31 +164,60 @@ export default ({node, onChange}: ScriptNodeProps) => {
                     )}
                 </Form.List>
 
+
                 {/* 脚本编辑框 */}
-                <Form.Item
-                    name="script"
-                    style={{marginBottom: 0, width: "100%"}}
-                >
-                    <MonacoEditor
-                        placeholder="请输入脚本代码..."
-                        height={200}
-                    />
-                </Form.Item>
+                <div style={{
+                    width: "100%", overflow: 'hidden',
+                    border: `1px solid ${token.colorBorderSecondary}`,
+                    borderRadius: token.borderRadius
+                }}>
+                    {/* 语言选择 */}
+                    <Flex align="center" style={{marginBottom: 8}}>
+                        <Form.Item
+                            name="language"
+                            style={{marginBottom: 0, marginRight: 8}}
+                        >
+                            <Select
+                                variant='borderless'
+                                size={'small'}
+                                style={{width: 'auto'}}
+                                placeholder="请选择语言"
+                                options={[
+                                    {value: 'javascript', label: 'JavaScript'},
+                                    {value: 'python', label: 'Python'},
+                                ]}
+                            />
+                        </Form.Item>
+                    </Flex>
+                    <Divider style={{margin: '0 0 8px 0'}}/>
+
+                    {/* 代码编辑器 */}
+                    <Form.Item
+                        name="script"
+                        style={{marginBottom: 0}}
+                    >
+                        <MonacoEditor
+                            language={language}
+                            placeholder="请输入脚本代码..."
+                            height={400}
+                        />
+                    </Form.Item>
+                </div>
 
                 {/* 输出变量 */}
                 <Form.List name="outputVariables">
-                    {(fields, { add, remove }) => (
-                        <Card 
-                            title='输出变量' 
-                            style={{width: "100%", boxShadow: 'none'}} 
-                            size="small" 
+                    {(fields, {add, remove}) => (
+                        <Card
+                            title='输出变量'
+                            style={{width: "100%", boxShadow: 'none'}}
+                            size="small"
                             variant='borderless'
                             extra={
                                 <Button
                                     type="text"
                                     icon={<PlusOutlined/>}
                                     size="small"
-                                    onClick={() => add({ name: '', type: 'string' })}
+                                    onClick={() => add({name: '', type: 'string'})}
                                 />
                             }
                         >
@@ -203,7 +228,7 @@ export default ({node, onChange}: ScriptNodeProps) => {
                                     split={false}
                                     dataSource={fields}
                                     renderItem={(field) => (
-                                        <List.Item key={field.key} style={{ padding: '4px 0' }}>
+                                        <List.Item key={field.key} style={{padding: '4px 0'}}>
                                             <Flex style={{width: "100%"}} gap={8} align="center">
                                                 <Form.Item
                                                     {...field}
@@ -233,7 +258,7 @@ export default ({node, onChange}: ScriptNodeProps) => {
                                     )}
                                 />
                             ) : (
-                                <div style={{ padding: '16px 0', textAlign: 'center', color: '#999', fontSize: '12px' }}>
+                                <div style={{padding: '16px 0', textAlign: 'center', color: '#999', fontSize: '12px'}}>
                                     暂无输出变量，点击右上角按钮添加
                                 </div>
                             )}

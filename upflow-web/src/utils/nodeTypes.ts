@@ -6,7 +6,7 @@ import EditCaseNode from "@/pages/flow/components/nodes/CaseNode/EditCaseAttribu
 import {NodeDefineType, ObjectType} from "@/typings";
 import {nanoid} from "nanoid";
 import LoopNode from "@/pages/flow/components/nodes/LoopNode";
-import LoopStartNode from "@/pages/flow/components/nodes/LoopNode/LoopStartNode";
+import LoopStartNode from "@/pages/flow/components/nodes/GroupStartNode";
 import CommentNode from "@/pages/flow/components/nodes/CommentNode";
 import EditLoopAttribute from "@/pages/flow/components/nodes/LoopNode/EditLoopAttribute";
 import LoopContinueNode from "@/pages/flow/components/nodes/LoopContinueNode";
@@ -16,9 +16,9 @@ import EditScriptAttribute from "@/pages/flow/components/nodes/ScriptNode/EditSc
 // 节点类型 key 常量
 export const NODE_TYPE = {
     START: 'start',
+    GROUP_START: 'group-start',
     CASE: 'case',
     LOOP: 'loop',
-    LOOP_START: 'loop-start',
     LOOP_CONTINUE: 'loop-continue',
     LOOP_BREAK: 'loop-break',
     SCRIPT: 'script',
@@ -77,12 +77,12 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
             }
         }
     },
-    [NODE_TYPE.LOOP_START]: {
+    [NODE_TYPE.GROUP_START]: {
         icon: 'icon-start',
         renderComponent: LoopStartNode,
         defaultConfig: {
             id: '',
-            type: NODE_TYPE.LOOP_START,
+            type: NODE_TYPE.GROUP_START,
             position: { x: 10, y: 50 },
             width: 30,
             height: 30,

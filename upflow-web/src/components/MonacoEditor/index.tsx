@@ -1,6 +1,6 @@
 import React, { useRef, useCallback } from 'react';
 import Editor from '@monaco-editor/react';
-import { Flex, Select, theme, Divider } from 'antd';
+import { theme } from 'antd';
 
 const { useToken } = theme;
 
@@ -10,8 +10,9 @@ export interface CodeValue {
 }
 
 interface MonacoEditorProps {
-  value?: CodeValue;
-  onChange?: (value: CodeValue) => void;
+  language?: string;
+  value?: string;
+  onChange?: (value: string) => void;
   placeholder?: string;
   height?: number | string;
   readOnly?: boolean;
@@ -19,7 +20,8 @@ interface MonacoEditorProps {
 }
 
 const MonacoEditor: React.FC<MonacoEditorProps> = ({
-  value = { language: 'javascript', script: '' },
+  language = 'javascript',
+  value = '',
   onChange,
   placeholder = '请输入代码...',
   height = 200,
@@ -42,29 +44,15 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({
     }
   }, []);
 
-  const handleLanguageChange = useCallback((newLanguage: string) => {
-    const newValue = {
-      language: newLanguage,
-      script: value.script
-    };
-    if (onChange) {
-      onChange(newValue);
-    }
-  }, [value.script, onChange]);
-
   const handleScriptChange = useCallback((newScript: string | undefined) => {
-    const newValue = {
-      language: value.language,
-      script: newScript || ''
-    };
     if (onChange) {
-      onChange(newValue);
+      onChange(newScript || '');
     }
-  }, [value.language, onChange]);
+  }, [onChange]);
 
   const handleEditorDidMount = (editor: any, monaco: any) => {
     editorRef.current = editor;
-    // 简化的主题配置
+    // 自定义主题配置，包含当前行高亮
     monaco.editor.defineTheme('custom-theme', {
       base: 'vs',
       inherit: true,
@@ -75,7 +63,11 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({
         'scrollbarSlider.hoverBackground': '#a8a8a8',
         'scrollbarSlider.activeBackground': '#a8a8a8',
         'editorLineNumber.foreground': '#999999',
-        'editorLineNumber.activeForeground': '#666666',
+        'editorLineNumber.activeForeground': '#1890ff', // 当前行号颜色
+        'editor.lineHighlightBackground': '#ffffff', // 当前行背景色设为白色
+        'editor.lineHighlightBorder': 'transparent', // 当前行边框色
+        'editorCursor.foreground': '#1890ff', // 光标颜色
+        'editor.background': '#ffffff', // 编辑器背景色
       },
     });
     
@@ -83,33 +75,11 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({
   };
 
   return (
-    <div style={{ 
-      overflow: 'hidden',
-      border: `1px solid ${token.colorBorder}`, 
-      borderRadius: token.borderRadius, 
-      ...style 
-    }}>
-      <Flex align="center" style={{ height: '100%' }}>
-        <Select
-          variant='borderless'
-          size={'small'}
-          style={{ marginLeft: 8, width: 'auto' }}
-          value={value.language}
-          onChange={handleLanguageChange}
-          placeholder="请选择语言"
-          options={[
-            { value: 'javascript', label: 'JavaScript' },
-            { value: 'python', label: 'Python' },
-          ]}
-        />
-      </Flex>
-      <Divider style={{ margin: '0 0 8px 0' }} />
-      
-      <div onKeyDownCapture={handleKeyDownCapture} onKeyUpCapture={handleKeyUpCapture}>
+    <div style={style} onKeyDownCapture={handleKeyDownCapture} onKeyUpCapture={handleKeyUpCapture}>
       <Editor
         height={height}
-        language={value.language}
-        value={value.script}
+        language={language}
+        value={value}
         onChange={handleScriptChange}
         onMount={handleEditorDidMount}
         options={{
@@ -126,6 +96,12 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({
           glyphMargin: false,
           folding: false,
           lineDecorationsWidth: 5,
+          // 当前行配置
+          renderLineHighlight: 'none', // 完全禁用当前行高亮
+          renderLineHighlightOnlyWhenFocus: false, // 即使失去焦点也显示当前行高亮
+          cursorBlinking: 'blink', // 光标闪烁样式: 'blink' | 'smooth' | 'phase' | 'expand' | 'solid'
+          cursorStyle: 'line', // 光标样式: 'line' | 'block' | 'underline' | 'line-thin' | 'block-outline' | 'underline-thin'
+          cursorWidth: 2, // 光标宽度
           scrollbar: {
             vertical: 'auto',
             horizontal: 'auto',
@@ -136,7 +112,6 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({
           },
         }}
       />
-      </div>
     </div>
   );
 };
