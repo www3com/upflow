@@ -1,18 +1,10 @@
 import React from 'react';
-import {Form, Input, Modal, Select, theme} from "antd";
+import {Cascader, Form, Input, Modal, Select, theme} from "antd";
 import IconFont from '@/components/IconFont';
 import './styles.less';
 import {Variable} from "@/typings";
 import {ValidationRulesList} from './ValidationRules';
-import {VARIABLE_TYPE_RULES_MAP} from '@/utils/constants';
-
-// 常量定义
-const VARIABLE_TYPES = [
-    {value: "string", label: "字符串"},
-    {value: "int", label: "整形"},
-    {value: "long", label: "长整型"},
-    {value: "list", label: "列表"}
-];
+import {VARIABLE_TYPE_MAP, VARIABLE_TYPE_RULES_MAP} from '@/utils/constants';
 
 interface EditStartDialogProps {
     open: boolean,
@@ -25,19 +17,22 @@ interface EditStartDialogProps {
 export default ({open, variable = {} as Variable, onUpdate, onCancel}: EditStartDialogProps) => {
     const [form] = Form.useForm();
     const {token} = theme.useToken();
-    const [currentVariableType, setCurrentVariableType] = React.useState<string>('string');
+    const [currentVariableType, setCurrentVariableType] = React.useState<string>('STRING');
 
     // 确保表单在打开时重置并设置初始值
     React.useEffect(() => {
         if (open) {
             form.resetFields();
             form.setFieldsValue(variable);
-            setCurrentVariableType(variable.type || 'string');
+            setCurrentVariableType(variable.type || 'STRING');
         }
     }, [open, variable, form]);
 
     // 监听变量类型变化，清理不兼容的校验规则
-    const handleVariableTypeChange = (newType: string) => {
+    const handleVariableTypeChange = (value: string[], selectedOptions: any[]) => {
+        // Cascader 返回的是路径数组，我们需要最后一个值作为实际的类型
+        const newType = value[value.length - 1];
+        console.log('variable type change:', newType)
         setCurrentVariableType(newType);
 
         const supportedRules = VARIABLE_TYPE_RULES_MAP[newType as keyof typeof VARIABLE_TYPE_RULES_MAP] || [];
@@ -52,9 +47,27 @@ export default ({open, variable = {} as Variable, onUpdate, onCancel}: EditStart
         form.setFieldValue('rules', filteredRules);
     };
 
+    // 自定义 Cascader 显示渲染函数
+    const displayRender = (labels: string[], selectedOptions?: any[]) => {
+        if (!labels || labels.length === 0) return '';
+        
+        // 递归构建嵌套格式，统一处理所有层级
+        const buildNestedLabel = (labelArray: string[]): string => {
+            if (labelArray.length === 1) {
+                return labelArray[0];
+            }
+            const [first, ...rest] = labelArray;
+            return `${first}<${buildNestedLabel(rest)}>`;
+        };
+        
+        return buildNestedLabel(labels);
+    };
+
     const handleOk = () => {
         form.validateFields().then((values) => {
             console.log('form values:', values);
+            delete values.type;
+            values.type = currentVariableType;
             onUpdate?.(values);
         });
     };
@@ -76,13 +89,12 @@ export default ({open, variable = {} as Variable, onUpdate, onCancel}: EditStart
                 </Form.Item>
 
                 <Form.Item label="变量类型" name='type'>
-                    <Select onChange={handleVariableTypeChange}>
-                        {VARIABLE_TYPES.map(type => (
-                            <Select.Option key={type.value} value={type.value}>
-                                {type.label}
-                            </Select.Option>
-                        ))}
-                    </Select>
+                    <Cascader 
+                        options={VARIABLE_TYPE_MAP} 
+                        onChange={handleVariableTypeChange} 
+                        placeholder="请选择变量类型"
+                        displayRender={displayRender}
+                    />
                 </Form.Item>
 
                 <ValidationRulesList form={form} token={token} variableType={currentVariableType}/>

@@ -1,6 +1,6 @@
 import {Node, Edge} from '@xyflow/react';
 import {Variable} from '@/typings';
-import {NODE_TYPE, NodeDefineTypes} from './nodeTypes';
+import {NODE_TYPE, NodeDefineTypes} from '../pages/flow/nodeTypes';
 
 /**
  * 递归获取指定节点的所有前置节点对象

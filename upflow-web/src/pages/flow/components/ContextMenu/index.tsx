@@ -1,7 +1,7 @@
 import React, { useRef} from 'react';
 import {  Menu } from 'antd';
 import type { MenuProps } from 'antd';
-import { NodeDefineTypes } from '@/utils/nodeTypes';
+import { NodeDefineTypes } from '@/pages/flow/nodeTypes';
 import IconFont from '@/components/IconFont';
 
 interface ContextMenuProps {

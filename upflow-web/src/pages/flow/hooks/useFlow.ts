@@ -10,9 +10,9 @@ import {
 } from "@xyflow/react";
 import React, {type MouseEvent as ReactMouseEvent, useCallback, useState} from "react";
 import {addNode, setEdges, setNodes, setSelectedNode, setHoveredNodeId, state, updateNode} from "@/states/flow";
-import {NodeDefineTypes} from "@/utils/nodeTypes";
+import {NodeDefineTypes} from "@/pages/flow/nodeTypes";
 import {useSnapshot} from "valtio";
-import {getAllChildrenIds, getNodeAbsolutePosition} from "@/utils/flow";
+import {getAllChildrenIds, getNodeAbsolutePosition} from "@/pages/flow/util";
 import {NodeType} from "@/typings";
 
 export const useFlow = () => {

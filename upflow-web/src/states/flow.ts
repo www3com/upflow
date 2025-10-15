@@ -2,8 +2,8 @@ import {Node, Edge} from '@xyflow/react';
 import {proxy} from "valtio";
 import {nanoid} from "nanoid";
 import {getFlowApi} from "@/services/flow";
-import {NODE_TYPE, NodeDefineTypes} from "@/utils/nodeTypes";
-import {getAllChildrenIds, newId, sortNodes} from "@/utils/flow";
+import {NODE_TYPE, NodeDefineTypes} from "@/pages/flow/nodeTypes";
+import {getAllChildrenIds, newId, sortNodes} from "@/pages/flow/util";
 import {message} from "antd/lib";
 import {NodeType} from "@/typings";
 

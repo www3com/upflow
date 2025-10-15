@@ -1,7 +1,7 @@
 import {Card, Flex, theme} from "antd";
 import styles from "./styles.less";
 import React, {DragEvent, MouseEvent} from "react";
-import {NodeDefineTypes} from "@/utils/nodeTypes";
+import {NodeDefineTypes} from "@/pages/flow/nodeTypes";
 import IconFont from '@/components/IconFont';
 
 const {useToken} = theme;

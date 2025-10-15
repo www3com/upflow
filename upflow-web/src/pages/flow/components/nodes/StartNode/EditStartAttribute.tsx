@@ -31,7 +31,7 @@ export default ({node, onChange}: StartNodeProps) => {
     const onUpdate = (variable: Variable) => {
         // 获取变量数据
         let variables = (node.data.variables || []) as Variable[];
-
+        console.log('variable:', variable)
         // 检查是否是更新现有变量还是添加新变量
         const existingIndex = variables.findIndex(v => v.name === variable.name);
         if (existingIndex >= 0) {

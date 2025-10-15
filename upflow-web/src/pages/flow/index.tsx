@@ -19,7 +19,7 @@ import {
     SelectionMode,
     useReactFlow
 } from "@xyflow/react";
-import {NodeDefineTypes} from "@/utils/nodeTypes";
+import {NodeDefineTypes} from "@/pages/flow/nodeTypes";
 import {useFlow} from "@/pages/flow/hooks/useFlow";
 import AttributePanel from "@/pages/flow/components/AttributePanel";
 import ZoomControl from "./components/ZoomControl";

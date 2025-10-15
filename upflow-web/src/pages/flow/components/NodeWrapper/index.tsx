@@ -6,7 +6,7 @@ import {
     DownCircleOutlined,
     EllipsisOutlined, UpCircleOutlined
 } from "@ant-design/icons";
-import {NodeDefineTypes} from "@/utils/nodeTypes";
+import {NodeDefineTypes} from "@/pages/flow/nodeTypes";
 import IconFont from '@/components/IconFont';
 import styles from './styles.less'
 import {cloneNode, deleteNode, extendNode, setHoveredNodeId} from "@/states/flow";

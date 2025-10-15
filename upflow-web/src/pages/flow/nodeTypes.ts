@@ -12,6 +12,10 @@ import EditLoopAttribute from "@/pages/flow/components/nodes/LoopNode/EditLoopAt
 import LoopContinueNode from "@/pages/flow/components/nodes/LoopContinueNode";
 import LoopBreakNode from "@/pages/flow/components/nodes/LoopBreakNode";
 import EditScriptAttribute from "@/pages/flow/components/nodes/ScriptNode/EditScriptAttribute";
+import SqlTransactionNode from "@/pages/flow/components/nodes/SqlTransactionNode";
+import SqlNode from "@/pages/flow/components/nodes/SqlNode";
+import EditSqlTransactionAttribute from "@/pages/flow/components/nodes/SqlTransactionNode/EditSqlTransactionAttribute";
+import EditSqlAttribute from "@/pages/flow/components/nodes/SqlNode/EditSqlAttribute";
 
 // 节点类型 key 常量
 export const NODE_TYPE = {
@@ -23,6 +27,7 @@ export const NODE_TYPE = {
     LOOP_BREAK: 'loop-break',
     SCRIPT: 'script',
     SQL: 'sql',
+    SQL_TRANSACTION: 'sql-transaction',
     SUBFLOW: 'subflow',
     ASSIGN: 'assign',
     COMMENT: 'comment'
@@ -36,7 +41,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
         defaultConfig: {
             id: '',
             type: NODE_TYPE.START,
-            position: { x: 0, y: 0 },
+            position: {x: 0, y: 0},
             width: 220,
             data: {
                 title: '开始',
@@ -52,7 +57,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
         defaultConfig: {
             id: '',
             type: NODE_TYPE.CASE,
-            position: { x: 0, y: 0 },
+            position: {x: 0, y: 0},
             width: 250,
             data: {
                 title: '条件分支',
@@ -68,12 +73,13 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
         defaultConfig: {
             id: '',
             type: NODE_TYPE.LOOP,
-            position: { x: 0, y: 0 },
+            position: {x: 0, y: 0},
             width: 400,
             height: 200,
             data: {
                 title: '循环',
                 group: true,
+                expanded: true
             }
         }
     },
@@ -83,7 +89,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
         defaultConfig: {
             id: '',
             type: NODE_TYPE.GROUP_START,
-            position: { x: 10, y: 50 },
+            position: {x: 10, y: 50},
             width: 30,
             height: 30,
             draggable: false,
@@ -96,7 +102,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
         defaultConfig: {
             id: '',
             type: NODE_TYPE.LOOP_CONTINUE,
-            position: { x: 0, y: 0 },
+            position: {x: 0, y: 0},
             width: 150,
             data: {title: '继续循环', group: false},
         }
@@ -107,9 +113,9 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
         defaultConfig: {
             id: '',
             type: NODE_TYPE.LOOP_BREAK,
-            position: { x: 0, y: 0 },
+            position: {x: 0, y: 0},
             width: 150,
-            data: { title: '终止循环', group: false},
+            data: {title: '终止循环', group: false},
         }
     },
     [NODE_TYPE.SCRIPT]: {
@@ -119,7 +125,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
         defaultConfig: {
             id: '',
             type: NODE_TYPE.SCRIPT,
-            position: { x: 0, y: 0 },
+            position: {x: 0, y: 0},
             data: {
                 title: '代码执行',
                 group: false,
@@ -128,14 +134,32 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
     },
     [NODE_TYPE.SQL]: {
         icon: 'icon-sql',
-        renderComponent: ScriptNode,
+        renderComponent: SqlNode,
+        attributeEditor: EditSqlAttribute,
         defaultConfig: {
             id: '',
             type: NODE_TYPE.SQL,
-            position: { x: 0, y: 0 },
+            position: {x: 0, y: 0},
             data: {
                 title: 'SQL脚本',
                 group: false,
+            }
+        }
+    },
+    [NODE_TYPE.SQL_TRANSACTION]: {
+        icon: 'icon-sql-transaction',
+        renderComponent: SqlTransactionNode,
+        attributeEditor: EditSqlTransactionAttribute,
+        defaultConfig: {
+            id: '',
+            type: NODE_TYPE.SQL_TRANSACTION,
+            position: {x: 0, y: 0},
+            width: 400,
+            height: 200,
+            data: {
+                title: 'SQL事务',
+                group: true,
+                expanded: true
             }
         }
     },
@@ -145,7 +169,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
         defaultConfig: {
             id: '',
             type: NODE_TYPE.SUBFLOW,
-            position: { x: 0, y: 0 },
+            position: {x: 0, y: 0},
             data: {
                 title: '子流程',
                 group: false,
@@ -158,7 +182,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
         defaultConfig: {
             id: '',
             type: NODE_TYPE.ASSIGN,
-            position: { x: 0, y: 0 },
+            position: {x: 0, y: 0},
             data: {
                 title: '变量赋值',
                 group: false,
@@ -171,7 +195,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
         defaultConfig: {
             id: '',
             type: NODE_TYPE.COMMENT,
-            position: { x: 0, y: 0 },
+            position: {x: 0, y: 0},
             width: 200,
             height: 80,
             data: {

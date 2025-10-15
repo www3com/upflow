@@ -5,7 +5,7 @@ import {Panel} from "@xyflow/react";
 import React, {ComponentType, useState, useEffect, useCallback} from "react";
 import ResizablePanel from "@/components/ResizablePanel";
 import {ExpandOutlined, CompressOutlined} from '@ant-design/icons';
-import {NodeDefineTypes} from "@/utils/nodeTypes";
+import {NodeDefineTypes} from "@/pages/flow/nodeTypes";
 import {state} from '@/states/flow';
 import {useSnapshot} from "valtio";
 import {NodeType} from "@/typings";
