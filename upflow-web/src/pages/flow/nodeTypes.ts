@@ -41,8 +41,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
         defaultConfig: {
             id: '',
             type: NODE_TYPE.START,
-            position: {x: 0, y: 0},
-            width: 270,
+            width: 250,
             data: {
                 title: '开始',
                 variables: [],

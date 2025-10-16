@@ -11,6 +11,7 @@ import IconFont from '@/components/IconFont';
 import styles from './styles.less'
 import {cloneNode, deleteNode, extendNode, setHoveredNodeId} from "@/states/flow";
 import {NodeType} from "@/typings";
+import {Handle, Position} from "@xyflow/react";
 
 
 const {useToken} = theme;
