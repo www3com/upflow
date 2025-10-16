@@ -11,6 +11,7 @@ import EditStartDialog from "@/pages/flow/components/nodes/StartNode/EditStartDi
 import {Node} from "@xyflow/react";
 import {useState} from "react";
 import {Variable} from "@/typings";
+import { getVariableTypeLabel } from "@/utils/variables";
 
 
 const {useToken} = theme;
@@ -29,8 +30,9 @@ export default ({node, onChange}: StartNodeProps) => {
         setVariable(variable);
     }
     const onUpdate = (variable: Variable) => {
-        // 获取变量数据
-        let variables = (node.data.variables || []) as Variable[];
+        // 获取变量数据并创建副本
+        const originalVariables = (node.data.variables || []) as Variable[];
+        let variables = [...originalVariables]; // 创建数组副本
         console.log('variable:', variable)
         // 检查是否是更新现有变量还是添加新变量
         const existingIndex = variables.findIndex(v => v.name === variable.name);
@@ -53,9 +55,9 @@ export default ({node, onChange}: StartNodeProps) => {
     }
 
     const onDelete = (variable: Variable) => {
-        // 获取变量数据
-        let variables = (node.data.variables || []) as Variable[];
-        let filteredVariables = variables.filter(v => v.name !== variable.name);
+        // 获取变量数据并创建副本
+        const originalVariables = (node.data.variables || []) as Variable[];
+        let filteredVariables = originalVariables.filter(v => v.name !== variable.name);
         let data = {
             ...node.data,
             variables: filteredVariables
@@ -86,14 +88,15 @@ export default ({node, onChange}: StartNodeProps) => {
                   renderItem={(item: Variable) => (
                       <List.Item>
                           <Flex justify={"space-between"} style={{width: "100%"}} className="type-container">
-                              <Space size={3}><IconFont type="icon-variable"/>{item.name}
+                              <Space size={3}><IconFont type="icon-variable"/>
+                                  {item.name}
                                   {item.rules && (
                                       <label style={{marginLeft: '5px', color: '#1677ff'}}>
                                           ({item.rules.length} rules)
                                       </label>
                                   )}
                               </Space>
-                              <label>{item.type}</label>
+                              <label>{getVariableTypeLabel(item.type)}</label>
                               <Space size={3} className="hover-buttons">
                                   <Button
                                       type="text"

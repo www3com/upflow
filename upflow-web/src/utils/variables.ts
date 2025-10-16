@@ -1,6 +1,7 @@
 import {Node, Edge} from '@xyflow/react';
 import {Variable} from '@/typings';
-import {NODE_TYPE, NodeDefineTypes} from '../pages/flow/nodeTypes';
+import {NODE_TYPE, NodeDefineTypes} from '@/pages/flow/nodeTypes';
+import {VARIABLE_TYPE, VARIABLE_TYPE_TREE, VariableTypeNode} from './constants';
 
 /**
  * 递归获取指定节点的所有前置节点对象
@@ -88,4 +89,34 @@ export const getAvailableVariablesWithNode = (currentNodeId: string, nodes: Node
     });
 
     return variablesWithNode;
+};
+
+
+const findVariableTypeLabel = (type: VARIABLE_TYPE): string => {
+    const findInNodes = (nodes: VariableTypeNode[]): string | null => {
+        for (const node of nodes) {
+            if (node.value === type) return node.label;
+            if (node.children) {
+                const found = findInNodes(node.children);
+                if (found) return found;
+            }
+        }
+        return null;
+    };
+
+    return findInNodes(VARIABLE_TYPE_TREE) || type;
+};
+
+export const getVariableTypeLabel = (value: VARIABLE_TYPE): string => {
+    const parts = value.split('_');
+    if (parts.length === 1) {
+        return findVariableTypeLabel(value);
+    }
+
+    const [outerType, ...innerParts] = parts;
+    const outerLabel = findVariableTypeLabel(outerType as VARIABLE_TYPE);
+    const innerType = innerParts.join('_') as VARIABLE_TYPE;
+    const innerLabel = getVariableTypeLabel(innerType);
+
+    return `${outerLabel}<${innerLabel}>`;
 };

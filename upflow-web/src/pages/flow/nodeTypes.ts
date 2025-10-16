@@ -42,7 +42,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
             id: '',
             type: NODE_TYPE.START,
             position: {x: 0, y: 0},
-            width: 220,
+            width: 270,
             data: {
                 title: '开始',
                 variables: [],

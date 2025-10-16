@@ -1,10 +1,10 @@
 import React from 'react';
-import {Cascader, Form, Input, Modal, Select, theme} from "antd";
+import {Cascader, Form, Input, Modal, theme} from "antd";
 import IconFont from '@/components/IconFont';
 import './styles.less';
 import {Variable} from "@/typings";
 import {ValidationRulesList} from './ValidationRules';
-import {VARIABLE_TYPE_MAP, VARIABLE_TYPE_RULES_MAP} from '@/utils/constants';
+import {VARIABLE_TYPE_TREE, VARIABLE_TYPE_RULES_MAP} from '@/utils/constants';
 
 interface EditStartDialogProps {
     open: boolean,
@@ -90,7 +90,7 @@ export default ({open, variable = {} as Variable, onUpdate, onCancel}: EditStart
 
                 <Form.Item label="变量类型" name='type'>
                     <Cascader 
-                        options={VARIABLE_TYPE_MAP} 
+                        options={VARIABLE_TYPE_TREE} 
                         onChange={handleVariableTypeChange} 
                         placeholder="请选择变量类型"
                         displayRender={displayRender}

@@ -109,7 +109,7 @@ export interface VariableTypeNode {
 /**
  * 变量类型标签树形结构
  */
-export const VARIABLE_TYPE_MAP: VariableTypeNode[] = [
+export const VARIABLE_TYPE_TREE: VariableTypeNode[] = [
     {label: 'String', value: 'STRING'},
     {label: 'Integer', value: 'INTEGER'},
     {label: 'Long', value: 'LONG'},

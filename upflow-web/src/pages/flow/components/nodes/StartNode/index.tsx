@@ -5,6 +5,8 @@ import styles from './styles.less'
 import NodeWrapper from "@/pages/flow/components/NodeWrapper";
 import IconFont from '@/components/IconFont';
 import {NodeType} from "@/typings";
+import {getVariableTypeLabel} from "@/utils/variables";
+import NodeResizeControl from "@/pages/flow/components/NodeResizeControl";
 
 const {useToken} = theme;
 
@@ -32,12 +34,13 @@ export default memo((node: NodeType) => {
                                     </label>
                                 )}
                             </Space>
-                            <label className={styles.rules}>{item.type}</label>
+                            <label className={styles.rules}>{getVariableTypeLabel(item.type)}</label>
                         </Flex>
                     ))}
                 </Flex>
                 <Handle type="source" position={Position.Right}/>
             </Flex>
+            <NodeResizeControl/>
         </NodeWrapper>
     )
 });

@@ -42,7 +42,7 @@ export interface Rule {
 
 export interface Variable {
     name: string,
-    type: string,
+    type: VARIABLE_TYPE,
     value: string
     rules?: Rule[]
 }
