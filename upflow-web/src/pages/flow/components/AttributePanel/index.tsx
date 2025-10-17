@@ -1,17 +1,18 @@
-import {Button, Flex, theme, Input, Form} from "antd";
-const { TextArea } = Input;
+import {Button, Form, Input, theme} from "antd";
 import styles from "./styles.less";
 import {Panel} from "@xyflow/react";
-import React, {ComponentType, useState, useEffect, useCallback} from "react";
+import React, {ComponentType, useCallback, useEffect, useState} from "react";
 import ResizablePanel from "@/components/ResizablePanel";
-import {ExpandOutlined, CompressOutlined} from '@ant-design/icons';
+import {CompressOutlined, ExpandOutlined} from '@ant-design/icons';
 import {NodeDefineTypes} from "@/pages/flow/nodeTypes";
 import {state} from '@/states/flow';
 import {useSnapshot} from "valtio";
 import {NodeType} from "@/typings";
 import IconFont from "@/components/IconFont";
 
-const handleNodeChange = (node: NodeType) => {
+const {TextArea} = Input;
+
+const handleNodeChange = (node: NodeType<any>) => {
     console.log('node', node)
     // 更新节点数据的逻辑
     const nodeIndex = state.nodes.findIndex(n => n.id === node.id);
@@ -57,30 +58,30 @@ export default () => {
                 description: snap.selectedNode.data.description || ''
             });
         }
-    }, [snap.selectedNode?.id,form]);
+    }, [snap.selectedNode?.id, form]);
 
     // 处理表单值变更
-    const handleFormValuesChange = useCallback((changedValues: any, allValues: any) => {
+    const handleFormValuesChange = useCallback((changedValues: any, _: any) => {
         updateNodeData(changedValues);
     }, [updateNodeData, form]);
 
     if (!snap.selectedNode) return <></>
-    
+
     // 根据节点类型获取对应的配置
     const config = NodeDefineTypes[snap.selectedNode.type!]
     const titleIcon = config?.icon
 
     const title = (
         <div className={styles.titleContainer}>
-            {titleIcon && <IconFont type={titleIcon} style={{ color: token.colorPrimary }} />}
+            {titleIcon && <IconFont type={titleIcon} style={{color: token.colorPrimary}}/>}
             <Form.Item
                 name="title"
-                style={{ margin: 0, flex: 1 }}
+                style={{margin: 0, flex: 1}}
             >
                 <Input
                     variant="borderless"
                     className={styles.titleInput}
-                    style={{ color: token.colorText }}
+                    style={{color: token.colorText}}
                     placeholder="输入标题"
                 />
             </Form.Item>
@@ -91,19 +92,22 @@ export default () => {
         <div className={styles.descriptionContainer}>
             <Form.Item
                 name="description"
-                style={{ margin: 0 }}
+                style={{margin: 0}}
             >
                 <TextArea
                     variant="borderless"
-                    style={{ color: token.colorTextSecondary, fontSize: '12px' }}
+                    style={{color: token.colorTextSecondary, fontSize: '12px'}}
                     placeholder="输入描述"
-                    autoSize={{ minRows: 1, maxRows: 4 }}
+                    autoSize={{minRows: 1, maxRows: 4}}
                 />
             </Form.Item>
         </div>
     )
-    
-    const EditComponent = config?.attributeEditor as ComponentType<{ node: NodeType, onChange?: (node: NodeType) => void }> | null
+
+    const EditComponent = config?.attributeEditor as ComponentType<{
+        node: NodeType<any>,
+        onChange?: (node: NodeType<any>) => void
+    }> | null
 
     const cardExtra = (
         <Button
@@ -136,7 +140,7 @@ export default () => {
                             onValuesChange={handleFormValuesChange}
                         >
                             <div className={styles.headerTitleRow}>
-                                <div className={styles.title} style={{ flex: 1 }}>
+                                <div className={styles.title} style={{flex: 1}}>
                                     {title}
                                 </div>
                                 <div>
@@ -146,10 +150,11 @@ export default () => {
                             {description}
                         </Form>
                     </div>
-                    
+
                     {/* Content部分 - 可滚动 */}
                     <div className={styles.content}>
-                        {EditComponent && <EditComponent node={snap.selectedNode as NodeType} onChange={handleNodeChange}/>}
+                        {EditComponent &&
+                            <EditComponent node={snap.selectedNode as NodeType<any>} onChange={handleNodeChange}/>}
                     </div>
                 </div>
             </ResizablePanel>

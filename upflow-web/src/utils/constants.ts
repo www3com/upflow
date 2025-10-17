@@ -1,4 +1,4 @@
-import {ObjectType} from "@/typings";
+import {ObjectType, VariableType} from "@/typings";
 
 export const CompareOprType: ObjectType<string> = {
     'in': "包含",
@@ -67,55 +67,26 @@ export const VARIABLE_TYPE_RULES_MAP = {
     ARRAY_FILE_OTHER: ["required", "size", "enum"]
 };
 
-
-/**
- * 支持的变量类型
- */
-export type VARIABLE_TYPE =
-    'STRING'
-    | 'INTEGER'
-    | 'LONG'
-    | 'DECIMAL'
-    | 'BOOLEAN'
-    | 'OBJECT'
-    | 'FILE'
-    | 'FILE_IMAGE'
-    | 'FILE_VIDEO'
-    | 'FILE_AUDIO'
-    | 'FILE_DOC'
-    | 'FILE_OTHER'
-    | 'ARRAY'
-    | 'ARRAY_STRING'
-    | 'ARRAY_INTEGER'
-    | 'ARRAY_LONG'
-    | 'ARRAY_DECIMAL'
-    | 'ARRAY_BOOLEAN'
-    | 'ARRAY_OBJECT'
-    | 'ARRAY_FILE_IMAGE'
-    | 'ARRAY_FILE_VIDEO'
-    | 'ARRAY_FILE_AUDIO'
-    | 'ARRAY_FILE_DOC'
-    | 'ARRAY_FILE_OTHER';
-
 /**
  * 变量类型树形节点接口
  */
 export interface VariableTypeNode {
     label: string;
-    value?: VARIABLE_TYPE;
+    value?: VariableType;
+    tag?: string;
     children?: VariableTypeNode[];
 }
 
 /**
  * 变量类型标签树形结构
  */
-export const VARIABLE_TYPE_TREE: VariableTypeNode[] = [
-    {label: 'String', value: 'STRING'},
-    {label: 'Integer', value: 'INTEGER'},
-    {label: 'Long', value: 'LONG'},
-    {label: 'Decimal', value: 'DECIMAL'},
-    {label: 'Boolean', value: 'BOOLEAN'},
-    {label: 'Object', value: 'OBJECT'},
+export const VARIABLE_TYPES: VariableTypeNode[] = [
+    {label: 'String', value: 'STRING', tag: 'basic'},
+    {label: 'Integer', value: 'INTEGER', tag: 'basic'},
+    {label: 'Long', value: 'LONG', tag: 'basic'},
+    {label: 'Decimal', value: 'DECIMAL', tag: 'basic'},
+    {label: 'Boolean', value: 'BOOLEAN', tag: 'basic'},
+    {label: 'Object', value: 'OBJECT', tag: 'basic'},
     {
         label: 'File', value: 'FILE',
         children: [

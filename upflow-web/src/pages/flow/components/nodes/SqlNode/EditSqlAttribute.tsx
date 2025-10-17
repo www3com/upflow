@@ -1,126 +1,67 @@
-import React, {useEffect, useMemo, useState} from "react";
-import {Button, Card, Flex, Form, Input, List, Select, Space, theme, Divider, Splitter} from "antd";
+import React, {useEffect, useMemo} from "react";
+import {Button, Card, Flex, Form, Input, List, Select, Space, theme} from "antd";
 import {DeleteOutlined, PlusOutlined} from "@ant-design/icons";
 import VariableSelect from "@/components/VariableSelect";
-import {getAvailableVariablesWithNode} from "@/utils/variables";
+import {getAvailableVariablesWithNode} from "@/pages/flow/variables";
 import {Node} from "@xyflow/react";
 import {useSnapshot} from "valtio";
 import {state} from "@/states/flow";
-import {VariableSelectValue} from "@/components/VariableSelect";
 import MonacoEditor from "@/components/MonacoEditor";
-import {
-    ScriptNodeType,
-    ScriptInputVariable,
-    ScriptOutputVariable,
-    VariableType,
-    ScriptLanguage
-} from "@/typings";
+import {NodeType, SqlNodeType} from "@/typings";
+import {VARIABLE_TYPES} from "@/utils/constants";
 
 
 const {useToken} = theme;
 
-// 变量类型选项 - 使用新的 VariableType
-const VARIABLE_TYPES: Array<{ value: VariableType, label: string }> = [
-    {value: "string", label: "字符串"},
-    {value: "int", label: "整形"},
-    {value: "long", label: "长整型"},
-    {value: "list", label: "列表"},
-    {value: "boolean", label: "布尔值"},
-    {value: "object", label: "对象"}
-];
-
-// 输入变量接口 - 适配 VariableSelectValue
-interface InputVariableForm {
-    name: string;
-    value: VariableSelectValue;
+interface SqlNodeProps {
+    node: NodeType<SqlNodeType>,
+    onChange: (node: NodeType<SqlNodeType>) => void
 }
 
-// 输出变量接口 - 扩展标准类型
-interface OutputVariableForm extends Omit<ScriptOutputVariable, 'type'> {
-    type: VariableType;
-}
-
-// 脚本节点数据接口 - 基于 ScriptNodeType
-interface ScriptNodeData extends Omit<ScriptNodeType, 'inputVariables' | 'outputVariables' | 'language' | 'script'> {
-    inputVariables?: InputVariableForm[];
-    outputVariables?: OutputVariableForm[];
-    language?: ScriptLanguage;
-    script?: string;
-}
-
-interface ScriptNodeProps {
-    node: Node,
-    onChange: (node: Node) => void
-}
-
-export default ({node, onChange}: ScriptNodeProps) => {
+export default ({node, onChange}: SqlNodeProps) => {
     const flowState = useSnapshot(state);
     const {token} = useToken();
     const [form] = Form.useForm();
 
-    // 监听 language 字段的变化
-    const language = Form.useWatch('language', form) || 'javascript';
-
-    // 生成输出变量的函数
-    const generateOutputVariables = (rowsType: VariableType = 'list'): OutputVariableForm[] => [
-        { name: 'rows', type: rowsType },
-        { name: 'rowNum', type: 'int' }
-    ];
-
     // 初始化表单数据
     useEffect(() => {
-        const nodeData = (node.data as unknown) as ScriptNodeData;
-        
-        // 获取现有的 rows 类型，如果不存在则默认为 'list'
-        const existingRowsType = nodeData.outputVariables?.[0]?.type || 'list';
-        const outputVariables = generateOutputVariables(existingRowsType);
-        
+        const nodeData = node.data as SqlNodeType;
         const initialValues = {
-            inputVariables: nodeData.inputVariables || [],
-            language: nodeData.language || 'sql',
-            script: nodeData.script || '',
-            outputVariables: outputVariables
+            input: nodeData.input || [],
+            content: nodeData.content || '',
+            output: [
+                {type: nodeData.output?.[0]?.type || 'ARRAY_OBJECT'}, // rows 变量
+                {type: 'INTEGER'} // rowNum 变量，固定为整形
+            ]
         };
-
         form.setFieldsValue(initialValues);
-        
-        // 确保节点数据中也包含正确的输出变量结构
-        if (!nodeData.outputVariables || 
-            nodeData.outputVariables.length !== 2 ||
-            nodeData.outputVariables[0]?.name !== 'rows' ||
-            nodeData.outputVariables[1]?.name !== 'rowNum') {
-            
-            const updatedData = {
-                ...nodeData,
-                outputVariables: outputVariables,
-                language: nodeData.language || 'sql'
-            } as ScriptNodeData;
-
-            const updatedNode = {
-                ...node,
-                data: (updatedData as unknown) as Record<string, unknown>
-            };
-
-            onChange(updatedNode);
-        }
     }, [node.data, form]);
 
     // 表单值变化处理
     const onValuesChange = (changedValues: any, allValues: any) => {
-        // 获取当前的 rows 类型
-        const rowsType = allValues.outputVariables?.[0]?.type || 'list';
-        const outputVariables = generateOutputVariables(rowsType);
-        
         const updatedData = {
             ...node.data,
-            ...allValues,
-            // 使用生成的输出变量，保持 rows 类型可选择，rowNum 固定为 int
-            outputVariables: outputVariables
-        } as ScriptNodeData;
+            input: allValues.input || [],
+            content: allValues.content || '',
+            output: [
+                {
+                    id: 'rows',
+                    name: 'rows',
+                    type: allValues.output?.[0]?.type || 'ARRAY_OBJECT',
+                    value: ''
+                },
+                {
+                    id: 'rowNum',
+                    name: 'rowNum',
+                    type: 'INTEGER',
+                    value: ''
+                }
+            ]
+        } as SqlNodeType;
 
         const updatedNode = {
             ...node,
-            data: (updatedData as unknown) as Record<string, unknown>
+            data: updatedData
         };
 
         onChange(updatedNode);
@@ -139,7 +80,7 @@ export default ({node, onChange}: ScriptNodeProps) => {
         >
             <Flex align='center' justify={'center'} vertical>
                 {/* 输入变量 */}
-                <Form.List name="inputVariables">
+                <Form.List name="input">
                     {(fields, {add, remove}) => (
                         <Card
                             title='输入变量'
@@ -179,7 +120,6 @@ export default ({node, onChange}: ScriptNodeProps) => {
                                                     <VariableSelect
                                                         variablesWithNode={variablesWithNode}
                                                         placeholder="选择变量值"
-                                                        showVariableLabel={false}
                                                     />
                                                 </Form.Item>
                                                 <Button
@@ -209,7 +149,7 @@ export default ({node, onChange}: ScriptNodeProps) => {
                     borderRadius: token.borderRadius
                 }}>
                     <Form.Item
-                        name="script"
+                        name="content"
                         style={{marginBottom: 0}}
                     >
                         <MonacoEditor
@@ -235,7 +175,7 @@ export default ({node, onChange}: ScriptNodeProps) => {
                             </div>
                             <div style={{flex: 1}}>
                                 <Form.Item
-                                    name={['outputVariables', 0, 'type']}
+                                    name={['output', 0, 'type']}
                                     style={{marginBottom: 0}}
                                 >
                                     <Select
@@ -249,7 +189,7 @@ export default ({node, onChange}: ScriptNodeProps) => {
                                 SQL查询结果行数据
                             </div>
                         </Flex>
-                        
+
                         {/* rowNum 变量 - 固定为 int 类型 */}
                         <Flex style={{width: "100%"}} gap={8} align="center">
                             <div style={{flex: 2, fontWeight: 500}}>

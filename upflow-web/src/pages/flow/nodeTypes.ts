@@ -1,17 +1,17 @@
 import StartNode from "@/pages/flow/components/nodes/StartNode";
 import ConditionNode from "@/pages/flow/components/nodes/CaseNode";
-import ScriptNode from "@/pages/flow/components/nodes/ScriptNode";
+import ScriptNode from "@/pages/flow/components/nodes/CodeNode";
 import EditStartNode from "@/pages/flow/components/nodes/StartNode/EditStartAttribute";
 import EditCaseNode from "@/pages/flow/components/nodes/CaseNode/EditCaseAttribute";
 import {NodeDefineType, ObjectType} from "@/typings";
 import {nanoid} from "nanoid";
 import LoopNode from "@/pages/flow/components/nodes/LoopNode";
 import LoopStartNode from "@/pages/flow/components/nodes/GroupStartNode";
-import CommentNode from "@/pages/flow/components/nodes/CommentNode";
+import NoteNode from "@/pages/flow/components/nodes/CommentNode";
 import EditLoopAttribute from "@/pages/flow/components/nodes/LoopNode/EditLoopAttribute";
 import LoopContinueNode from "@/pages/flow/components/nodes/LoopContinueNode";
 import LoopBreakNode from "@/pages/flow/components/nodes/LoopBreakNode";
-import EditScriptAttribute from "@/pages/flow/components/nodes/ScriptNode/EditScriptAttribute";
+import EditScriptAttribute from "@/pages/flow/components/nodes/CodeNode/EditScriptAttribute";
 import SqlTransactionNode from "@/pages/flow/components/nodes/SqlTransactionNode";
 import SqlNode from "@/pages/flow/components/nodes/SqlNode";
 import EditSqlTransactionAttribute from "@/pages/flow/components/nodes/SqlTransactionNode/EditSqlTransactionAttribute";
@@ -30,7 +30,7 @@ export const NODE_TYPE = {
     SQL_TRANSACTION: 'sql-transaction',
     SUBFLOW: 'subflow',
     ASSIGN: 'assign',
-    COMMENT: 'comment'
+    NOTE: 'note'
 } as const;
 
 export const NodeDefineTypes: ObjectType<NodeDefineType> = {
@@ -41,7 +41,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
         defaultConfig: {
             id: '',
             type: NODE_TYPE.START,
-            width: 250,
+            width: 220,
             data: {
                 title: '开始',
                 variables: [],
@@ -188,12 +188,12 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
             }
         }
     },
-    [NODE_TYPE.COMMENT]: {
+    [NODE_TYPE.NOTE]: {
         icon: 'icon-file',
-        renderComponent: CommentNode,
+        renderComponent: NoteNode,
         defaultConfig: {
             id: '',
-            type: NODE_TYPE.COMMENT,
+            type: NODE_TYPE.NOTE,
             position: {x: 0, y: 0},
             width: 200,
             height: 80,

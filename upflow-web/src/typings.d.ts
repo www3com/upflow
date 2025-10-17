@@ -1,3 +1,5 @@
+import {Node, Edge} from '@xyflow/react';
+
 interface ObjectType<T> {
     [key: string]: T
 }
@@ -8,17 +10,80 @@ interface ListItemType {
 }
 
 /**
+ * 支持的脚本语言类型
+ */
+export type ScriptLanguage = 'javascript' | 'python'
+
+/**
+ * 开始节点
+ */
+export interface Rule {
+    type: string,
+    value?: string | boolean,
+    message?: string
+}
+
+/**
+ * 支持的变量类型
+ */
+export type VariableType =
+    'STRING'
+    | 'INTEGER'
+    | 'LONG'
+    | 'DECIMAL'
+    | 'BOOLEAN'
+    | 'OBJECT'
+    | 'FILE'
+    | 'FILE_IMAGE'
+    | 'FILE_VIDEO'
+    | 'FILE_AUDIO'
+    | 'FILE_DOC'
+    | 'FILE_OTHER'
+    | 'ARRAY'
+    | 'ARRAY_STRING'
+    | 'ARRAY_INTEGER'
+    | 'ARRAY_LONG'
+    | 'ARRAY_DECIMAL'
+    | 'ARRAY_BOOLEAN'
+    | 'ARRAY_OBJECT'
+    | 'ARRAY_FILE_IMAGE'
+    | 'ARRAY_FILE_VIDEO'
+    | 'ARRAY_FILE_AUDIO'
+    | 'ARRAY_FILE_DOC'
+    | 'ARRAY_FILE_OTHER';
+
+/**
+ * 变量
+ */
+export interface Variable {
+    id: string,
+    name: string,
+    type: VariableType,
+    value?: string
+    rules?: Rule[]
+}
+
+/**
  * 节点类型
  */
-interface NodeType {
+interface NodeType<T> extends Node {
     id: string
     type: string
     position?: { x: number, y: number }
-    data: any
+    data: T
     width?: number
     height?: number
     dragging?: boolean
     draggable?: boolean
+}
+
+interface EdgeType<T> extends Edge {
+    id: string
+    source: string
+    target: string
+    sourceHandle?: string
+    targetHandle?: string
+    data?: T
 }
 
 /**
@@ -32,38 +97,23 @@ interface NodeDefineType {
 }
 
 /**
- * 开始节点
+ * 开始节点类型
  */
-export interface Rule {
-    type: string,
-    value?: string | boolean,
-    message?: string
-}
-
-export interface Variable {
-    name: string,
-    type: VARIABLE_TYPE,
-    value: string
-    rules?: Rule[]
-}
-
 interface StartNodeType {
     title?: string
     description?: string
-    variables?: Variable[]
+    input?: Variable[]
     group?: boolean
     expanded?: boolean
     hidden?: boolean
 }
 
-
 /**
  * 条件分支 - 条件
  */
 export interface Condition {
-    nodeId: string,
-    varName: string,
-    opr: string,
+    varId: string
+    opr: string
     value: string
 }
 
@@ -77,79 +127,67 @@ export interface Case {
 }
 
 /**
+ * 条件分支
+ */
+export interface CaseNodeType {
+    title?: string
+    description?: string
+    cases: Case[]
+}
+
+/**
  * 循环节点类型
  */
 export interface LoopNodeType {
     title?: string
     description?: string
     type: 'for' | 'while' | 'forever'
-    forVariable?: {
-        nodeId: string,
-        varName: string
-    }
+    forVarId?: string
     whileNumber?: number,
     bodyVarName: string,
     bodyIndexName: string,
 }
 
 /**
- * 支持的脚本语言类型
- */
-export type ScriptLanguage = 'javascript' | 'python'
-
-/**
- * 支持的变量类型
- */
-export type VariableType = 'string' | 'int' | 'long' | 'list' | 'boolean' | 'object'
-
-/**
- * 变量引用类型 - 引用其他节点的变量
- */
-export interface VariableReference {
-    /** 引用的节点ID */
-    nodeId: string
-    /** 引用的变量名 */
-    varName: string
-}
-
-/**
- * 脚本节点输入变量
- */
-export interface ScriptInputVariable {
-    /** 在脚本中使用的变量名 */
-    name: string
-    /** 变量引用 */
-    value: VariableReference
-}
-
-/**
- * 脚本节点输出变量
- */
-export interface ScriptOutputVariable {
-    /** 变量名 */
-    name: string
-    /** 变量类型 */
-    type: VariableType
-}
-
-/**
  * 脚本节点类型
  */
-export interface ScriptNodeType {
-    /** 节点标题 */
+export interface CodeNodeType {
     title?: string
-    /** 节点描述 */
     description?: string
-    /** 脚本语言类型 */
     language: ScriptLanguage
-    /** 脚本代码内容 */
-    script: string
-    /** 输入变量列表 */
-    variables?: ScriptInputVariable[]
-    /** 输出变量列表 */
-    output?: ScriptOutputVariable[]
-    /** 脚本执行超时时间（毫秒），默认30秒 */
+    content: string
+    input?: Variable[]
+    output?: Variable[]
     timeout?: number
     /** 是否启用调试模式 */
     debug?: boolean
+}
+
+export interface SqlNodeType {
+    title?: string
+    description?: string
+    connKey: string
+    content: string
+    input?: Variable[]
+    output?: Variable[]
+}
+
+export interface SqlTransactionNodeType {
+    title?: string
+    description?: string
+    connKey: string
+}
+
+export interface SubFlowNodeType {
+    title?: string
+    description?: string
+    flowId: string
+    input?: Variable[]
+    output?: Variable[]
+}
+
+export interface NoteNodeType {
+    title?: string
+    description?: string
+    content: string
 }

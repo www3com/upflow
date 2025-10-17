@@ -1,20 +1,13 @@
-import React, {useEffect, useMemo, useState} from "react";
-import {Button, Card, Flex, Form, Input, List, Select, Space, theme, Divider, Splitter} from "antd";
+import React, {useEffect, useMemo} from "react";
+import {Button, Card, Divider, Flex, Form, Input, List, Select, theme} from "antd";
 import {DeleteOutlined, PlusOutlined} from "@ant-design/icons";
-import VariableSelect from "@/components/VariableSelect";
-import {getAvailableVariablesWithNode} from "@/utils/variables";
+import VariableSelect, {VariableSelectValue} from "@/components/VariableSelect";
+import {getAvailableVariablesWithNode} from "@/pages/flow/variables";
 import {Node} from "@xyflow/react";
 import {useSnapshot} from "valtio";
 import {state} from "@/states/flow";
-import {VariableSelectValue} from "@/components/VariableSelect";
 import MonacoEditor from "@/components/MonacoEditor";
-import {
-    ScriptNodeType,
-    ScriptInputVariable,
-    ScriptOutputVariable,
-    VariableType,
-    ScriptLanguage
-} from "@/typings";
+import {CodeNodeType, OutputVariable, ScriptLanguage, VariableType} from "@/typings";
 
 
 const {useToken} = theme;
@@ -36,12 +29,12 @@ interface InputVariableForm {
 }
 
 // 输出变量接口 - 扩展标准类型
-interface OutputVariableForm extends Omit<ScriptOutputVariable, 'type'> {
+interface OutputVariableForm extends Omit<OutputVariable, 'type'> {
     type: VariableType;
 }
 
 // 脚本节点数据接口 - 基于 ScriptNodeType
-interface ScriptNodeData extends Omit<ScriptNodeType, 'inputVariables' | 'outputVariables' | 'language' | 'script'> {
+interface ScriptNodeData extends Omit<CodeNodeType, 'inputVariables' | 'outputVariables' | 'language' | 'script'> {
     inputVariables?: InputVariableForm[];
     outputVariables?: OutputVariableForm[];
     language?: ScriptLanguage;

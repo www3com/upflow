@@ -1,10 +1,10 @@
 import request from "@/utils/request";
-import { Node,Edge } from '@xyflow/react';
+import {EdgeType, NodeType} from "@/typings";
 
 
 export interface FlowType {
-    nodes: Node[];
-    edges: Edge[];
+    nodes: NodeType<any>[];
+    edges: EdgeType<any>[];
     viewport: {
         x: number;
         y: number;

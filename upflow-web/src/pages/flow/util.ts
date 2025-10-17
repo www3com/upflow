@@ -1,20 +1,16 @@
 import {Node} from '@xyflow/react';
-import {nanoid} from "nanoid";
-
-export const newId = () => {
-    return nanoid(8);
-}
+import {NodeType} from "@/typings";
 
 // 确保父节点在子节点之前的排序函数（高性能、稳定顺序）
-export const sortNodes = (nodes: Node[]) => {
+export const sortNodes = (nodes: NodeType<any>[]) => {
     if (nodes.length === 0) return [];
 
     // 构建 map: id -> node
-    const nodeMap = new Map<string, Node>();
+    const nodeMap = new Map<string, NodeType<any>>();
     nodes.forEach(n => nodeMap.set(n.id, n));
 
     // 构建 parentId -> children
-    const childrenMap = new Map<string, Node[]>();
+    const childrenMap = new Map<string, NodeType<any>[]>();
     nodes.forEach(n => {
         if (n.parentId) {
             if (!childrenMap.has(n.parentId)) {
@@ -25,9 +21,9 @@ export const sortNodes = (nodes: Node[]) => {
     });
 
     const visited = new Set<string>();
-    const result: Node[] = [];
+    const result: NodeType<any>[] = [];
 
-    function dfs(node: Node) {
+    function dfs(node: NodeType<any>) {
         if (visited.has(node.id)) return;
         visited.add(node.id);
 
@@ -51,7 +47,7 @@ export const sortNodes = (nodes: Node[]) => {
 };
 
 // 获取节点的所有子节点（包括嵌套的子节点）
-export const getAllChildrenIds = (nodeId: string, nodes: readonly Node[]): string[] => {
+export const getAllChildrenIds = (nodeId: string, nodes: readonly NodeType<any>[]): string[] => {
     const childrenIds: string[] = [];
 
     // 递归查找所有子节点

@@ -11,7 +11,7 @@ import EditStartDialog from "@/pages/flow/components/nodes/StartNode/EditStartDi
 import {Node} from "@xyflow/react";
 import {useState} from "react";
 import {Variable} from "@/typings";
-import { getVariableTypeLabel } from "@/utils/variables";
+import { getVariableTypeLabel } from "@/pages/flow/variables";
 
 
 const {useToken} = theme;

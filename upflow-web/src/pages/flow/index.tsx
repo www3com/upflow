@@ -1,25 +1,22 @@
-import React, {useEffect, useMemo, useState, useCallback} from "react";
-import {
-    init,
-    state, saveFlow, addNode, addComment, exportDSL, importDSL,
-} from "@/states/flow";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
+import {addNode, exportDSL, importDSL, init, saveFlow, state,} from "@/states/flow";
 import {useSnapshot} from "valtio";
 import '@xyflow/react/dist/style.css';
 import './xy-theme.css';
 import {Button, Space, Splitter} from "antd";
 import NodePanel from "@/pages/flow/components/NodePanel";
 import {
-    Node,
     Background,
     BackgroundVariant,
     Edge,
+    Node,
     Panel,
     ReactFlow,
     ReactFlowProvider,
     SelectionMode,
     useReactFlow
 } from "@xyflow/react";
-import {NodeDefineTypes} from "@/pages/flow/nodeTypes";
+import {NODE_TYPE, NodeDefineTypes} from "@/pages/flow/nodeTypes";
 import {useFlow} from "@/pages/flow/hooks/useFlow";
 import AttributePanel from "@/pages/flow/components/AttributePanel";
 import ZoomControl from "./components/ZoomControl";
@@ -76,8 +73,8 @@ const FlowPage = () => {
     }, [screenToFlowPosition, contextMenu.position]);
 
     const handleAddComment = useCallback(() => {
-        const flowPosition = screenToFlowPosition(contextMenu.position);
-        addComment(flowPosition);
+        const position = screenToFlowPosition(contextMenu.position);
+        addNode(NODE_TYPE.NOTE, position)
     }, [screenToFlowPosition, contextMenu.position]);
 
     const handleViewportChange = useCallback((viewport: { x: number; y: number; zoom: number }) => {

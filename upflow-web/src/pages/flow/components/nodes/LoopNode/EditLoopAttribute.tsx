@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {Card, Flex, Form, Input, Select} from "antd";
 import VariableSelect from "@/components/VariableSelect";
-import {getAvailableVariablesWithNode} from "@/utils/variables";
+import {getAvailableVariablesWithNode} from "@/pages/flow/variables";
 import {Node} from "@xyflow/react";
 import {useSnapshot} from "valtio";
 import {state} from "@/states/flow";

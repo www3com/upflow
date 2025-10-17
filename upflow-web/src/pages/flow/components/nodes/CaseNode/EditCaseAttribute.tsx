@@ -1,21 +1,18 @@
-import {Button,  List} from "antd";
-import {
-    PlusOutlined
-} from "@ant-design/icons";
+import {Button, List} from "antd";
+import {PlusOutlined} from "@ant-design/icons";
 import EditCaseItem from './EditCaseItem';
 import './styles.less';
-
 import {Node} from "@xyflow/react";
-import {Case, Condition} from "@/typings";
-import {nanoid} from "nanoid";
+import {Case, CaseNodeType, Condition, NodeType} from "@/typings";
 import {useSnapshot} from "valtio";
 import {state} from "@/states/flow";
-import {getAvailableVariablesWithNode} from "@/utils/variables";
+import {getAvailableVariablesWithNode} from "@/pages/flow/variables";
+import {newId} from "@/utils/id";
 
 
 interface CaseNodeProps {
-    node: Node,
-    onChange: (node: Node) => void
+    node: NodeType<CaseNodeType>,
+    onChange: (node: NodeType<CaseNodeType>) => void
 }
 
 export default ({node, onChange}: CaseNodeProps) => {
@@ -24,21 +21,20 @@ export default ({node, onChange}: CaseNodeProps) => {
     const flowState = useSnapshot(state);
     const variablesWithNode = getAvailableVariablesWithNode(node.id, [...flowState.nodes] as Node[], [...flowState.edges] as any[]);
 
-    const cases = (node.data.detail as Case[]) || [];
+    const cases = (node.data.cases) || [];
 
     const onAddCase = () => {
         const newCase: Case = {
-            id: nanoid(8),
+            id: newId(),
             opr: 'and',
             conditions: []
         };
-        
-        const newCases = [...cases, newCase];
+
         const updatedNode = {
             ...node,
             data: {
                 ...node.data,
-                detail: newCases
+                cases: [...cases, newCase]
             }
         };
         onChange(updatedNode);
@@ -50,7 +46,7 @@ export default ({node, onChange}: CaseNodeProps) => {
             ...node,
             data: {
                 ...node.data,
-                detail: newCases
+                cases: newCases
             }
         };
         onChange(updatedNode);
@@ -63,35 +59,20 @@ export default ({node, onChange}: CaseNodeProps) => {
             opr: logicalOperator || newCases[caseIndex].opr, // 更新逻辑操作符
             conditions: conditions
         };
-        
+
         const updatedNode = {
             ...node,
             data: {
                 ...node.data,
-                detail: newCases
+                cases: newCases
             }
         };
         onChange(updatedNode);
     };
 
-
-
-    const renderCase = (caseItem: Case, index: number) => (
-        <List.Item key={caseItem.id} style={{ padding: 0, margin: 0 }}>
-            <EditCaseItem
-                caseItem={caseItem}
-                index={index}
-                totalCases={cases.length}
-                variablesWithNode={variablesWithNode}
-                onDeleteCase={onDeleteCase}
-                onUpdateCase={onUpdateCase}
-            />
-        </List.Item>
-    );
-
     return (
         <div>
-            <List 
+            <List
                 size="small"
                 bordered={false}
                 dataSource={cases}
@@ -106,11 +87,22 @@ export default ({node, onChange}: CaseNodeProps) => {
                         添加条件分支
                     </Button>
                 }
-                renderItem={renderCase}
+                renderItem={(item: Case, index: number) => (
+                    <List.Item key={item.id} style={{padding: 0, margin: 0}}>
+                        <EditCaseItem
+                            item={item}
+                            index={index}
+                            caseLength={cases.length}
+                            variablesWithNode={variablesWithNode}
+                            onDeleteCase={onDeleteCase}
+                            onUpdateCase={onUpdateCase}
+                        />
+                    </List.Item>
+                )}
             />
-            <div style={{ marginTop: 16, padding: 8, backgroundColor: '#f5f5f5', borderRadius: 4 }}>
+            <div style={{marginTop: 16, padding: 8, backgroundColor: '#f5f5f5', borderRadius: 4}}>
                 <strong>Else</strong>
-                <div style={{ fontSize: 12, color: '#666', marginTop: 4 }}>
+                <div style={{fontSize: 12, color: '#666', marginTop: 4}}>
                     用于定义当 if 条件不满足时应执行的逻辑。
                 </div>
             </div>

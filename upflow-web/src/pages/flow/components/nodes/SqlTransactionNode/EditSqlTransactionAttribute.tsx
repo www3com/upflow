@@ -1,11 +1,8 @@
-import React, {useEffect, useMemo, useState} from "react";
-import {Button, Card, Flex, Form, Input, Select} from "antd";
-import VariableSelect from "@/components/VariableSelect";
-import {getAvailableVariablesWithNode} from "@/utils/variables";
+import React from "react";
+import {Button, Flex, Form, Select} from "antd";
 import {Node} from "@xyflow/react";
 import {useSnapshot} from "valtio";
 import {state} from "@/states/flow";
-import {LoopNodeType} from "@/typings";
 import {SettingOutlined} from "@ant-design/icons";
 
 interface LoopNodeProps {
@@ -34,7 +31,7 @@ export default ({node, onChange}: LoopNodeProps) => {
                     <Select
                         placeholder="请选择循环类型"
                     />
-                    <Button type={"text"} onClick={handleConfigClick} icon={<SettingOutlined />}/>
+                    <Button type={"text"} onClick={handleConfigClick} icon={<SettingOutlined/>}/>
                 </Flex>
             </Form.Item>
         </Form>

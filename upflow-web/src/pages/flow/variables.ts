@@ -1,7 +1,7 @@
-import {Node, Edge} from '@xyflow/react';
-import {Variable} from '@/typings';
-import {NODE_TYPE, NodeDefineTypes} from '@/pages/flow/nodeTypes';
-import {VARIABLE_TYPE, VARIABLE_TYPE_TREE, VariableTypeNode} from './constants';
+import {Edge, Node} from '@xyflow/react';
+import {NodeDefineTypes} from '@/pages/flow/nodeTypes';
+import {VARIABLE_TYPES, VariableTypeNode} from '@/utils/constants';
+import {Variable, VariableType} from "@/typings";
 
 /**
  * 递归获取指定节点的所有前置节点对象
@@ -39,11 +39,10 @@ const getPreviousNodes = (nodeId: string, edges: Edge[], nodes: Node[], visited:
 };
 
 export interface VariableWithNode {
-    nodeId: string;
     nodeName: string;
-    varName: string;
-    varType: string;
     nodeIcon: string;
+    varId: string;
+    varName: string;
 }
 
 /**
@@ -65,25 +64,25 @@ export const getAvailableVariablesWithNode = (currentNodeId: string, nodes: Node
         const variables: Variable[] = [];
 
         // 从开始节点获取输入变量
-        if (node.type === NODE_TYPE.START) {
-            const inputVariables = (node.data.variables || []) as Variable[];
+        if (node.data.input) {
+            const inputVariables = (node.data.input || []) as Variable[];
             variables.push(...inputVariables);
         }
 
         // 从其他节点获取输出变量（如果有的话）
         if (node.data.output) {
-            variables.push(node.data.output as Variable);
+            const outputVariables = (node.data.output || []) as Variable[];
+            variables.push(...outputVariables);
         }
 
         // 将变量转换为包含节点信息的格式
         variables.forEach(variable => {
             const nodeIcon = NodeDefineTypes[node.type!]?.icon || 'icon-default';
             variablesWithNode.push({
-                nodeId: node.id,
                 nodeName,
-                varName: variable.name,
-                varType: variable.type,
-                nodeIcon
+                nodeIcon,
+                varId: variable.id,
+                varName: variable.name
             });
         });
     });
@@ -92,7 +91,7 @@ export const getAvailableVariablesWithNode = (currentNodeId: string, nodes: Node
 };
 
 
-const findVariableTypeLabel = (type: VARIABLE_TYPE): string => {
+const findVariableTypeLabel = (type: VariableType): string => {
     const findInNodes = (nodes: VariableTypeNode[]): string | null => {
         for (const node of nodes) {
             if (node.value === type) return node.label;
@@ -104,18 +103,18 @@ const findVariableTypeLabel = (type: VARIABLE_TYPE): string => {
         return null;
     };
 
-    return findInNodes(VARIABLE_TYPE_TREE) || type;
+    return findInNodes(VARIABLE_TYPES) || type;
 };
 
-export const getVariableTypeLabel = (value: VARIABLE_TYPE): string => {
+export const getVariableTypeLabel = (value: VariableType): string => {
     const parts = value.split('_');
     if (parts.length === 1) {
         return findVariableTypeLabel(value);
     }
 
     const [outerType, ...innerParts] = parts;
-    const outerLabel = findVariableTypeLabel(outerType as VARIABLE_TYPE);
-    const innerType = innerParts.join('_') as VARIABLE_TYPE;
+    const outerLabel = findVariableTypeLabel(outerType as VariableType);
+    const innerType = innerParts.join('_') as VariableType;
     const innerLabel = getVariableTypeLabel(innerType);
 
     return `${outerLabel}<${innerLabel}>`;

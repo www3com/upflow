@@ -1,11 +1,10 @@
-import {Node, Edge} from '@xyflow/react';
 import {proxy} from "valtio";
-import {nanoid} from "nanoid";
 import {getFlowApi} from "@/services/flow";
 import {NODE_TYPE, NodeDefineTypes} from "@/pages/flow/nodeTypes";
-import {getAllChildrenIds, newId, sortNodes} from "@/pages/flow/util";
+import {getAllChildrenIds, sortNodes} from "@/pages/flow/util";
 import {message} from "antd/lib";
-import {NodeType} from "@/typings";
+import {EdgeType, NodeType} from "@/typings";
+import {newId} from "@/utils/id";
 
 interface NodeSize {
     id: string;
@@ -16,9 +15,9 @@ interface NodeSize {
 const NodeSizeMap: Record<string, NodeSize> = {};
 
 export const state = proxy({
-    nodes: [] as Node[],
-    edges: [] as Edge[],
-    selectedNode: null as NodeType | null,
+    nodes: [] as NodeType<any>[],
+    edges: [] as EdgeType<any>[],
+    selectedNode: null as NodeType<any> | null,
     hoveredNodeId: null as string | null,
 });
 
@@ -29,7 +28,7 @@ export const init = async () => {
     state.edges = res.data!.edges;
 }
 
-export const setSelectedNode = (node: NodeType | null) => {
+export const setSelectedNode = (node: NodeType<any> | null) => {
     state.selectedNode = node;
 }
 
@@ -100,9 +99,9 @@ export const exportDSL = () => {
 
         // 创建并下载文件
         const dataStr = JSON.stringify(flowData, null, 2);
-        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        const dataBlob = new Blob([dataStr], {type: 'application/json'});
         const url = URL.createObjectURL(dataBlob);
-        
+
         const link = document.createElement('a');
         link.href = url;
         link.download = fileName;
@@ -111,7 +110,7 @@ export const exportDSL = () => {
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
-        
+
         message.success(`DSL 导出成功！文件名：${fileName}`);
     } catch (error) {
         console.error('导出 DSL 失败:', error);
@@ -134,18 +133,18 @@ export const importDSL = (file: File) => {
     }
 
     const reader = new FileReader();
-    
+
     reader.onload = (e) => {
         try {
             const content = e.target?.result as string;
-            
+
             if (!content || content.trim() === '') {
                 message.error('文件内容为空！');
                 return;
             }
 
             const flowData = JSON.parse(content);
-            
+
             // 详细的数据结构验证
             if (!flowData || typeof flowData !== 'object') {
                 message.error('无效的文件格式：不是有效的 JSON 对象！');
@@ -163,20 +162,20 @@ export const importDSL = (file: File) => {
             }
 
             // 验证节点数据结构
-            const invalidNodes = flowData.nodes.filter((node: any) => 
+            const invalidNodes = flowData.nodes.filter((node: any) =>
                 !node.id || !node.type || !node.position || !node.data
             );
-            
+
             if (invalidNodes.length > 0) {
                 message.error(`发现 ${invalidNodes.length} 个无效节点，请检查文件格式！`);
                 return;
             }
 
             // 验证边数据结构
-            const invalidEdges = flowData.edges.filter((edge: any) => 
+            const invalidEdges = flowData.edges.filter((edge: any) =>
                 !edge.id || !edge.source || !edge.target
             );
-            
+
             if (invalidEdges.length > 0) {
                 message.error(`发现 ${invalidEdges.length} 个无效连接，请检查文件格式！`);
                 return;
@@ -185,7 +184,7 @@ export const importDSL = (file: File) => {
             // 确认导入操作
             const nodeCount = flowData.nodes.length;
             const edgeCount = flowData.edges.length;
-            
+
             if (state.nodes.length > 0 || state.edges.length > 0) {
                 // 如果当前有数据，提示用户
                 const confirmMessage = `即将导入 ${nodeCount} 个节点和 ${edgeCount} 个连接，这将覆盖当前流程。是否继续？`;
@@ -197,16 +196,16 @@ export const importDSL = (file: File) => {
             // 执行导入
             state.nodes = flowData.nodes;
             state.edges = flowData.edges;
-            
+
             // 清空选中状态
             state.selectedNode = null;
-            
-            const importInfo = flowData.metadata 
+
+            const importInfo = flowData.metadata
                 ? `导入成功！版本：${flowData.version || '未知'}，节点：${nodeCount}，连接：${edgeCount}`
                 : `导入成功！节点：${nodeCount}，连接：${edgeCount}`;
-                
+
             message.success(importInfo);
-            
+
         } catch (error) {
             console.error('导入 DSL 失败:', error);
             if (error instanceof SyntaxError) {
@@ -224,44 +223,6 @@ export const importDSL = (file: File) => {
     reader.readAsText(file, 'UTF-8');
 }
 
-export const addComment = (position: { x: number, y: number }) => {
-    try {
-        const commentNode: Node = {
-            id: nanoid(8),
-            type: 'comment',
-            position,
-            data: {
-                title: '注释',
-                detail: '请输入注释内容...',
-                group: false,
-            },
-            style: {
-                background: '#fff3cd',
-                border: '1px solid #ffeaa7',
-                borderRadius: '4px',
-                padding: '10px',
-                minWidth: '200px',
-                minHeight: '80px',
-            },
-            draggable: true,
-            selectable: true,
-        };
-
-        // 添加注释节点到状态中
-        state.nodes = [...state.nodes, commentNode];
-        
-        // 设置为选中状态，方便用户立即编辑
-        state.selectedNode = commentNode as NodeType;
-        
-        message.success('注释节点添加成功！');
-        
-        return commentNode;
-    } catch (error) {
-        console.error('添加注释节点失败:', error);
-        message.error('添加注释节点失败，请重试！');
-    }
-}
-
 export const addNode = (type: string, position: { x: number, y: number }) => {
     let startNode = state.nodes.find(n => n.type === NODE_TYPE.START);
     if (type === NODE_TYPE.START && startNode) {
@@ -270,7 +231,7 @@ export const addNode = (type: string, position: { x: number, y: number }) => {
     }
     createNode(type, position);
 }
-export const updateNode = (node: Node) => {
+export const updateNode = (node: NodeType<any>) => {
     let nodes = state.nodes.map(n => n.id === node.id ? node : n);
     state.nodes = sortNodes(nodes)
 }
@@ -281,7 +242,7 @@ export const deleteNode = (nodeId: string) => {
     let edges = state.edges.filter(e => e.source !== nodeId && e.target !== nodeId);
     state.nodes = nodes;
     state.edges = edges;
-    
+
     // 如果被删除的节点是当前选中的节点，清除选中状态
     if (state.selectedNode && state.selectedNode.id === nodeId) {
         state.selectedNode = null;
@@ -306,15 +267,15 @@ export const cloneNode = (nodeId: string) => {
     const clonedData = JSON.parse(JSON.stringify(sourceNode.data));
 
     // 创建克隆节点，位置稍微偏移避免重叠
-    const clonedNode: Node = {
+    const clonedNode: NodeType<any> = {
         ...sourceNode,
-        id: nanoid(8),
+        id: newId(),
         data: clonedData,
         zIndex: sourceNode.zIndex! + 1,
         selected: false,
         position: {
-            x: sourceNode.position.x + 50, // 向右偏移50px
-            y: sourceNode.position.y + 50  // 向下偏移50px
+            x: sourceNode.position!.x + 50, // 向右偏移50px
+            y: sourceNode.position!.y + 50  // 向下偏移50px
         }
     };
 
@@ -322,11 +283,11 @@ export const cloneNode = (nodeId: string) => {
     state.nodes = state.nodes.concat(clonedNode);
 }
 
-export const setNodes = (nodes: Node[]) => {
+export const setNodes = (nodes: NodeType<any>[]) => {
     state.nodes = nodes;
 }
 
-export const setEdges = (edges: Edge[]) => {
+export const setEdges = (edges: EdgeType<any>[]) => {
     state.edges = edges;
 }
 
@@ -407,8 +368,8 @@ export const extendNode = (nodeId: string) => {
 const createNode = (type: string, position: { x: number, y: number }) => {
     let node = NodeDefineTypes[type];
     let id = newId();
-    let nodes: Node[] = [];
-    const newNode: Node = {
+    let nodes: NodeType<any>[] = [];
+    const newNode: NodeType<any> = {
         id, type, position,
         width: node.defaultConfig?.width,
         height: node.defaultConfig?.height,

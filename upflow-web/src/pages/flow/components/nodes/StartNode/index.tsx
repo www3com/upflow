@@ -5,7 +5,8 @@ import styles from './styles.less'
 import NodeWrapper from "@/pages/flow/components/NodeWrapper";
 import IconFont from '@/components/IconFont';
 import {NodeType} from "@/typings";
-import {getVariableTypeLabel} from "@/utils/variables";
+import {getVariableTypeLabel} from "@/pages/flow/variables";
+import NodeResizeControl from "@/pages/flow/components/NodeResizeControl";
 
 const {useToken} = theme;
 
@@ -38,6 +39,7 @@ export default memo((node: NodeType) => {
                 </Flex>
             )}
             <Handle type="source" position={Position.Right}/>
+            <NodeResizeControl/>
         </NodeWrapper>
     )
 });
