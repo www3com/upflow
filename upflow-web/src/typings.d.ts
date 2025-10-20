@@ -1,4 +1,4 @@
-import {Node, Edge} from '@xyflow/react';
+import {Edge, Node} from '@xyflow/react';
 
 interface ObjectType<T> {
     [key: string]: T
@@ -103,9 +103,6 @@ interface StartNodeType {
     title?: string
     description?: string
     input?: Variable[]
-    group?: boolean
-    expanded?: boolean
-    hidden?: boolean
 }
 
 /**

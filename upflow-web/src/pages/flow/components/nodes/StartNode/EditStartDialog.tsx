@@ -3,7 +3,7 @@ import {Cascader, Form, Input, Modal} from "antd";
 import IconFont from '@/components/IconFont';
 import './styles.less';
 import {Variable} from "@/typings";
-import {ValidationRulesList} from './ValidationRuleList';
+import {ValidationRuleList} from './ValidationRuleList';
 import {VARIABLE_TYPE_RULES_MAP, VARIABLE_TYPES} from '@/utils/constants';
 
 interface EditStartDialogProps {
@@ -16,14 +16,14 @@ interface EditStartDialogProps {
 // 渲染校验值输入组件
 export default ({open, variable = {} as Variable, onUpdate, onCancel}: EditStartDialogProps) => {
     const [form] = Form.useForm();
-    const [currentVariableType, setCurrentVariableType] = React.useState<string>('STRING');
+    const [currentVarType, setCurrentVarType] = React.useState<string>('STRING');
 
     // 确保表单在打开时重置并设置初始值
     React.useEffect(() => {
         if (open) {
             form.resetFields();
             form.setFieldsValue(variable);
-            setCurrentVariableType(variable.type || 'STRING');
+            setCurrentVarType(variable.type || 'STRING');
         }
     }, [open, variable, form]);
 
@@ -31,7 +31,7 @@ export default ({open, variable = {} as Variable, onUpdate, onCancel}: EditStart
     const handleVariableTypeChange = (value: string[]) => {
         // Cascader 返回的是路径数组，我们需要最后一个值作为实际的类型
         const newType = value[value.length - 1];
-        setCurrentVariableType(newType);
+        setCurrentVarType(newType);
 
         const supportedRules = VARIABLE_TYPE_RULES_MAP[newType as keyof typeof VARIABLE_TYPE_RULES_MAP] || [];
         const currentRules = form.getFieldValue('rules') || [];
@@ -64,7 +64,7 @@ export default ({open, variable = {} as Variable, onUpdate, onCancel}: EditStart
     const handleOk = () => {
         form.validateFields().then((values) => {
             delete values.type;
-            values.type = currentVariableType;
+            values.type = currentVarType;
             onUpdate?.(values);
         });
     };
@@ -94,7 +94,7 @@ export default ({open, variable = {} as Variable, onUpdate, onCancel}: EditStart
                     />
                 </Form.Item>
 
-                <ValidationRulesList form={form} variableType={currentVariableType}/>
+                <ValidationRuleList form={form} variableType={currentVarType}/>
             </Form>
         </Modal>
     );

@@ -22,14 +22,14 @@ export default ({node, onChange}: StartNodeProps) => {
     const [variable, setVariable] = useState<Variable>({} as Variable);
 
     const onEdit = (variable: Variable) => {
-        setOpen(true);
         setVariable(variable);
+        setOpen(true);
     }
     const onUpdate = (variable: Variable) => {
         // 获取变量数据并创建副本
         const originalVariables = node.data.input || [];
-        let variables = [...originalVariables]; // 创建数组副本
-        console.log('variable:', variable)
+        let variables = [...originalVariables];
+
         // 检查是否是更新现有变量还是添加新变量
         const existIndex = variables.findIndex(v => v.name === variable.name);
         if (existIndex >= 0) {
@@ -42,8 +42,7 @@ export default ({node, onChange}: StartNodeProps) => {
             ...node.data,
             input: variables
         };
-        let startNode = {...node, data};
-        onChange(startNode);
+        onChange({...node, data});
         setOpen(false);
     }
 
@@ -55,8 +54,7 @@ export default ({node, onChange}: StartNodeProps) => {
             ...node.data,
             input: filteredVariables
         };
-        let startNode = {...node, data};
-        onChange(startNode);
+        onChange({...node, data});
     }
 
     // 获取变量数据

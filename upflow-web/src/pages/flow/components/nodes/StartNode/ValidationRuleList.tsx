@@ -1,16 +1,16 @@
 import React from 'react';
-import { Button, Form } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import { ValidationRuleItem } from './ValidationRuleItem';
-import { getAvailableRules, getDefaultErrorMessage } from '@/pages/flow/variables';
+import {Button, Form} from 'antd';
+import {PlusOutlined} from '@ant-design/icons';
+import {ValidationRuleItem} from './ValidationRuleItem';
+import {getAvailableRules, getDefaultErrorMessage} from '@/pages/flow/variables';
 
 // 校验规则列表组件
-interface ValidationRulesListProps {
+interface ValidationRuleListProps {
     form: any;
     variableType?: string;
 }
 
-export const ValidationRulesList: React.FC<ValidationRulesListProps> = ({ form, variableType = 'string' }) => {
+export const ValidationRuleList: React.FC<ValidationRuleListProps> = ({form, variableType = 'string'}) => {
     // 获取当前变量类型的默认校验规则
     const getDefaultRuleType = () => {
         const availableRules = getAvailableRules(variableType);
@@ -20,14 +20,14 @@ export const ValidationRulesList: React.FC<ValidationRulesListProps> = ({ form, 
     return (
         <Form.Item label="校验规则">
             <Form.List name="rules">
-                {(fields, { add, remove }) => (
+                {(fields, {add, remove}) => (
                     <>
                         {fields.length === 0 && (
                             <div className="empty-state">
                                 暂无校验规则
                             </div>
                         )}
-                        
+
                         {fields.map((field) => (
                             <ValidationRuleItem
                                 key={field.key}
@@ -37,16 +37,16 @@ export const ValidationRulesList: React.FC<ValidationRulesListProps> = ({ form, 
                                 variableType={variableType}
                             />
                         ))}
-                        
+
                         <Button
                             type="dashed"
-                            icon={<PlusOutlined />}
+                            icon={<PlusOutlined/>}
                             className="full-width"
                             size="small"
                             onClick={() => {
                                 const defaultRuleType = getDefaultRuleType();
                                 const defaultMessage = getDefaultErrorMessage(defaultRuleType);
-                                add({ type: defaultRuleType, message: defaultMessage });
+                                add({type: defaultRuleType, message: defaultMessage});
                             }}
                         >
                             添加校验规则
