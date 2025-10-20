@@ -18,7 +18,7 @@ const {useToken} = theme;
 
 
 interface NodeWrapperProps {
-    node: NodeType,
+    node: NodeType<any>,
     children?: React.ReactNode,
 }
 
