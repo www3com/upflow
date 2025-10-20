@@ -1,10 +1,10 @@
 import React from 'react';
-import {Cascader, Form, Input, Modal, theme} from "antd";
+import {Cascader, Form, Input, Modal} from "antd";
 import IconFont from '@/components/IconFont';
 import './styles.less';
 import {Variable} from "@/typings";
-import {ValidationRulesList} from './ValidationRules';
-import {VARIABLE_TYPES, VARIABLE_TYPE_RULES_MAP} from '@/utils/constants';
+import {ValidationRulesList} from './ValidationRuleList';
+import {VARIABLE_TYPE_RULES_MAP, VARIABLE_TYPES} from '@/utils/constants';
 
 interface EditStartDialogProps {
     open: boolean,
@@ -16,7 +16,6 @@ interface EditStartDialogProps {
 // 渲染校验值输入组件
 export default ({open, variable = {} as Variable, onUpdate, onCancel}: EditStartDialogProps) => {
     const [form] = Form.useForm();
-    const {token} = theme.useToken();
     const [currentVariableType, setCurrentVariableType] = React.useState<string>('STRING');
 
     // 确保表单在打开时重置并设置初始值
@@ -29,10 +28,9 @@ export default ({open, variable = {} as Variable, onUpdate, onCancel}: EditStart
     }, [open, variable, form]);
 
     // 监听变量类型变化，清理不兼容的校验规则
-    const handleVariableTypeChange = (value: string[], selectedOptions: any[]) => {
+    const handleVariableTypeChange = (value: string[]) => {
         // Cascader 返回的是路径数组，我们需要最后一个值作为实际的类型
         const newType = value[value.length - 1];
-        console.log('variable type change:', newType)
         setCurrentVariableType(newType);
 
         const supportedRules = VARIABLE_TYPE_RULES_MAP[newType as keyof typeof VARIABLE_TYPE_RULES_MAP] || [];
@@ -48,9 +46,9 @@ export default ({open, variable = {} as Variable, onUpdate, onCancel}: EditStart
     };
 
     // 自定义 Cascader 显示渲染函数
-    const displayRender = (labels: string[], selectedOptions?: any[]) => {
+    const displayRender = (labels: string[]) => {
         if (!labels || labels.length === 0) return '';
-        
+
         // 递归构建嵌套格式，统一处理所有层级
         const buildNestedLabel = (labelArray: string[]): string => {
             if (labelArray.length === 1) {
@@ -59,13 +57,12 @@ export default ({open, variable = {} as Variable, onUpdate, onCancel}: EditStart
             const [first, ...rest] = labelArray;
             return `${first}<${buildNestedLabel(rest)}>`;
         };
-        
+
         return buildNestedLabel(labels);
     };
 
     const handleOk = () => {
         form.validateFields().then((values) => {
-            console.log('form values:', values);
             delete values.type;
             values.type = currentVariableType;
             onUpdate?.(values);
@@ -89,15 +86,15 @@ export default ({open, variable = {} as Variable, onUpdate, onCancel}: EditStart
                 </Form.Item>
 
                 <Form.Item label="变量类型" name='type'>
-                    <Cascader 
-                        options={VARIABLE_TYPES} 
-                        onChange={handleVariableTypeChange} 
+                    <Cascader
+                        options={VARIABLE_TYPES}
+                        onChange={handleVariableTypeChange}
                         placeholder="请选择变量类型"
                         displayRender={displayRender}
                     />
                 </Form.Item>
 
-                <ValidationRulesList form={form} token={token} variableType={currentVariableType}/>
+                <ValidationRulesList form={form} variableType={currentVariableType}/>
             </Form>
         </Modal>
     );

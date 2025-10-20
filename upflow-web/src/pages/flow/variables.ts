@@ -1,6 +1,6 @@
 import {Edge, Node} from '@xyflow/react';
 import {NodeDefineTypes} from '@/pages/flow/nodeTypes';
-import {VARIABLE_TYPES, VariableTypeNode} from '@/utils/constants';
+import {VARIABLE_TYPES, VariableTypeNode, VALIDATION_RULE_TYPES, VARIABLE_TYPE_RULES_MAP, VALIDATION_RULE_DEFAULT_MESSAGES} from '@/utils/constants';
 import {Variable, VariableType} from "@/typings";
 
 /**
@@ -118,4 +118,37 @@ export const getVariableTypeLabel = (value: VariableType): string => {
     const innerLabel = getVariableTypeLabel(innerType);
 
     return `${outerLabel}<${innerLabel}>`;
+};
+
+export const getAvailableRules = (variableType: string) => {
+  const availableRuleTypes = VARIABLE_TYPE_RULES_MAP[variableType as keyof typeof VARIABLE_TYPE_RULES_MAP] || [];
+  return VALIDATION_RULE_TYPES.filter((rule: any) => availableRuleTypes.includes(rule.value));
+};
+
+export const getDefaultErrorMessage = (ruleType: string, value?: string): string => {
+    const template = VALIDATION_RULE_DEFAULT_MESSAGES[ruleType];
+    if (!template) return "";
+    
+    // 对于需要参数的规则类型，如果没有提供值则返回基础模板
+    if (!value) return template;
+    
+    // 处理不同类型的参数替换
+    switch (ruleType) {
+        case 'max':
+        case 'min':
+            return template.replace('{value}', value);
+        case 'length':
+        case 'size':
+            // 处理范围值格式 "min,max"
+            if (value.includes(',')) {
+                const [min, max] = value.split(',');
+                return template.replace('{min}', min || '0').replace('{max}', max || '∞');
+            }
+            return template;
+        case 'enum':
+            // 处理枚举值，假设用逗号分隔
+            return template.replace('{options}', value);
+        default:
+            return template;
+    }
 };
