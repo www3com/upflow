@@ -1,21 +1,32 @@
 import StartNode from "@/pages/flow/components/nodes/StartNode";
 import ConditionNode from "@/pages/flow/components/nodes/CaseNode";
-import ScriptNode from "@/pages/flow/components/nodes/CodeNode";
+import CodeNode from "@/pages/flow/components/nodes/CodeNode";
 import EditStartNode from "@/pages/flow/components/nodes/StartNode/EditStartAttribute";
 import EditCaseNode from "@/pages/flow/components/nodes/CaseNode/EditCaseAttribute";
-import {NodeDefineType, ObjectType} from "@/typings";
-import {nanoid} from "nanoid";
+import {
+    CaseNodeType,
+    CodeNodeType,
+    LoopNodeType,
+    NodeDefineType,
+    NodeType,
+    NoteNodeType,
+    ObjectType,
+    SqlTransactionNodeType,
+    StartNodeType,
+    SubFlowNodeType
+} from "@/typings";
 import LoopNode from "@/pages/flow/components/nodes/LoopNode";
-import LoopStartNode from "@/pages/flow/components/nodes/GroupStartNode";
+import GroupStartNode from "@/pages/flow/components/nodes/GroupStartNode";
 import NoteNode from "@/pages/flow/components/nodes/CommentNode";
 import EditLoopAttribute from "@/pages/flow/components/nodes/LoopNode/EditLoopAttribute";
 import LoopContinueNode from "@/pages/flow/components/nodes/LoopContinueNode";
 import LoopBreakNode from "@/pages/flow/components/nodes/LoopBreakNode";
-import EditScriptAttribute from "@/pages/flow/components/nodes/CodeNode/EditScriptAttribute";
+import EditCodeAttribute from "@/pages/flow/components/nodes/CodeNode/EditCodeAttribute";
 import SqlTransactionNode from "@/pages/flow/components/nodes/SqlTransactionNode";
 import SqlNode from "@/pages/flow/components/nodes/SqlNode";
 import EditSqlTransactionAttribute from "@/pages/flow/components/nodes/SqlTransactionNode/EditSqlTransactionAttribute";
 import EditSqlAttribute from "@/pages/flow/components/nodes/SqlNode/EditSqlAttribute";
+import {newId} from "@/utils/id";
 
 // 节点类型 key 常量
 export const NODE_TYPE = {
@@ -25,7 +36,7 @@ export const NODE_TYPE = {
     LOOP: 'loop',
     LOOP_CONTINUE: 'loop-continue',
     LOOP_BREAK: 'loop-break',
-    SCRIPT: 'script',
+    CODE: 'code',
     SQL: 'sql',
     SQL_TRANSACTION: 'sql-transaction',
     SUBFLOW: 'subflow',
@@ -39,15 +50,15 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
         renderComponent: StartNode,
         attributeEditor: EditStartNode,
         defaultConfig: {
-            id: '',
+            id: newId(),
             type: NODE_TYPE.START,
             width: 220,
             data: {
                 title: '开始',
-                variables: [],
+                input: [],
                 group: false,
             }
-        }
+        } as NodeType<StartNodeType>
     },
     [NODE_TYPE.CASE]: {
         icon: 'icon-case',
@@ -60,17 +71,17 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
             width: 250,
             data: {
                 title: '条件分支',
-                detail: [{id: nanoid(8), opr: 'and', conditions: []}],
+                cases: [{id: newId(), opr: 'and', conditions: []}],
                 group: false,
             }
-        }
+        } as NodeType<CaseNodeType>
     },
     [NODE_TYPE.LOOP]: {
         icon: 'icon-loop',
         renderComponent: LoopNode,
         attributeEditor: EditLoopAttribute,
         defaultConfig: {
-            id: '',
+            id: newId(),
             type: NODE_TYPE.LOOP,
             position: {x: 0, y: 0},
             width: 400,
@@ -80,13 +91,13 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
                 group: true,
                 expanded: true
             }
-        }
+        } as NodeType<LoopNodeType>
     },
     [NODE_TYPE.GROUP_START]: {
         icon: 'icon-start',
-        renderComponent: LoopStartNode,
+        renderComponent: GroupStartNode,
         defaultConfig: {
-            id: '',
+            id: newId(),
             type: NODE_TYPE.GROUP_START,
             position: {x: 10, y: 50},
             width: 30,
@@ -99,7 +110,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
         icon: 'icon-continue',
         renderComponent: LoopContinueNode,
         defaultConfig: {
-            id: '',
+            id: newId(),
             type: NODE_TYPE.LOOP_CONTINUE,
             position: {x: 0, y: 0},
             width: 150,
@@ -110,26 +121,25 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
         icon: 'icon-break',
         renderComponent: LoopBreakNode,
         defaultConfig: {
-            id: '',
+            id: newId(),
             type: NODE_TYPE.LOOP_BREAK,
             position: {x: 0, y: 0},
             width: 150,
             data: {title: '终止循环', group: false},
         }
     },
-    [NODE_TYPE.SCRIPT]: {
-        icon: 'icon-script',
-        renderComponent: ScriptNode,
-        attributeEditor: EditScriptAttribute,
+    [NODE_TYPE.CODE]: {
+        icon: 'icon-code',
+        renderComponent: CodeNode,
+        attributeEditor: EditCodeAttribute,
         defaultConfig: {
-            id: '',
-            type: NODE_TYPE.SCRIPT,
+            id: newId(),
+            type: NODE_TYPE.CODE,
             position: {x: 0, y: 0},
             data: {
                 title: '代码执行',
-                group: false,
             }
-        }
+        } as NodeType<CodeNodeType>
     },
     [NODE_TYPE.SQL]: {
         icon: 'icon-sql',
@@ -160,24 +170,23 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
                 group: true,
                 expanded: true
             }
-        }
+        } as NodeType<SqlTransactionNodeType>
     },
     [NODE_TYPE.SUBFLOW]: {
         icon: 'icon-subflow',
-        renderComponent: ScriptNode,
+        renderComponent: CodeNode,
         defaultConfig: {
             id: '',
             type: NODE_TYPE.SUBFLOW,
             position: {x: 0, y: 0},
             data: {
                 title: '子流程',
-                group: false,
             }
-        }
+        } as NodeType<SubFlowNodeType>
     },
     [NODE_TYPE.ASSIGN]: {
         icon: 'icon-assign',
-        renderComponent: ScriptNode,
+        renderComponent: CodeNode,
         defaultConfig: {
             id: '',
             type: NODE_TYPE.ASSIGN,
@@ -199,10 +208,8 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
             height: 80,
             data: {
                 title: '注释',
-                detail: '请输入注释内容...',
-                group: false,
-                hidden: true
+                content: '请输入注释内容...',
             }
-        }
+        } as NodeType<NoteNodeType>
     },
 }

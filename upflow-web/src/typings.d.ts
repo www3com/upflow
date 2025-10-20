@@ -143,6 +143,8 @@ export interface LoopNodeType {
     whileNumber?: number,
     bodyVarName: string,
     bodyIndexName: string,
+    group: boolean,
+    expanded: boolean
 }
 
 /**
@@ -173,6 +175,8 @@ export interface SqlTransactionNodeType {
     title?: string
     description?: string
     connKey: string
+    group: boolean
+    expanded: boolean
 }
 
 export interface SubFlowNodeType {

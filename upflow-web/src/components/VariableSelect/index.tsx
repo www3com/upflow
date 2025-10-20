@@ -39,7 +39,7 @@ const VariableLabel: React.FC<VariableLabelProps> = ({value, variablesWithNode})
 };
 
 // VariableSelect 组件属性接口
-export interface VariableSelectProps extends Omit<SelectProps, 'options' | 'labelRender' | 'value' | 'onChange' | 'labelInValue'> {
+export interface VariableSelectProps extends Omit<SelectProps, | 'value' | 'onChange'> {
     value?: string;
     onChange?: (value: string) => void;
     variablesWithNode: VariableWithNode[];
@@ -86,6 +86,7 @@ const VariableSelect: React.FC<VariableSelectProps> = ({
 
     // 处理值变化
     const handleChange = (selectedValue: string) => {
+        console.log("selectedValue", selectedValue)
         if (onChange && selectedValue) {
             onChange(selectedValue)
         }
@@ -99,7 +100,6 @@ const VariableSelect: React.FC<VariableSelectProps> = ({
     return <Select
         popupMatchSelectWidth={false}
         placeholder="请选择变量"
-        labelInValue
         value={value}
         onChange={handleChange}
         options={options}

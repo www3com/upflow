@@ -1,15 +1,12 @@
-import {Button, Flex, Card, Select, Input, Form, Divider} from "antd";
-import {
-    DeleteOutlined,
-    PlusOutlined,
-} from "@ant-design/icons";
+import {Button, Card, Divider, Flex, Form, Input, Select, theme} from "antd";
+import {DeleteOutlined, PlusOutlined,} from "@ant-design/icons";
 import IconFont from '@/components/IconFont';
 import VariableSelect from '@/components/VariableSelect';
-import {theme} from "antd";
 import {useEffect, useState} from "react";
-import {Case, Condition} from "@/typings";
+import {Case} from "@/typings";
 import {CompareOprType} from "@/utils/constants";
 import {VariableWithNode} from "@/pages/flow/variables";
+import styles from './styles.less';
 
 const {useToken} = theme;
 
@@ -20,34 +17,40 @@ const OPERATOR_OPTIONS = Object.entries(CompareOprType).map(([value, label]) => 
 }));
 
 interface EditCaseItemProps {
-    item: Case;
-    index: number;
-    caseLength: number;
+    value: Case;
+    onChange: (value: Case) => void;
+    title: string;
     variablesWithNode: VariableWithNode[];
-    onDeleteCase: (index: number) => void;
-    onUpdateCase: (caseIndex: number, conditions: Condition[], logicalOperator?: string) => void;
-    form?: any;
+    onDelete?: () => void;
 }
 
 export default function EditCaseItem({
-                                         item,
-                                         index,
-                                         caseLength,
+                                         value,
+                                         onChange,
+                                         title,
                                          variablesWithNode,
-                                         onDeleteCase,
-                                         onUpdateCase,
-                                         form
+                                         onDelete,
                                      }: EditCaseItemProps) {
     const {token} = useToken();
-    const [logicalOperator, setLogicalOperator] = useState<string>(item.opr || 'and');
+    const [form] = Form.useForm();
+    const [logicalOperator, setLogicalOperator] = useState<string>(value.opr || 'and');
 
-    // 获取当前表单实例
-    const currentForm = form || Form.useForm()[0];
+    // 初始化表单数据
+    useEffect(() => {
+        form.setFieldsValue({
+            conditions: value.conditions || []
+        });
+    }, [value, form]);
 
     // 监听表单变化并更新父组件
     const handleFormChange = () => {
-        const formConditions = currentForm.getFieldValue('conditions') || [];
-        onUpdateCase(index, formConditions, logicalOperator);
+        const formConditions = form.getFieldValue('conditions') || [];
+        const updatedCase: Case = {
+            ...value,
+            opr: logicalOperator,
+            conditions: formConditions
+        };
+        onChange(updatedCase);
     };
 
     // 逻辑操作符切换函数
@@ -55,23 +58,34 @@ export default function EditCaseItem({
         const newOperator = logicalOperator === 'and' ? 'or' : 'and';
         setLogicalOperator(newOperator);
         // 立即更新父组件
-        const formConditions = currentForm.getFieldValue('conditions') || [];
-        onUpdateCase(index, formConditions, newOperator);
+        const formConditions = form.getFieldValue('conditions') || [];
+        const updatedCase: Case = {
+            ...value,
+            opr: newOperator,
+            conditions: formConditions
+        };
+        onChange(updatedCase);
     };
 
     // 添加条件的函数
     const handleAddCondition = () => {
-        const formConditions = currentForm.getFieldValue('conditions') || [];
+        const formConditions = form.getFieldValue('conditions') || [];
         const newFormCondition = {
             varId: undefined,
             opr: 'in',
             value: ''
         };
-        currentForm.setFieldsValue({
-            conditions: [...formConditions, newFormCondition]
+        const newConditions = [...formConditions, newFormCondition];
+        form.setFieldsValue({
+            conditions: newConditions
         });
         // 更新父组件
-        onUpdateCase(index, [...formConditions, newFormCondition], logicalOperator);
+        const updatedCase: Case = {
+            ...value,
+            opr: logicalOperator,
+            conditions: newConditions
+        };
+        onChange(updatedCase);
     };
 
     // 渲染单个条件项
@@ -80,17 +94,12 @@ export default function EditCaseItem({
 
         return (
             <Flex key={key} align="center" gap={5}>
-                <Flex vertical gap={1} style={{
-                    padding: '5px',
-                    backgroundColor: '#f2f4f7',
-                    borderRadius: '6px',
-                    flex: 1
-                }}>
+                <Flex vertical gap={1} className={styles.conditionContainer}>
                     {/* 第一行：变量和操作符 */}
                     <Flex align="center" gap={0} justify={'space-between'}>
                         <Form.Item
                             {...restField}
-                            name={[name, 'variable']}
+                            name={[name, 'varId']}
                             style={{marginBottom: 0}}
                         >
                             <VariableSelect
@@ -130,16 +139,12 @@ export default function EditCaseItem({
                     <Form.Item
                         {...restField}
                         name={[name, 'value']}
-                        style={{marginBottom: 0}}
+                        style={{margin: 0}}
                     >
                         <Input
                             placeholder="输入值"
                             onChange={handleFormChange}
-                            style={{
-                                border: 'none',
-                                backgroundColor: 'transparent',
-                                width: '100%'
-                            }}
+                            className={styles.transparentInput}
                             size="small"
                         />
                     </Form.Item>
@@ -168,7 +173,7 @@ export default function EditCaseItem({
                 <Flex justify="space-between" align="center">
                     <Flex gap={5} align="center">
                         <span style={{fontWeight: 'bold'}}>
-                        {caseLength === 1 ? 'IF' : `CASE ${index + 1}`}
+                        {title}
                         </span>
                         <Button
                             size={'small'}
@@ -182,12 +187,14 @@ export default function EditCaseItem({
                     </Flex>
                     <Flex gap={5} align="center">
                         <Button type="text" size="small" icon={<PlusOutlined/>} onClick={handleAddCondition}/>
-                        <Button type="text" icon={<DeleteOutlined/>} size="small" onClick={() => onDeleteCase(index)}/>
+                        {onDelete && (
+                            <Button type="text" icon={<DeleteOutlined/>} size="small" onClick={onDelete}/>
+                        )}
                     </Flex>
                 </Flex>
             }
         >
-            <Form form={currentForm} onValuesChange={handleFormChange}>
+            <Form form={form} onValuesChange={handleFormChange}>
                 <Form.List name="conditions">
                     {(fields, {remove}) => (
                         <Flex vertical gap={5}>

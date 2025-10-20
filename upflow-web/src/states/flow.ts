@@ -345,7 +345,7 @@ export const extendNode = (nodeId: string) => {
     }
 
     // 更新所有子节点的隐藏状态
-    const updatedNodes = state.nodes.map(node => {
+    state.nodes = state.nodes.map(node => {
         if (node.id === nodeId) {
             return updatedNode;
         }
@@ -360,9 +360,6 @@ export const extendNode = (nodeId: string) => {
 
         return node;
     });
-
-    // 更新状态
-    state.nodes = updatedNodes;
 }
 
 const createNode = (type: string, position: { x: number, y: number }) => {
@@ -374,7 +371,6 @@ const createNode = (type: string, position: { x: number, y: number }) => {
         width: node.defaultConfig?.width,
         height: node.defaultConfig?.height,
         data: {...node.defaultConfig?.data},
-        extent: 'parent',
     };
     nodes.push(newNode);
 

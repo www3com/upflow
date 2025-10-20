@@ -2,13 +2,11 @@ import {Button, List} from "antd";
 import {PlusOutlined} from "@ant-design/icons";
 import EditCaseItem from './EditCaseItem';
 import './styles.less';
-import {Node} from "@xyflow/react";
-import {Case, CaseNodeType, Condition, NodeType} from "@/typings";
+import {Case, CaseNodeType, EdgeType, NodeType} from "@/typings";
 import {useSnapshot} from "valtio";
 import {state} from "@/states/flow";
 import {getAvailableVariablesWithNode} from "@/pages/flow/variables";
 import {newId} from "@/utils/id";
-
 
 interface CaseNodeProps {
     node: NodeType<CaseNodeType>,
@@ -16,10 +14,9 @@ interface CaseNodeProps {
 }
 
 export default ({node, onChange}: CaseNodeProps) => {
-
     // 获取流程状态和可用变量
     const flowState = useSnapshot(state);
-    const variablesWithNode = getAvailableVariablesWithNode(node.id, [...flowState.nodes] as Node[], [...flowState.edges] as any[]);
+    const variablesWithNode = getAvailableVariablesWithNode(node.id, flowState.nodes as NodeType<any>[], flowState.edges as EdgeType<any>[]);
 
     const cases = (node.data.cases) || [];
 
@@ -52,14 +49,10 @@ export default ({node, onChange}: CaseNodeProps) => {
         onChange(updatedNode);
     };
 
-    const onUpdateCase = (caseIndex: number, conditions: Condition[], logicalOperator?: string) => {
-        const newCases = [...cases];
-        newCases[caseIndex] = {
-            ...newCases[caseIndex],
-            opr: logicalOperator || newCases[caseIndex].opr, // 更新逻辑操作符
-            conditions: conditions
-        };
 
+    const onCaseChange = (index: number, updatedCase: Case) => {
+        const newCases = [...cases];
+        newCases[index] = updatedCase;
         const updatedNode = {
             ...node,
             data: {
@@ -90,12 +83,11 @@ export default ({node, onChange}: CaseNodeProps) => {
                 renderItem={(item: Case, index: number) => (
                     <List.Item key={item.id} style={{padding: 0, margin: 0}}>
                         <EditCaseItem
-                            item={item}
-                            index={index}
-                            caseLength={cases.length}
+                            value={item}
+                            onChange={(updatedCase) => onCaseChange(index, updatedCase)}
+                            title={cases.length === 1 ? 'IF' : `CASE ${index + 1}`}
                             variablesWithNode={variablesWithNode}
-                            onDeleteCase={onDeleteCase}
-                            onUpdateCase={onUpdateCase}
+                            onDelete={cases.length > 1 ? () => onDeleteCase(index) : undefined}
                         />
                     </List.Item>
                 )}

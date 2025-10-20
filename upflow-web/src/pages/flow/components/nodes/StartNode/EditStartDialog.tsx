@@ -5,6 +5,7 @@ import './styles.less';
 import {Variable} from "@/typings";
 import {ValidationRuleList} from './ValidationRuleList';
 import {VARIABLE_TYPE_RULES_MAP, VARIABLE_TYPES} from '@/utils/constants';
+import {newId} from "@/utils/id";
 
 interface EditStartDialogProps {
     open: boolean,
@@ -65,6 +66,9 @@ export default ({open, variable = {} as Variable, onUpdate, onCancel}: EditStart
         form.validateFields().then((values) => {
             delete values.type;
             values.type = currentVarType;
+            if (!values.id) {
+                values.id = newId();
+            }
             onUpdate?.(values);
         });
     };

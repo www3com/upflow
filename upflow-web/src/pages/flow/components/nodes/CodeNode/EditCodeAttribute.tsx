@@ -1,49 +1,21 @@
 import React, {useEffect, useMemo} from "react";
 import {Button, Card, Divider, Flex, Form, Input, List, Select, theme} from "antd";
 import {DeleteOutlined, PlusOutlined} from "@ant-design/icons";
-import VariableSelect, {VariableSelectValue} from "@/components/VariableSelect";
-import {getAvailableVariablesWithNode} from "@/pages/flow/variables";
-import {Node} from "@xyflow/react";
+import VariableSelect from "@/components/VariableSelect";
 import {useSnapshot} from "valtio";
 import {state} from "@/states/flow";
 import MonacoEditor from "@/components/MonacoEditor";
-import {CodeNodeType, OutputVariable, ScriptLanguage, VariableType} from "@/typings";
+import {CodeNodeType, EdgeType, NodeType, SqlNodeType} from "@/typings";
+import {getAvailableVariablesWithNode} from "@/pages/flow/variables";
+import {VARIABLE_TYPES} from "@/utils/constants";
 
 
 const {useToken} = theme;
 
-// 变量类型选项 - 使用新的 VariableType
-const VARIABLE_TYPES: Array<{ value: VariableType, label: string }> = [
-    {value: "string", label: "字符串"},
-    {value: "int", label: "整形"},
-    {value: "long", label: "长整型"},
-    {value: "list", label: "列表"},
-    {value: "boolean", label: "布尔值"},
-    {value: "object", label: "对象"}
-];
-
-// 输入变量接口 - 适配 VariableSelectValue
-interface InputVariableForm {
-    name: string;
-    value: VariableSelectValue;
-}
-
-// 输出变量接口 - 扩展标准类型
-interface OutputVariableForm extends Omit<OutputVariable, 'type'> {
-    type: VariableType;
-}
-
-// 脚本节点数据接口 - 基于 ScriptNodeType
-interface ScriptNodeData extends Omit<CodeNodeType, 'inputVariables' | 'outputVariables' | 'language' | 'script'> {
-    inputVariables?: InputVariableForm[];
-    outputVariables?: OutputVariableForm[];
-    language?: ScriptLanguage;
-    script?: string;
-}
 
 interface ScriptNodeProps {
-    node: Node,
-    onChange: (node: Node) => void
+    node: NodeType<CodeNodeType>,
+    onChange: (node: NodeType<CodeNodeType>) => void
 }
 
 export default ({node, onChange}: ScriptNodeProps) => {
@@ -56,12 +28,11 @@ export default ({node, onChange}: ScriptNodeProps) => {
 
     // 初始化表单数据
     useEffect(() => {
-        const nodeData = (node.data as unknown) as ScriptNodeData;
         const initialValues = {
-            inputVariables: nodeData.inputVariables || [],
-            language: nodeData.language || 'javascript',
-            script: nodeData.script || '',
-            outputVariables: nodeData.outputVariables || []
+            inputVariables: node.data.input || [],
+            language: node.data.language || 'javascript',
+            script: node.data.content || '',
+            outputVariables: node.data.output || []
         };
 
         form.setFieldsValue(initialValues);
@@ -69,14 +40,12 @@ export default ({node, onChange}: ScriptNodeProps) => {
 
     // 表单值变化处理
     const onValuesChange = (changedValues: any, allValues: any) => {
-        const updatedData = {
-            ...node.data,
-            ...allValues
-        } as ScriptNodeData;
-
         const updatedNode = {
             ...node,
-            data: (updatedData as unknown) as Record<string, unknown>
+            data: {
+                ...node.data,
+                ...allValues
+            }
         };
 
         onChange(updatedNode);
@@ -84,7 +53,7 @@ export default ({node, onChange}: ScriptNodeProps) => {
 
     // 获取可用变量列表
     const variablesWithNode = useMemo(() => {
-        return getAvailableVariablesWithNode(node.id, flowState.nodes as Node[], flowState.edges as any[]);
+        return getAvailableVariablesWithNode(node.id, flowState.nodes as NodeType<SqlNodeType>[], flowState.edges as EdgeType<any>[]);
     }, [node.id, flowState.nodes, flowState.edges]);
 
     return (
@@ -95,7 +64,7 @@ export default ({node, onChange}: ScriptNodeProps) => {
         >
             <Flex align='center' justify={'center'} vertical>
                 {/* 输入变量 */}
-                <Form.List name="inputVariables">
+                <Form.List name="input">
                     {(fields, {add, remove}) => (
                         <Card
                             title='输入变量'
@@ -118,7 +87,7 @@ export default ({node, onChange}: ScriptNodeProps) => {
                                     split={false}
                                     dataSource={fields}
                                     renderItem={(field) => (
-                                        <List.Item key={field.key} style={{padding: '2px 0'}}>
+                                        <List.Item key={field.name} style={{padding: '2px 0'}}>
                                             <Flex style={{width: "100%"}} gap={8} align="center">
                                                 <Form.Item
                                                     {...field}
@@ -135,7 +104,6 @@ export default ({node, onChange}: ScriptNodeProps) => {
                                                     <VariableSelect
                                                         variablesWithNode={variablesWithNode}
                                                         placeholder="选择变量值"
-                                                        showVariableLabel={false}
                                                     />
                                                 </Form.Item>
                                                 <Button

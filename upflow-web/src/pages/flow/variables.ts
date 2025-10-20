@@ -1,7 +1,13 @@
-import {Edge, Node} from '@xyflow/react';
+import {Node} from '@xyflow/react';
 import {NodeDefineTypes} from '@/pages/flow/nodeTypes';
-import {VARIABLE_TYPES, VariableTypeNode, VALIDATION_RULE_TYPES, VARIABLE_TYPE_RULES_MAP, VALIDATION_RULE_DEFAULT_MESSAGES} from '@/utils/constants';
-import {Variable, VariableType} from "@/typings";
+import {
+    VALIDATION_RULE_DEFAULT_MESSAGES,
+    VALIDATION_RULE_TYPES,
+    VARIABLE_TYPE_RULES_MAP,
+    VARIABLE_TYPES,
+    VariableTypeNode
+} from '@/utils/constants';
+import {EdgeType, NodeType, Variable, VariableType} from "@/typings";
 
 /**
  * 递归获取指定节点的所有前置节点对象
@@ -11,13 +17,13 @@ import {Variable, VariableType} from "@/typings";
  * @param visited 已访问的节点集合，用于避免循环引用
  * @returns 前置节点对象数组
  */
-const getPreviousNodes = (nodeId: string, edges: Edge[], nodes: Node[], visited: Set<string> = new Set()): Node[] => {
+const getPreviousNodes = (nodeId: string, edges: EdgeType<any>[], nodes: NodeType<any>[], visited: Set<string> = new Set()): NodeType<any>[] => {
     if (visited.has(nodeId)) {
         return [];
     }
 
     visited.add(nodeId);
-    const previousNodes: Node[] = [];
+    const previousNodes: NodeType<any>[] = [];
 
     // 查找所有指向当前节点的边
     const incomingEdges = edges.filter(edge => edge.target === nodeId);
@@ -45,6 +51,7 @@ export interface VariableWithNode {
     varName: string;
 }
 
+
 /**
  * 获取当前节点可用的变量列表（包含节点信息）
  * @param currentNodeId 当前节点ID
@@ -52,7 +59,7 @@ export interface VariableWithNode {
  * @param edges 流程中的所有边
  * @returns 包含节点信息的变量列表
  */
-export const getAvailableVariablesWithNode = (currentNodeId: string, nodes: Node[], edges: Edge[]): VariableWithNode[] => {
+export const getAvailableVariablesWithNode = (currentNodeId: string, nodes: NodeType<any>[], edges: EdgeType<any>[]): VariableWithNode[] => {
     const variablesWithNode: VariableWithNode[] = [];
 
     // 获取当前节点的所有前置节点对象
@@ -60,31 +67,35 @@ export const getAvailableVariablesWithNode = (currentNodeId: string, nodes: Node
 
     // 遍历前置节点，收集变量
     previousNodes.forEach(node => {
-        const nodeName = (node.data.title as string) || `节点${node.id}`;
-        const variables: Variable[] = [];
+        const nodeData = node.data || {};
+        const nodeName = (nodeData.title as string) || `节点${node.id}`;
+
+        // 获取节点类型对应的图标
+        const nodeType = node.type || '';
+        const nodeDefine = NodeDefineTypes[nodeType];
+        const nodeIcon = nodeDefine?.icon || 'icon-default';
+
+        // 收集变量的辅助函数
+        const addVariablesToList = (variables: Variable[]) => {
+            variables.forEach(variable => {
+                variablesWithNode.push({
+                    nodeName,
+                    nodeIcon,
+                    varId: variable.id,
+                    varName: variable.name
+                });
+            });
+        };
 
         // 从开始节点获取输入变量
-        if (node.data.input) {
-            const inputVariables = (node.data.input || []) as Variable[];
-            variables.push(...inputVariables);
+        if (nodeData.input && Array.isArray(nodeData.input)) {
+            addVariablesToList(nodeData.input);
         }
 
-        // 从其他节点获取输出变量（如果有的话）
-        if (node.data.output) {
-            const outputVariables = (node.data.output || []) as Variable[];
-            variables.push(...outputVariables);
+        // 从其他节点获取输出变量
+        if (nodeData.output && Array.isArray(nodeData.output)) {
+            addVariablesToList(nodeData.output);
         }
-
-        // 将变量转换为包含节点信息的格式
-        variables.forEach(variable => {
-            const nodeIcon = NodeDefineTypes[node.type!]?.icon || 'icon-default';
-            variablesWithNode.push({
-                nodeName,
-                nodeIcon,
-                varId: variable.id,
-                varName: variable.name
-            });
-        });
     });
 
     return variablesWithNode;
@@ -121,17 +132,17 @@ export const getVariableTypeLabel = (value: VariableType): string => {
 };
 
 export const getAvailableRules = (variableType: string) => {
-  const availableRuleTypes = VARIABLE_TYPE_RULES_MAP[variableType as keyof typeof VARIABLE_TYPE_RULES_MAP] || [];
-  return VALIDATION_RULE_TYPES.filter((rule: any) => availableRuleTypes.includes(rule.value));
+    const availableRuleTypes = VARIABLE_TYPE_RULES_MAP[variableType as keyof typeof VARIABLE_TYPE_RULES_MAP] || [];
+    return VALIDATION_RULE_TYPES.filter((rule: any) => availableRuleTypes.includes(rule.value));
 };
 
 export const getDefaultErrorMessage = (ruleType: string, value?: string): string => {
     const template = VALIDATION_RULE_DEFAULT_MESSAGES[ruleType];
     if (!template) return "";
-    
+
     // 对于需要参数的规则类型，如果没有提供值则返回基础模板
     if (!value) return template;
-    
+
     // 处理不同类型的参数替换
     switch (ruleType) {
         case 'max':
@@ -151,4 +162,57 @@ export const getDefaultErrorMessage = (ruleType: string, value?: string): string
         default:
             return template;
     }
+};
+
+/**
+ * 根据变量 Id 获取变量名称和节点 title
+ * @param variableId 变量ID
+ * @param nodes 节点数组
+ * @returns 变量信息对象，如果未找到则返回 null
+ */
+export const getVariableInfoById = (variableId: string, nodes: Node[]): VariableWithNode | null => {
+    // 遍历所有节点，查找包含指定变量ID的节点
+    for (const node of nodes) {
+        const nodeData = node.data || {};
+
+        // 获取节点类型对应的图标
+        const nodeType = node.type || '';
+        const nodeDefine = NodeDefineTypes[nodeType];
+        const nodeIcon = nodeDefine?.icon || 'icon-default';
+        const nodeName = (nodeData.title as string) || '未命名节点';
+
+        // 查找变量的辅助函数
+        const findVariableInArray = (variables: Variable[]): Variable | undefined => {
+            return variables.find((v: Variable) => v.id === variableId);
+        };
+
+        // 创建返回对象的辅助函数
+        const createVariableWithNode = (variable: Variable): VariableWithNode => {
+            return {
+                nodeName,
+                nodeIcon,
+                varId: variable.id,
+                varName: variable.name
+            };
+        };
+
+        // 检查节点的输入变量
+        if (nodeData.input && Array.isArray(nodeData.input)) {
+            const variable = findVariableInArray(nodeData.input);
+            if (variable) {
+                return createVariableWithNode(variable);
+            }
+        }
+
+        // 检查节点的输出变量
+        if (nodeData.output && Array.isArray(nodeData.output)) {
+            const variable = findVariableInArray(nodeData.output);
+            if (variable) {
+                return createVariableWithNode(variable);
+            }
+        }
+    }
+
+    // 如果没有找到变量，返回 null
+    return null;
 };

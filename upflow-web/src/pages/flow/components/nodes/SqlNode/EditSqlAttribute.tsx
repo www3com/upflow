@@ -3,11 +3,10 @@ import {Button, Card, Flex, Form, Input, List, Select, Space, theme} from "antd"
 import {DeleteOutlined, PlusOutlined} from "@ant-design/icons";
 import VariableSelect from "@/components/VariableSelect";
 import {getAvailableVariablesWithNode} from "@/pages/flow/variables";
-import {Node} from "@xyflow/react";
 import {useSnapshot} from "valtio";
 import {state} from "@/states/flow";
 import MonacoEditor from "@/components/MonacoEditor";
-import {NodeType, SqlNodeType} from "@/typings";
+import {EdgeType, NodeType, SqlNodeType} from "@/typings";
 import {VARIABLE_TYPES} from "@/utils/constants";
 
 
@@ -69,7 +68,7 @@ export default ({node, onChange}: SqlNodeProps) => {
 
     // 获取可用变量列表
     const variablesWithNode = useMemo(() => {
-        return getAvailableVariablesWithNode(node.id, flowState.nodes as Node[], flowState.edges as any[]);
+        return getAvailableVariablesWithNode(node.id, flowState.nodes as NodeType<SqlNodeType>[], flowState.edges as EdgeType<any>[]);
     }, [node.id, flowState.nodes, flowState.edges]);
 
     return (

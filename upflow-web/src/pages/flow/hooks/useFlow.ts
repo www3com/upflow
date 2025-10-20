@@ -13,7 +13,7 @@ import {addNode, setEdges, setNodes, setSelectedNode, setHoveredNodeId, state, u
 import {NodeDefineTypes} from "@/pages/flow/nodeTypes";
 import {useSnapshot} from "valtio";
 import {getAllChildrenIds, getNodeAbsolutePosition} from "@/pages/flow/util";
-import {NodeType} from "@/typings";
+import {EdgeType, NodeType} from "@/typings";
 
 export const useFlow = () => {
     const snap = useSnapshot(state);
@@ -32,7 +32,7 @@ export const useFlow = () => {
                 // 找到对应的节点并更新 selectedNode
                 const selectedNode = state.nodes.find(node => node.id === selectedChange.id);
                 if (selectedNode) {
-                    setSelectedNode(selectedNode as NodeType);
+                    setSelectedNode(selectedNode as NodeType<any>);
                 }
             } else {
                 // 如果没有节点被选中，清空 selectedNode
@@ -50,11 +50,11 @@ export const useFlow = () => {
             }
         }
 
-        setNodes(applyNodeChanges(changes, state.nodes));
+        setNodes(applyNodeChanges(changes, state.nodes as Node[]) as NodeType<any>[]);
     }, []);
 
     const onEdgesChange = useCallback((changes: EdgeChange[]) => {
-        setEdges(applyEdgeChanges(changes, state.edges));
+        setEdges(applyEdgeChanges(changes, state.edges) as EdgeType<any>[]);
     }, []);
 
     const onConnect = useCallback((connection: Connection) => {
@@ -80,7 +80,7 @@ export const useFlow = () => {
         setHoveredNodeId(null);
 
         // 获取拖拽节点的所有子节点ID
-        const childrenIds = getAllChildrenIds(draggedNode.id, snap.nodes as readonly Node[]);
+        const childrenIds = getAllChildrenIds(draggedNode.id, snap.nodes as readonly NodeType<any>[]);
         const intersectingNodes = getIntersectingNodes(draggedNode).filter(node =>
             NodeDefineTypes[node.type!]?.defaultConfig?.data.group === true &&
             node.id !== draggedNode.id &&
@@ -94,7 +94,7 @@ export const useFlow = () => {
         console.log('onNodeDragStop', draggedNode)
         setDropNodeIds([]);
         // 获取拖拽节点的所有子节点ID
-        const childrenIds = getAllChildrenIds(draggedNode.id, snap.nodes as readonly Node[]);
+        const childrenIds = getAllChildrenIds(draggedNode.id, snap.nodes as readonly NodeType<any>[]);
         const intersectingNodes = getIntersectingNodes(draggedNode).filter(node =>
             NodeDefineTypes[node.type!]?.defaultConfig?.data.group === true &&
             node.id !== draggedNode.id &&
@@ -106,7 +106,7 @@ export const useFlow = () => {
             if (draggedNode.parentId) {
                 // 使用新的函数计算绝对位置，支持多层嵌套
                 let absolutePosition = getNodeAbsolutePosition(draggedNode.id, snap.nodes as readonly Node[]);
-                updateNode({...draggedNode, parentId: undefined, position: absolutePosition})
+                updateNode({...draggedNode, type: draggedNode.type!, parentId: undefined, position: absolutePosition})
             }
             return;
         }
@@ -119,7 +119,7 @@ export const useFlow = () => {
                 x: draggedNode.position.x - targetNode.position.x,
                 y: draggedNode.position.y - targetNode.position.y
             };
-            updateNode({...draggedNode, parentId: targetNode.id, position: relativePosition})
+            updateNode({...draggedNode, type: draggedNode.type!, parentId: targetNode.id, position: relativePosition})
             return;
         }
         console.log('onNodeDragStop2', draggedNode)
@@ -136,15 +136,15 @@ export const useFlow = () => {
             x: absolutePosition.x - targetAbsolutePosition.x,
             y: absolutePosition.y - targetAbsolutePosition.y
         };
-        updateNode({...draggedNode, parentId: targetNode.id, position: relativePosition})
+        updateNode({...draggedNode, type: draggedNode.type!, parentId: targetNode.id, position: relativePosition})
         console.log('onNodeDragStop3', draggedNode)
     }, [snap.nodes]);
 
-    const onNodeMouseEnter = useCallback((event: ReactMouseEvent, node: Node) => {
+    const onNodeMouseEnter = useCallback((_: ReactMouseEvent, node: Node) => {
         setHoveredNodeId(node.id);
     }, []);
 
-    const onNodeMouseLeave = useCallback((event: ReactMouseEvent, node: Node) => {
+    const onNodeMouseLeave = useCallback((_: ReactMouseEvent) => {
         setHoveredNodeId(null);
     }, []);
 
