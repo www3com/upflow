@@ -3,7 +3,7 @@ import {getFlowApi} from "@/services/flow";
 import {NODE_TYPE, NodeDefineTypes} from "@/pages/flow/nodeTypes";
 import {getAllChildrenIds, sortNodes} from "@/pages/flow/util";
 import {message} from "antd/lib";
-import {EdgeType, NodeType} from "@/typings";
+import {EdgeType, NodeType} from "@/types/flow";
 import {newId} from "@/utils/id";
 
 interface NodeSize {
@@ -17,8 +17,8 @@ const NodeSizeMap: Record<string, NodeSize> = {};
 export const state = proxy({
     nodes: [] as NodeType<any>[],
     edges: [] as EdgeType<any>[],
-    selectedNode: null as NodeType<any> | null,
-    hoveredNodeId: null as string | null,
+    selectedNode: undefined as NodeType<any> | undefined,
+    hoveredNodeId: undefined as string | undefined,
 });
 
 
@@ -28,11 +28,11 @@ export const init = async () => {
     state.edges = res.data!.edges;
 }
 
-export const setSelectedNode = (node: NodeType<any> | null) => {
+export const setSelectedNode = (node: NodeType<any> | undefined) => {
     state.selectedNode = node;
 }
 
-export const setHoveredNodeId = (nodeId: string | null) => {
+export const setHoveredNodeId = (nodeId: string | undefined) => {
     state.hoveredNodeId = nodeId;
 }
 
@@ -198,7 +198,7 @@ export const importDSL = (file: File) => {
             state.edges = flowData.edges;
 
             // 清空选中状态
-            state.selectedNode = null;
+            state.selectedNode = undefined;
 
             const importInfo = flowData.metadata
                 ? `导入成功！版本：${flowData.version || '未知'}，节点：${nodeCount}，连接：${edgeCount}`
@@ -245,7 +245,7 @@ export const deleteNode = (nodeId: string) => {
 
     // 如果被删除的节点是当前选中的节点，清除选中状态
     if (state.selectedNode && state.selectedNode.id === nodeId) {
-        state.selectedNode = null;
+        state.selectedNode = undefined;
     }
 }
 

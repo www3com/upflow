@@ -41,7 +41,7 @@ export default memo((node: NodeType<CaseNodeType>) => {
             const handleId = index === 0 ? `if-${item.id}` : `elif-${item.id}`;
 
             return (
-                <CasePart
+                <CaseSection
                     key={item.id}
                     count={node.data.cases!.length}
                     index={index}
@@ -79,7 +79,7 @@ export default memo((node: NodeType<CaseNodeType>) => {
 });
 
 // 优化的CasePart组件，使用React.memo避免不必要的重渲染
-export const CasePart = memo(({count, index, item, keywordRef}: {
+export const CaseSection = memo(({count, index, item, keywordRef}: {
     count: number,
     index: number,
     item: Case,

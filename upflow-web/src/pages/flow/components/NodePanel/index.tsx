@@ -1,45 +1,47 @@
-import {Card, Flex, theme} from "antd";
-import styles from "./styles.less";
-import React, {DragEvent, MouseEvent} from "react";
-import {NodeDefineTypes} from "@/pages/flow/nodeTypes";
-import IconFont from '@/components/IconFont';
+import React, { useState, useMemo } from 'react';
+import { Card, Flex } from 'antd';
+import { NodeDefineTypes } from '@/pages/flow/nodeTypes';
+import DraggableNodeItem from './DraggableNodeItem';
+import styles from './styles.less';
 
-const {useToken} = theme;
+// 常量定义
+const FLEX_GAP = 4;
 
-export default () => {
-    const {token} = useToken();
-    // 组件拖拽开始
-    const onDragStart = (event: DragEvent, nodeType: string) => {
-        event.dataTransfer.setData('application/reactflow', nodeType);
-        event.dataTransfer.effectAllowed = 'move';
-    };
+/**
+ * 节点面板组件
+ * 显示可拖拽的节点类型列表
+ */
+const NodePanel: React.FC = () => {
+  const [hoveredNodeType, setHoveredNodeType] = useState<string | null>(null);
 
-    const onMouseEnter = (event: MouseEvent<HTMLElement>) => {
-        event.currentTarget.style.backgroundColor = token.colorBgTextHover;
-        event.currentTarget.style.borderColor = token.colorPrimary;
-    }
-
-    const onMouseLeave = (event: MouseEvent<HTMLElement>) => {
-        event.currentTarget.style.backgroundColor = '#fafafa';
-        event.currentTarget.style.borderColor = '#d9d9d9';
-    }
-    return (
-        <Card title='组件面板' variant='borderless' size='small' className={styles.card}>
-                    <Flex wrap gap={4}>
-                        {Object.keys(NodeDefineTypes)
-                            .filter(nodeType => !NodeDefineTypes[nodeType].defaultConfig?.data.hidden)
-                            .map((nodeType) => (
-                            <Flex vertical draggable align={'center'} justify={'center'} gap={5} key={nodeType}
-                                  className={styles.draggableNode}
-                          onDragStart={(event) => onDragStart(event, nodeType)}
-                          onMouseEnter={(e) => onMouseEnter(e)}
-                          onMouseLeave={(e) => onMouseLeave(e)}>
-                        <IconFont type={NodeDefineTypes[nodeType].icon}
-                                  style={{fontSize: '22px', color: token.colorPrimary}}/>
-                        <span style={{fontSize: '12px'}}>{NodeDefineTypes[nodeType].defaultConfig?.data.title}</span>
-                    </Flex>
-                ))}
-            </Flex>
-        </Card>
+  // 过滤可见的节点类型
+  const visibleNodeTypes = useMemo(() => {
+    return Object.entries(NodeDefineTypes).filter(
+      ([, nodeConfig]) => !nodeConfig.defaultConfig?.data.hidden
     );
-}
+  }, []);
+
+  return (
+    <Card 
+      title="组件面板" 
+      variant="borderless" 
+      size="small" 
+      className={styles.card}
+    >
+      <Flex wrap gap={FLEX_GAP}>
+        {visibleNodeTypes.map(([nodeType, nodeConfig]) => (
+          <DraggableNodeItem
+            key={nodeType}
+            nodeType={nodeType}
+            nodeConfig={nodeConfig}
+            isHovered={hoveredNodeType === nodeType}
+            onMouseEnter={() => setHoveredNodeType(nodeType)}
+            onMouseLeave={() => setHoveredNodeType(null)}
+          />
+        ))}
+      </Flex>
+    </Card>
+  );
+};
+
+export default NodePanel;

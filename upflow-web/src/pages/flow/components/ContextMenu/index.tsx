@@ -1,12 +1,18 @@
-import React, { useRef} from 'react';
-import {  Menu } from 'antd';
+import React, { useRef, useMemo } from 'react';
+import { Menu } from 'antd';
 import type { MenuProps } from 'antd';
 import { NodeDefineTypes } from '@/pages/flow/nodeTypes';
 import IconFont from '@/components/IconFont';
 
+// 类型定义
+interface Position {
+  x: number;
+  y: number;
+}
+
 interface ContextMenuProps {
   visible: boolean;
-  position: { x: number; y: number };
+  position: Position;
   onClose: () => void;
   onContextMenu: (event: React.MouseEvent) => void;
   onAddNode: (nodeType: string) => void;
@@ -14,6 +20,35 @@ interface ContextMenuProps {
   onExportDSL: () => void;
   onImportDSL: (file: File) => void;
 }
+
+// 常量配置
+const MENU_CONFIG = {
+  zIndex: {
+    overlay: 999,
+    menu: 1000,
+  },
+  style: {
+    overlay: {
+      position: 'fixed' as const,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+    },
+    menu: {
+      position: 'fixed' as const,
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+      borderRadius: '6px',
+    },
+    hiddenInput: {
+      display: 'none' as const,
+    },
+  },
+  icon: {
+    size: 16,
+  },
+  fileAccept: '.dsl',
+} as const;
 
 const ContextMenu: React.FC<ContextMenuProps> = ({
   visible,
@@ -27,6 +62,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // 处理文件导入
   const handleImportClick = () => {
     fileInputRef.current?.click();
   };
@@ -37,96 +73,99 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
       onImportDSL(file);
       onClose();
     }
+    // 清空文件输入，允许重复选择同一文件
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
 
-  // 节点类型子菜单
-  const nodeTypeMenuItems: MenuProps['items'] = Object.entries(NodeDefineTypes)
-    .filter(([_, value]) =>  !value.defaultConfig?.data.hidden)
-    .map(([key, config]) => ({
-      key: `node-${key}`,
-      label: config.defaultConfig?.data.title,
-      icon: <IconFont type={config.icon} style={{ fontSize: 16 }} />,
-      onClick: () => {
-        onAddNode(key);
-        onClose();
-      },
-    }));
+  // 创建节点类型菜单项
+  const createNodeMenuItems = useMemo((): MenuProps['items'] => {
+    return Object.entries(NodeDefineTypes)
+      .filter(([_, nodeConfig]) => !nodeConfig.defaultConfig?.data.hidden)
+      .map(([nodeType, nodeConfig]) => ({
+        key: `node-${nodeType}`,
+        label: nodeConfig.defaultConfig?.data.title,
+        icon: <IconFont type={nodeConfig.icon} style={{ fontSize: MENU_CONFIG.icon.size }} />,
+        onClick: () => {
+          onAddNode(nodeType);
+          onClose();
+        },
+      }));
+  }, [onAddNode, onClose]);
 
-  const menuItems: MenuProps['items'] = [
-    {
-      key: 'add-node',
-      label: '添加节点',
-      icon: <IconFont type="icon-add" style={{ fontSize: 16 }} />,
-      children: nodeTypeMenuItems,
-    },
-    {
-      key: 'add-comment',
-      label: '添加注释',
-      icon: <IconFont type="icon-file" style={{ fontSize: 16 }} />,
-      onClick: () => {
-        onAddComment();
-        onClose();
+  // 创建主菜单项
+  const createMainMenuItems = useMemo((): MenuProps['items'] => {
+    return [
+      {
+        key: 'add-node',
+        label: '添加节点',
+        icon: <IconFont type="icon-add" style={{ fontSize: MENU_CONFIG.icon.size }} />,
+        children: createNodeMenuItems,
       },
-    },
-    { type: 'divider' },
-    {
-      key: 'export-dsl',
-      label: '导出 DSL',
-      icon: <IconFont type="icon-export" style={{ fontSize: 16 }} />,
-      onClick: () => {
-        onExportDSL();
-        onClose();
+      {
+        key: 'add-comment',
+        label: '添加注释',
+        icon: <IconFont type="icon-file" style={{ fontSize: MENU_CONFIG.icon.size }} />,
+        onClick: () => {
+          onAddComment();
+          onClose();
+        },
       },
-    },
-    {
-      key: 'import-dsl',
-      label: '导入 DSL',
-      icon: <IconFont type="icon-import" style={{ fontSize: 16 }} />,
-      onClick: handleImportClick,
-    },
-  ];
+      { type: 'divider' },
+      {
+        key: 'export-dsl',
+        label: '导出 DSL',
+        icon: <IconFont type="icon-export" style={{ fontSize: MENU_CONFIG.icon.size }} />,
+        onClick: () => {
+          onExportDSL();
+          onClose();
+        },
+      },
+      {
+        key: 'import-dsl',
+        label: '导入 DSL',
+        icon: <IconFont type="icon-import" style={{ fontSize: MENU_CONFIG.icon.size }} />,
+        onClick: handleImportClick,
+      },
+    ];
+  }, [createNodeMenuItems, onAddComment, onExportDSL, handleImportClick, onClose]);
 
-  if (!visible) return null;
+  if (!visible) {
+    return null;
+  }
 
   return (
     <>
+      {/* 背景遮罩 */}
       <div
         style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 999,
+          ...MENU_CONFIG.style.overlay,
+          zIndex: MENU_CONFIG.zIndex.overlay,
         }}
         onClick={onClose}
-        onContextMenu={(e) => {
-          // 在背景遮罩上右键时，更新菜单位置而不是关闭
-          onContextMenu(e);
-        }}
+        onContextMenu={onContextMenu}
       />
+      
+      {/* 上下文菜单 */}
       <Menu
-        items={menuItems}
+        items={createMainMenuItems}
         mode="vertical"
         selectable={false}
         style={{
-          position: 'fixed',
+          ...MENU_CONFIG.style.menu,
           left: position.x,
           top: position.y,
-          zIndex: 1000,
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-          borderRadius: '6px',
+          zIndex: MENU_CONFIG.zIndex.menu,
         }}
       />
       
+      {/* 隐藏的文件输入 */}
       <input
         ref={fileInputRef}
         type="file"
-        accept=".dsl"
-        style={{ display: 'none' }}
+        accept={MENU_CONFIG.fileAccept}
+        style={MENU_CONFIG.style.hiddenInput}
         onChange={handleFileChange}
       />
     </>

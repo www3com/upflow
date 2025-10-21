@@ -1726,7 +1726,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rc-component/qrcode@npm:~1.0.0":
+"@rc-component/qrcode@npm:~1.0.1":
   version: 1.0.1
   resolution: "@rc-component/qrcode@npm:1.0.1"
   dependencies:
@@ -2134,7 +2134,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.0.11":
+"@types/react-dom@npm:^18.3.7":
   version: 18.3.7
   resolution: "@types/react-dom@npm:18.3.7"
   peerDependencies:
@@ -2143,7 +2143,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^18.0.38":
+"@types/react@npm:^18.3.26":
   version: 18.3.26
   resolution: "@types/react@npm:18.3.26"
   dependencies:
@@ -2322,41 +2322,41 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@umijs/ast@npm:4.5.1":
-  version: 4.5.1
-  resolution: "@umijs/ast@npm:4.5.1"
+"@umijs/ast@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@umijs/ast@npm:4.5.2"
   dependencies:
-    "@umijs/bundler-utils": "npm:4.5.1"
-  checksum: 10c0/3f33374f247a3f889e090aa19056492086669dee5a7321c43c0d68b98b826971489159fa5244569e6f21316fa0ca7cc50725aff4f357ac4c0fbc036c7de571b2
+    "@umijs/bundler-utils": "npm:4.5.2"
+  checksum: 10c0/fa6058ecc2a4628e8ff279ccff89cd3ab2534dcc0bf12edfb29f40f4eef4984ec29c8eef818ae271cbdeedd0387fa28544e0f28f3851e5a813c8e74302cfa99b
   languageName: node
   linkType: hard
 
-"@umijs/babel-preset-umi@npm:4.5.1":
-  version: 4.5.1
-  resolution: "@umijs/babel-preset-umi@npm:4.5.1"
+"@umijs/babel-preset-umi@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@umijs/babel-preset-umi@npm:4.5.2"
   dependencies:
     "@babel/runtime": "npm:7.23.6"
     "@bloomberg/record-tuple-polyfill": "npm:0.0.4"
-    "@umijs/bundler-utils": "npm:4.5.1"
-    "@umijs/utils": "npm:4.5.1"
+    "@umijs/bundler-utils": "npm:4.5.2"
+    "@umijs/utils": "npm:4.5.2"
     core-js: "npm:3.34.0"
-  checksum: 10c0/f885d3809128ad1073fe0565eecd914391e56f926f1036e225bcce2f2418d68f7794050f0caf6e991d90a83325be3acfed51e6daf9be3285dce5f370a8bd623c
+  checksum: 10c0/899d35e15f55efb82cf0c32ca2f10ca1ddca76a40ffef48ef3cfbf7e98de784e8377ab8a0b593beb911074c3d25b0ac92d6d2879e59a9ec16cfd89c03d6fea49
   languageName: node
   linkType: hard
 
-"@umijs/bundler-esbuild@npm:4.5.1":
-  version: 4.5.1
-  resolution: "@umijs/bundler-esbuild@npm:4.5.1"
+"@umijs/bundler-esbuild@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@umijs/bundler-esbuild@npm:4.5.2"
   dependencies:
-    "@umijs/bundler-utils": "npm:4.5.1"
-    "@umijs/utils": "npm:4.5.1"
+    "@umijs/bundler-utils": "npm:4.5.2"
+    "@umijs/utils": "npm:4.5.2"
     enhanced-resolve: "npm:5.9.3"
     postcss: "npm:^8.4.21"
     postcss-flexbugs-fixes: "npm:5.0.2"
     postcss-preset-env: "npm:7.5.0"
   bin:
     bundler-esbuild: bin/bundler-esbuild.js
-  checksum: 10c0/f99f7279ddba557f173450d9c143afc6bca12ad5c447300a7eb01a365bdd0b89e97bd71db4eb12e9ce04db787d9e76c84c5bba903d01d1c27c46530beafde992
+  checksum: 10c0/5b24b04a7699a8ea9f7e9a33fc368a9eaef63aca1a7eb74b2e7057bd076018309769db4a13a3d927292dd104d122fb9f96e39d5228475cc46d35122da96123fa
   languageName: node
   linkType: hard
 
@@ -2380,7 +2380,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@umijs/bundler-utils@npm:4.5.1, @umijs/bundler-utils@npm:^4.0.81":
+"@umijs/bundler-utils@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@umijs/bundler-utils@npm:4.5.2"
+  dependencies:
+    "@umijs/utils": "npm:4.5.2"
+    esbuild: "npm:0.21.4"
+    regenerate: "npm:^1.4.2"
+    regenerate-unicode-properties: "npm:10.1.1"
+    spdy: "npm:^4.0.2"
+  checksum: 10c0/534e1d0a3ae97927ec5f1c41fcec05fd9b89fa03b702fc37a3b87a0a26ee76e7793ffe0f165dd479857193c48b8179db34380c6c3281f3246d5ba7e162787af7
+  languageName: node
+  linkType: hard
+
+"@umijs/bundler-utils@npm:^4.0.81":
   version: 4.5.1
   resolution: "@umijs/bundler-utils@npm:4.5.1"
   dependencies:
@@ -2393,30 +2406,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@umijs/bundler-utoopack@npm:4.5.1":
-  version: 4.5.1
-  resolution: "@umijs/bundler-utoopack@npm:4.5.1"
+"@umijs/bundler-utoopack@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@umijs/bundler-utoopack@npm:4.5.2"
   dependencies:
-    "@umijs/bundler-utils": "npm:4.5.1"
-    "@umijs/bundler-webpack": "npm:4.5.1"
+    "@umijs/bundler-utils": "npm:4.5.2"
+    "@umijs/bundler-webpack": "npm:4.5.2"
     compression: "npm:^1.7.4"
     connect-history-api-fallback: "npm:^2.0.0"
     cors: "npm:^2.8.5"
     express: "npm:^4.18.2"
     express-http-proxy: "npm:^2.1.1"
   peerDependencies:
-    "@utoo/pack": ^0.0.1-alpha.47
-  checksum: 10c0/cf6462d79e01732f5a623011e8f6a3f267b8171fd873b4362ac169efd2985ce38989eb663829af46bce954ac14d52fc43a34b6ba936449073d1e6c7dc8c0ee4d
+    "@utoo/pack": ^0.0.1-alpha.56
+  checksum: 10c0/9c83050a91075f26e5580408f944bb4242e2b02ff44321f71ab9cb6b7b55d5f9627bf632b4fc905331903612efa3ebc055f82cda73b483d49da6c72ccdff9c86
   languageName: node
   linkType: hard
 
-"@umijs/bundler-vite@npm:4.5.1":
-  version: 4.5.1
-  resolution: "@umijs/bundler-vite@npm:4.5.1"
+"@umijs/bundler-vite@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@umijs/bundler-vite@npm:4.5.2"
   dependencies:
     "@svgr/core": "npm:6.5.1"
-    "@umijs/bundler-utils": "npm:4.5.1"
-    "@umijs/utils": "npm:4.5.1"
+    "@umijs/bundler-utils": "npm:4.5.2"
+    "@umijs/utils": "npm:4.5.2"
     "@vitejs/plugin-react": "npm:4.0.0"
     core-js: "npm:3.34.0"
     less: "npm:4.1.3"
@@ -2426,24 +2439,24 @@ __metadata:
     vite: "npm:4.5.2"
   bin:
     bundler-vite: bin/bundler-vite.js
-  checksum: 10c0/26b69790c583e342a60800dd0d9a76162a135472682ef2a2144b6c668a08a342e62d722a9d99201ab308d4220f5f7bfa6fdf67ffaa2fdcac09697c1f3f6312a2
+  checksum: 10c0/a7d77381d0bcd0aef66e29b17169f876dac025dff8b2162e2684ded8ea0aa736386bc632b652cfccc7c11da649f0bb2821ce0fc23730b1d098858eff55a4be33
   languageName: node
   linkType: hard
 
-"@umijs/bundler-webpack@npm:4.5.1":
-  version: 4.5.1
-  resolution: "@umijs/bundler-webpack@npm:4.5.1"
+"@umijs/bundler-webpack@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@umijs/bundler-webpack@npm:4.5.2"
   dependencies:
     "@svgr/core": "npm:6.5.1"
     "@svgr/plugin-jsx": "npm:^6.5.1"
     "@svgr/plugin-svgo": "npm:^6.5.1"
     "@types/hapi__joi": "npm:17.1.9"
-    "@umijs/babel-preset-umi": "npm:4.5.1"
-    "@umijs/bundler-utils": "npm:4.5.1"
+    "@umijs/babel-preset-umi": "npm:4.5.2"
+    "@umijs/bundler-utils": "npm:4.5.2"
     "@umijs/case-sensitive-paths-webpack-plugin": "npm:^1.0.1"
-    "@umijs/mfsu": "npm:4.5.1"
+    "@umijs/mfsu": "npm:4.5.2"
     "@umijs/react-refresh-webpack-plugin": "npm:0.5.11"
-    "@umijs/utils": "npm:4.5.1"
+    "@umijs/utils": "npm:4.5.2"
     cors: "npm:^2.8.5"
     css-loader: "npm:6.7.1"
     es5-imcompatible-versions: "npm:^0.1.78"
@@ -2457,7 +2470,7 @@ __metadata:
     react-refresh: "npm:0.14.0"
   bin:
     bundler-webpack: bin/bundler-webpack.js
-  checksum: 10c0/72cf0c02e8dee296f3d306da52c1d988e28a54a6f547fa6e18bb9a928a1b0c64e5d885373625139f19d244ae798173c7dbd348622e9e5d37e8a532af317be056
+  checksum: 10c0/c6fe3f00d2171e41fb47f0b5f0c125bfd4f83d682bde6816b4602933db51706cf822a83b7e88d1e93a8e68f6b5a4df507f72ee27bc3ef67c01238c0e0304719a
   languageName: node
   linkType: hard
 
@@ -2468,13 +2481,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@umijs/core@npm:4.5.1":
-  version: 4.5.1
-  resolution: "@umijs/core@npm:4.5.1"
+"@umijs/core@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@umijs/core@npm:4.5.2"
   dependencies:
-    "@umijs/bundler-utils": "npm:4.5.1"
-    "@umijs/utils": "npm:4.5.1"
-  checksum: 10c0/875a4f62552eb63757700d184c7ecd162969738586a004a559c10801da37fec9b80c4a7ad6f37f986d0bae2daa5267441b9b38a41f207285a66b52d604b74faa
+    "@umijs/bundler-utils": "npm:4.5.2"
+    "@umijs/utils": "npm:4.5.2"
+  checksum: 10c0/00a491185e7d690e50f60cd9d9892de7a740c2889771fe1db08dfdc799b8c6187bd2abd5243403ddd17a834e36023285d61324ad42f5e346ff5328b7a864ac8d
   languageName: node
   linkType: hard
 
@@ -2594,23 +2607,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@umijs/lint@npm:4.5.1":
-  version: 4.5.1
-  resolution: "@umijs/lint@npm:4.5.1"
+"@umijs/lint@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@umijs/lint@npm:4.5.2"
   dependencies:
     "@babel/core": "npm:7.23.6"
     "@babel/eslint-parser": "npm:7.23.3"
     "@stylelint/postcss-css-in-js": "npm:^0.38.0"
     "@typescript-eslint/eslint-plugin": "npm:^5.62.0"
     "@typescript-eslint/parser": "npm:^5.62.0"
-    "@umijs/babel-preset-umi": "npm:4.5.1"
+    "@umijs/babel-preset-umi": "npm:4.5.2"
     eslint-plugin-jest: "npm:27.2.3"
     eslint-plugin-react: "npm:7.33.2"
     eslint-plugin-react-hooks: "npm:4.6.0"
     postcss: "npm:^8.4.21"
     postcss-syntax: "npm:0.36.2"
     stylelint-config-standard: "npm:25.0.0"
-  checksum: 10c0/ae5e8f8394380ba23164c015c2fd71f9c4959991de2272e4b52754d524b22075458e32e3673720bfbe671bc70121f1eb02f4030d2ed80059cd44113eb78b4372
+  checksum: 10c0/72dec746872597f038b873cbbaaa23b170ae7f5a8159ff7cb01a8896b8fa3b128c3432f907a3817f6052cfcd69654913095d9867b946dac20e427b462f5d4808
   languageName: node
   linkType: hard
 
@@ -2724,54 +2737,54 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@umijs/mfsu@npm:4.5.1":
-  version: 4.5.1
-  resolution: "@umijs/mfsu@npm:4.5.1"
+"@umijs/mfsu@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@umijs/mfsu@npm:4.5.2"
   dependencies:
-    "@umijs/bundler-esbuild": "npm:4.5.1"
-    "@umijs/bundler-utils": "npm:4.5.1"
-    "@umijs/utils": "npm:4.5.1"
+    "@umijs/bundler-esbuild": "npm:4.5.2"
+    "@umijs/bundler-utils": "npm:4.5.2"
+    "@umijs/utils": "npm:4.5.2"
     enhanced-resolve: "npm:5.9.3"
     is-equal: "npm:^1.6.4"
-  checksum: 10c0/7801578d6054c185c7da0ace4c8bc6e1ec28c9e7817c483b464df9d2a24acf2b4c1a20ed5667a2d5504739646c208e4072a8a2dca393a79b7832b9f2e9a97790
+  checksum: 10c0/2d9c3fb37f5aa04f245f04c023d1ceb791f5e5f615320edd37ea40cf928d54925dfb6de7f0ac426f4a2b0345f0c17e180a36a8261459fea390280fd2a7d0f49e
   languageName: node
   linkType: hard
 
-"@umijs/plugin-run@npm:4.5.1":
-  version: 4.5.1
-  resolution: "@umijs/plugin-run@npm:4.5.1"
+"@umijs/plugin-run@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@umijs/plugin-run@npm:4.5.2"
   dependencies:
     tsx: "npm:3.12.2"
-  checksum: 10c0/5d9feceebb3c4065c3def50fe875df0319eaf2dfc1bb7aade06aabddb56ccda239df30659d484d689e4a9ca5571421e2efbcb4672cfe003d9ffe19dd5a26a132
+  checksum: 10c0/4579e10cdc4c6a20084e1483c4f63242309675f22f73005661c1695f78a179a0f94c50423548146c72d98b9a1f8a2e68c4cec9c7664986c90ee2220e906868a1
   languageName: node
   linkType: hard
 
-"@umijs/preset-umi@npm:4.5.1":
-  version: 4.5.1
-  resolution: "@umijs/preset-umi@npm:4.5.1"
+"@umijs/preset-umi@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@umijs/preset-umi@npm:4.5.2"
   dependencies:
     "@iconify/utils": "npm:2.1.1"
     "@stagewise/toolbar": "npm:0.6.2"
     "@svgr/core": "npm:6.5.1"
-    "@umijs/ast": "npm:4.5.1"
-    "@umijs/babel-preset-umi": "npm:4.5.1"
-    "@umijs/bundler-esbuild": "npm:4.5.1"
+    "@umijs/ast": "npm:4.5.2"
+    "@umijs/babel-preset-umi": "npm:4.5.2"
+    "@umijs/bundler-esbuild": "npm:4.5.2"
     "@umijs/bundler-mako": "npm:0.11.10"
-    "@umijs/bundler-utils": "npm:4.5.1"
-    "@umijs/bundler-utoopack": "npm:4.5.1"
-    "@umijs/bundler-vite": "npm:4.5.1"
-    "@umijs/bundler-webpack": "npm:4.5.1"
-    "@umijs/core": "npm:4.5.1"
+    "@umijs/bundler-utils": "npm:4.5.2"
+    "@umijs/bundler-utoopack": "npm:4.5.2"
+    "@umijs/bundler-vite": "npm:4.5.2"
+    "@umijs/bundler-webpack": "npm:4.5.2"
+    "@umijs/core": "npm:4.5.2"
     "@umijs/did-you-know": "npm:^1.0.4"
     "@umijs/es-module-parser": "npm:0.0.7"
     "@umijs/history": "npm:5.3.1"
-    "@umijs/mfsu": "npm:4.5.1"
-    "@umijs/plugin-run": "npm:4.5.1"
-    "@umijs/renderer-react": "npm:4.5.1"
-    "@umijs/server": "npm:4.5.1"
+    "@umijs/mfsu": "npm:4.5.2"
+    "@umijs/plugin-run": "npm:4.5.2"
+    "@umijs/renderer-react": "npm:4.5.2"
+    "@umijs/server": "npm:4.5.2"
     "@umijs/ui": "npm:3.0.1"
-    "@umijs/utils": "npm:4.5.1"
-    "@umijs/zod2ts": "npm:4.5.1"
+    "@umijs/utils": "npm:4.5.2"
+    "@umijs/zod2ts": "npm:4.5.2"
     babel-plugin-dynamic-import-node: "npm:2.3.3"
     babel-plugin-react-compiler: "npm:0.0.0-experimental-c23de8d-20240515"
     click-to-react-component: "npm:1.1.0"
@@ -2789,7 +2802,7 @@ __metadata:
     react-router: "npm:6.3.0"
     react-router-dom: "npm:6.3.0"
     regenerator-runtime: "npm:0.13.11"
-  checksum: 10c0/ecc778e728b4204d08d115300b965573bf82b971d6eb063d63f77a12bf17c455e0011816d44d82a55e4a9d319da14a13fd86b3b772f1cfef1e8379507c49b009
+  checksum: 10c0/d5a679fde19b6cc168f9645ac52a103e0252a60fbc26e0680f63f2d97fa974cd6a79b0e23b7c3e5a4968ce47bca59c341c9bb80d72908b2f36bee10ab40addbf
   languageName: node
   linkType: hard
 
@@ -2832,9 +2845,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@umijs/renderer-react@npm:4.5.1":
-  version: 4.5.1
-  resolution: "@umijs/renderer-react@npm:4.5.1"
+"@umijs/renderer-react@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@umijs/renderer-react@npm:4.5.2"
   dependencies:
     "@babel/runtime": "npm:7.23.6"
     "@loadable/component": "npm:5.15.2"
@@ -2844,36 +2857,36 @@ __metadata:
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 10c0/1526cc5d197273147087471184bf8f524dea309984efe99a922e0b63f259356e71dae031c8f584a388777b14c8d8f053aa4cc4714dcc3c94448be6f5022aff5f
+  checksum: 10c0/329981220b3e062545cb3d95cdf616af3098bad06f4b027c28341eb030ab4ffa2759e634a45c71a4efff28b3ac432596fb5deb62d55c2bcbefd367950ac58c86
   languageName: node
   linkType: hard
 
-"@umijs/server@npm:4.5.1":
-  version: 4.5.1
-  resolution: "@umijs/server@npm:4.5.1"
+"@umijs/server@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@umijs/server@npm:4.5.2"
   dependencies:
-    "@umijs/bundler-utils": "npm:4.5.1"
+    "@umijs/bundler-utils": "npm:4.5.2"
     history: "npm:5.3.0"
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
     react-router-dom: "npm:6.3.0"
-  checksum: 10c0/d068eb1c7f388ce4be68e2060e23162956bca9213ea281a91fda82607800831dcafabb22ec6be78de8606114483fe9198b1fb185029a6cf5c3c7d6c7acce4c7c
+  checksum: 10c0/0e99c8ad5d1c417632a22e9419faa219b67e6d6e7d805c74126a00afaeb43b72f7d37d83cbabc0234f958d85955d1719f0a179dac9f142ca19d2bf88db942e02
   languageName: node
   linkType: hard
 
-"@umijs/test@npm:4.5.1":
-  version: 4.5.1
-  resolution: "@umijs/test@npm:4.5.1"
+"@umijs/test@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@umijs/test@npm:4.5.2"
   dependencies:
     "@babel/plugin-transform-modules-commonjs": "npm:7.23.3"
     "@jest/types": "npm:27.5.1"
-    "@umijs/bundler-utils": "npm:4.5.1"
-    "@umijs/utils": "npm:4.5.1"
+    "@umijs/bundler-utils": "npm:4.5.2"
+    "@umijs/utils": "npm:4.5.2"
     babel-jest: "npm:^29.7.0"
     esbuild: "npm:0.21.4"
     identity-obj-proxy: "npm:3.0.0"
     isomorphic-unfetch: "npm:4.0.2"
-  checksum: 10c0/0aa0f01a99ae764c1c02deecc4e0a427ca8f992bc1eaac03580cc9fddcf0c25fdab9bc6b320f5c5bdb9b5557ab8863aaa65ae380165efc94e9cd2cb69980bf6c
+  checksum: 10c0/48a6d74bdc84a5f170fb01032c837004c825aa4132c9917df11c72a2e150cbb59ba027b72708b7e8363544d429f685c44be83364c1773c5fdbad36562f847308
   languageName: node
   linkType: hard
 
@@ -2894,10 +2907,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@umijs/zod2ts@npm:4.5.1":
-  version: 4.5.1
-  resolution: "@umijs/zod2ts@npm:4.5.1"
-  checksum: 10c0/8927bb8f139a00d7350d6d815f0c41ab71ddc9bc4eb91c611bad2b220e2d165f9fae5f32f53db972bf1132b5416e419d31443fb8dffec03ee9714c66e763a17b
+"@umijs/utils@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@umijs/utils@npm:4.5.2"
+  dependencies:
+    chokidar: "npm:3.5.3"
+    pino: "npm:7.11.0"
+  checksum: 10c0/83c011657148fa159d76a7948666299c430bcca8baedc378307d86d04326b9ff33422a8ac599e65732af34feddd8141b7504de149f8d38c546234a417438a15b
+  languageName: node
+  linkType: hard
+
+"@umijs/zod2ts@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@umijs/zod2ts@npm:4.5.2"
+  checksum: 10c0/586e4016ceb8878155e0a6f87ab73dabe6d3de0a93e7ea59e2253a09dfd9fb437592858f6807ec933c1f512524b810beb253e28cdd809411ca94c1be5316f7fa
   languageName: node
   linkType: hard
 
@@ -3055,9 +3078,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"antd@npm:^5.27.4":
-  version: 5.27.4
-  resolution: "antd@npm:5.27.4"
+"antd@npm:^5.27.6":
+  version: 5.27.6
+  resolution: "antd@npm:5.27.6"
   dependencies:
     "@ant-design/colors": "npm:^7.2.1"
     "@ant-design/cssinjs": "npm:^1.23.0"
@@ -3068,7 +3091,7 @@ __metadata:
     "@babel/runtime": "npm:^7.26.0"
     "@rc-component/color-picker": "npm:~2.0.1"
     "@rc-component/mutate-observer": "npm:^1.1.0"
-    "@rc-component/qrcode": "npm:~1.0.0"
+    "@rc-component/qrcode": "npm:~1.0.1"
     "@rc-component/tour": "npm:~1.15.1"
     "@rc-component/trigger": "npm:^2.3.0"
     classnames: "npm:^2.5.1"
@@ -3098,7 +3121,7 @@ __metadata:
     rc-slider: "npm:~11.1.9"
     rc-steps: "npm:~6.0.1"
     rc-switch: "npm:~4.1.0"
-    rc-table: "npm:~7.53.0"
+    rc-table: "npm:~7.54.0"
     rc-tabs: "npm:~15.7.0"
     rc-textarea: "npm:~1.10.2"
     rc-tooltip: "npm:~6.4.0"
@@ -3111,7 +3134,7 @@ __metadata:
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: 10c0/cbf19a04b582b598035e2048fa77fc32861c6a63a1fda197d150d731e61ea81df184c18a5406494029c8d05ff553ca87fbcb0012beb81855b7b79be53020c6d3
+  checksum: 10c0/2b3b30ac9c39c7fd374a9a81de64bb032c6e6cda1b9ac26ce5a099775f8e5851ea97cee429ff03eeb41ad1e9a0e1947fa969c90b9d8c73713ec57168c5b4a3d9
   languageName: node
   linkType: hard
 
@@ -9600,9 +9623,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-table@npm:~7.53.0":
-  version: 7.53.1
-  resolution: "rc-table@npm:7.53.1"
+"rc-table@npm:~7.54.0":
+  version: 7.54.0
+  resolution: "rc-table@npm:7.54.0"
   dependencies:
     "@babel/runtime": "npm:^7.10.1"
     "@rc-component/context": "npm:^1.4.0"
@@ -9613,7 +9636,7 @@ __metadata:
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: 10c0/a2b214d2c0f8ceef9bc9256634b76e7811b121a105492c7373a422fe68977534c2a73c385bef802dfa37865604ff0aaf25cb5405d47dc0c1962ea3d7ba8107b3
+  checksum: 10c0/bf78af66c97aca8437bcf1f88df81b4171afbf647959c9b3600b246c15f9db8763fa50255749390d7f2c0ba0a6aea4f467f64aa4dd6265d56ebf35ffc0d6b94f
   languageName: node
   linkType: hard
 
@@ -10125,15 +10148,15 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@monaco-editor/react": "npm:^4.7.0"
-    "@types/react": "npm:^18.0.38"
-    "@types/react-dom": "npm:^18.0.11"
+    "@types/react": "npm:^18.3.26"
+    "@types/react-dom": "npm:^18.3.7"
     "@xyflow/react": "npm:^12.8.6"
-    antd: "npm:^5.27.4"
+    antd: "npm:^5.27.6"
     axios: "npm:^1.12.2"
     monaco-editor: "npm:^0.54.0"
     nanoid: "npm:^5.1.6"
-    typescript: "npm:^5.0.4"
-    umi: "npm:^4.5.1"
+    typescript: "npm:^5.9.3"
+    umi: "npm:^4.5.2"
     valtio: "npm:^2.1.8"
   languageName: unknown
   linkType: soft
@@ -11234,7 +11257,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5.0.4":
+"typescript@npm:^5.9.3":
   version: 5.9.3
   resolution: "typescript@npm:5.9.3"
   bin:
@@ -11244,7 +11267,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^5.0.4#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A^5.9.3#optional!builtin<compat/typescript>":
   version: 5.9.3
   resolution: "typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"
   bin:
@@ -11254,25 +11277,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"umi@npm:^4.5.1":
-  version: 4.5.1
-  resolution: "umi@npm:4.5.1"
+"umi@npm:^4.5.2":
+  version: 4.5.2
+  resolution: "umi@npm:4.5.2"
   dependencies:
     "@babel/runtime": "npm:7.23.6"
-    "@umijs/bundler-utils": "npm:4.5.1"
-    "@umijs/bundler-webpack": "npm:4.5.1"
-    "@umijs/core": "npm:4.5.1"
-    "@umijs/lint": "npm:4.5.1"
-    "@umijs/preset-umi": "npm:4.5.1"
-    "@umijs/renderer-react": "npm:4.5.1"
-    "@umijs/server": "npm:4.5.1"
-    "@umijs/test": "npm:4.5.1"
-    "@umijs/utils": "npm:4.5.1"
+    "@umijs/bundler-utils": "npm:4.5.2"
+    "@umijs/bundler-webpack": "npm:4.5.2"
+    "@umijs/core": "npm:4.5.2"
+    "@umijs/lint": "npm:4.5.2"
+    "@umijs/preset-umi": "npm:4.5.2"
+    "@umijs/renderer-react": "npm:4.5.2"
+    "@umijs/server": "npm:4.5.2"
+    "@umijs/test": "npm:4.5.2"
+    "@umijs/utils": "npm:4.5.2"
     prettier-plugin-organize-imports: "npm:^3.2.2"
     prettier-plugin-packagejson: "npm:2.4.3"
   bin:
     umi: bin/umi.js
-  checksum: 10c0/6b582db3fab673eda32934b4f76d7667557cee71f0d97825d5b020a578c1c2f91b10e9e236544d891b5f1a3ba1474f0acdb807a2c1487a994c30c0a913b36e5f
+  checksum: 10c0/601f39c74b12b35e303385a7715c5edea47f73325e0904d436130f3d3eb376a7be51116eae65b2bc28ed29a8b8691336335ff2c4b7cca6e56e843fb2efdf18a6
   languageName: node
   linkType: hard
 
