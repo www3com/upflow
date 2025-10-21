@@ -1,5 +1,5 @@
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { Panel, useKeyPress, useReactFlow } from '@xyflow/react';
+import { memo, useCallback, useEffect, useRef } from 'react';
+import { Panel, useKeyPress, useReactFlow, useStore } from '@xyflow/react';
 import { FullscreenOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import { Button, Divider, Dropdown, Flex, MenuProps } from 'antd';
 import styles from './index.less';
@@ -21,12 +21,12 @@ const usePrevious = <T,>(value: T): T | undefined => {
 };
 
 const ZoomControl = () => {
-  const { zoomIn, zoomOut, fitView, getZoom, zoomTo } = useReactFlow();
-  const [zoom, setZoom] = useState(getZoom);
+  const { zoomIn, zoomOut, fitView, zoomTo } = useReactFlow();
+  const zoom = useStore((s) => s.transform[2]);
 
   const updateZoom = useCallback(() => {
-    setTimeout(() => setZoom(getZoom()), 250);
-  }, [getZoom]);
+    // 由 store 订阅实时 zoom，无需手动更新
+  }, []);
 
   const handleZoomAction = useCallback(
     (action: () => void) => {
