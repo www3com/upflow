@@ -2,18 +2,20 @@ import {
     addEdge,
     applyEdgeChanges,
     applyNodeChanges,
-    Connection, Edge,
-    EdgeChange, getOutgoers,
+    Connection,
+    Edge,
+    EdgeChange,
+    getOutgoers,
     Node,
     NodeChange,
     useReactFlow
 } from "@xyflow/react";
 import React, {type MouseEvent as ReactMouseEvent, useCallback, useState} from "react";
-import {addNode, setEdges, setNodes, setSelectedNode, setHoveredNodeId, state, updateNode} from "@/states/flow";
+import {addNode, setEdges, setHoveredNodeId, setNodes, setSelectedNode, state, updateNode} from "@/states/flow";
 import {NodeDefineTypes} from "@/pages/flow/nodeTypes";
 import {useSnapshot} from "valtio";
 import {getAllChildrenIds, getNodeAbsolutePosition} from "@/pages/flow/util";
-import {EdgeType, NodeType} from "@/typings";
+import {EdgeType, NodeType} from "@/types/flow";
 
 export const useFlow = () => {
     const snap = useSnapshot(state);
@@ -149,7 +151,7 @@ export const useFlow = () => {
     }, []);
 
     const onValidConnection = useCallback((connection: Edge | Connection) => {
-        const target = snap.nodes.find((node) => node.id === connection.target);
+        const target = snap.nodes.find((node: NodeType<any>) => node.id === connection.target);
         if (!target) return false;
         const hasCycle = (node: Node, visited = new Set()) => {
             if (visited.has(node.id)) return false;

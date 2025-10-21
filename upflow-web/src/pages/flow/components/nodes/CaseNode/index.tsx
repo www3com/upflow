@@ -16,7 +16,7 @@ import {Handle, Position} from "@xyflow/react";
 import {CompareOprType} from "@/utils/constants";
 
 import IconFont from '@/components/IconFont';
-import {Case, CaseNodeType, NodeType} from "@/typings";
+import {Case, CaseNodeType, NodeType} from "@/types/flow";
 import NodeWrapper from "@/pages/flow/components/NodeWrapper";
 import {useSnapshot} from "valtio";
 import {state} from "@/states/flow";

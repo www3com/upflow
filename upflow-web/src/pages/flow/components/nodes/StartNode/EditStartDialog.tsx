@@ -2,7 +2,7 @@ import React from 'react';
 import {Cascader, Form, Input, Modal} from "antd";
 import IconFont from '@/components/IconFont';
 import './styles.less';
-import {Variable} from "@/typings";
+import {Variable} from "@/types/flow";
 import {ValidationRuleList} from './ValidationRuleList';
 import {VARIABLE_TYPE_RULES_MAP, VARIABLE_TYPES} from '@/utils/constants';
 import {newId} from "@/utils/id";

@@ -7,8 +7,8 @@ import {CompressOutlined, ExpandOutlined} from '@ant-design/icons';
 import {NodeDefineTypes} from "@/pages/flow/nodeTypes";
 import {state} from '@/states/flow';
 import {useSnapshot} from "valtio";
-import {NodeType} from "@/typings";
 import IconFont from "@/components/IconFont";
+import {NodeType} from "@/types/flow";
 
 const {TextArea} = Input;
 

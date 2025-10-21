@@ -10,8 +10,7 @@ import {NodeDefineTypes} from "@/pages/flow/nodeTypes";
 import IconFont from '@/components/IconFont';
 import styles from './styles.less'
 import {cloneNode, deleteNode, extendNode, setHoveredNodeId} from "@/states/flow";
-import {NodeType} from "@/typings";
-import {Handle, Position} from "@xyflow/react";
+import {NodeType} from "@/types/flow";
 
 
 const {useToken} = theme;

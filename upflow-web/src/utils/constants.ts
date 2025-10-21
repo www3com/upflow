@@ -1,4 +1,4 @@
-import {ObjectType, VariableType} from "@/typings";
+import {VariableType} from "@/types/flow";
 
 export const CompareOprType: ObjectType<string> = {
     'in': "包含",

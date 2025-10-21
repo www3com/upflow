@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Handle, Position, useUpdateNodeInternals} from '@xyflow/react';
-import {Case} from '@/typings';
+import {Case} from '@/types/flow';
 
 interface UseHandlePositionsProps {
     nodeId: string;

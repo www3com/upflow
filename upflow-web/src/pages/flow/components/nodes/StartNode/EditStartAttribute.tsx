@@ -5,7 +5,7 @@ import './styles.less';
 
 import EditStartDialog from "@/pages/flow/components/nodes/StartNode/EditStartDialog";
 import {useState} from "react";
-import {NodeType, StartNodeType, Variable} from "@/typings";
+import {NodeType, StartNodeType, Variable} from "@/types/flow";
 import {getVariableTypeLabel} from "@/pages/flow/variables";
 
 

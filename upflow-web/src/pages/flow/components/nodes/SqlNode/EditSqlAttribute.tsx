@@ -6,7 +6,7 @@ import {getAvailableVariablesWithNode} from "@/pages/flow/variables";
 import {useSnapshot} from "valtio";
 import {state} from "@/states/flow";
 import MonacoEditor from "@/components/MonacoEditor";
-import {EdgeType, NodeType, SqlNodeType} from "@/typings";
+import {EdgeType, NodeType, SqlNodeType} from "@/types/flow";
 import {VARIABLE_TYPES} from "@/utils/constants";
 
 

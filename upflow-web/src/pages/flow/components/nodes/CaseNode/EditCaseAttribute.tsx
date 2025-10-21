@@ -2,11 +2,11 @@ import {Button, List} from "antd";
 import {PlusOutlined} from "@ant-design/icons";
 import EditCaseItem from './EditCaseItem';
 import './styles.less';
-import {Case, CaseNodeType, EdgeType, NodeType} from "@/typings";
 import {useSnapshot} from "valtio";
 import {state} from "@/states/flow";
 import {getAvailableVariablesWithNode} from "@/pages/flow/variables";
 import {newId} from "@/utils/id";
+import {Case, CaseNodeType, EdgeType, NodeType} from "@/types/flow";
 
 interface CaseNodeProps {
     node: NodeType<CaseNodeType>,

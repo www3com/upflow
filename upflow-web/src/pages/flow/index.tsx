@@ -93,11 +93,11 @@ const FlowPage = () => {
                     nodeTypes={nodeTypes}
                     minZoom={0.25}
                     maxZoom={2}
-                    nodes={snap.nodes.map(node => ({
+                    nodes={snap.nodes.map((node: Node) => ({
                         ...node,
                         className: `${node.className} ${dropNodeIds?.includes(node.id) && 'highlight'} ${hoveredNodeId === node.id && 'node-hovered'}`
                     } as Node))}
-                    edges={snap.edges.map(edge => ({
+                    edges={snap.edges.map((edge: any) => ({
                         ...edge,
                         className: `${edge.className} ${hoveredNodeId && (edge.source === hoveredNodeId || edge.target === hoveredNodeId) && 'edge-hovered'}`
                     } as Edge))}

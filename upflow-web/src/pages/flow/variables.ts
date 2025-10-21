@@ -7,7 +7,7 @@ import {
     VARIABLE_TYPES,
     VariableTypeNode
 } from '@/utils/constants';
-import {EdgeType, NodeType, Variable, VariableType} from "@/typings";
+import {EdgeType, NodeType, Variable, VariableType} from "@/types/flow";
 
 /**
  * 递归获取指定节点的所有前置节点对象

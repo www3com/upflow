@@ -3,7 +3,7 @@ import {DeleteOutlined, PlusOutlined,} from "@ant-design/icons";
 import IconFont from '@/components/IconFont';
 import VariableSelect from '@/components/VariableSelect';
 import {useEffect, useState} from "react";
-import {Case} from "@/typings";
+import {Case} from "@/types/flow";
 import {CompareOprType} from "@/utils/constants";
 import {VariableWithNode} from "@/pages/flow/variables";
 import styles from './styles.less';

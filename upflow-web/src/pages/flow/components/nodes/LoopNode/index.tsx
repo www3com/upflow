@@ -1,23 +1,15 @@
-import {memo, useState} from "react";
+import {memo} from "react";
 import {Handle, Position} from "@xyflow/react";
-import NodeWrapper from "@/pages/flow/components/NodeWrapper";
-import NodeResizeControl from "@/pages/flow/components/NodeResizeControl";
-import {NodeType} from "@/typings";
+import {LoopNodeType, NodeType} from "@/types/flow";
+import GroupNodeWrapper from "@/pages/flow/components/GroupNodeWrapper";
 
 
-export default memo((node: NodeType) => {
-    const [isHovered, setIsHovered] = useState(false);
-
+export default memo((node: NodeType<LoopNodeType>) => {
     return (
-        <div style={{height: '100%', width: '100%'}}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-        >
-            <NodeWrapper node={node}>
-                {node.data.group && isHovered && node.data.expanded && (<NodeResizeControl/>)}
-                <Handle type="source" position={Position.Right}/>
-                <Handle type="target" position={Position.Left}/>
-            </NodeWrapper>
-        </div>
+        <GroupNodeWrapper node={node}>
+            <Handle type="source" position={Position.Right}/>
+            <Handle type="target" position={Position.Left}/>
+        </GroupNodeWrapper>
+
     )
 });

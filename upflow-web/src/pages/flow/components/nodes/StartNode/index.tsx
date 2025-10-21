@@ -4,7 +4,7 @@ import {Handle, Position} from "@xyflow/react";
 import styles from './styles.less'
 import NodeWrapper from "@/pages/flow/components/NodeWrapper";
 import IconFont from '@/components/IconFont';
-import {NodeType, StartNodeType} from "@/typings";
+import {NodeType, StartNodeType} from "@/types/flow";
 import {getVariableTypeLabel} from "@/pages/flow/variables";
 import NodeResizeControl from "@/pages/flow/components/NodeResizeControl";
 

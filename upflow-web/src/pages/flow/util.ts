@@ -1,5 +1,5 @@
 import {Node} from '@xyflow/react';
-import {NodeType} from "@/typings";
+import {NodeType} from "@/types/flow";
 
 // 确保父节点在子节点之前的排序函数（高性能、稳定顺序）
 export const sortNodes = (nodes: NodeType<any>[]) => {

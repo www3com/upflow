@@ -3,18 +3,7 @@ import ConditionNode from "@/pages/flow/components/nodes/CaseNode";
 import CodeNode from "@/pages/flow/components/nodes/CodeNode";
 import EditStartNode from "@/pages/flow/components/nodes/StartNode/EditStartAttribute";
 import EditCaseNode from "@/pages/flow/components/nodes/CaseNode/EditCaseAttribute";
-import {
-    CaseNodeType,
-    CodeNodeType,
-    LoopNodeType,
-    NodeDefineType,
-    NodeType,
-    NoteNodeType,
-    ObjectType,
-    SqlTransactionNodeType,
-    StartNodeType,
-    SubFlowNodeType
-} from "@/typings";
+
 import LoopNode from "@/pages/flow/components/nodes/LoopNode";
 import GroupStartNode from "@/pages/flow/components/nodes/GroupStartNode";
 import NoteNode from "@/pages/flow/components/nodes/CommentNode";
@@ -27,6 +16,15 @@ import SqlNode from "@/pages/flow/components/nodes/SqlNode";
 import EditSqlTransactionAttribute from "@/pages/flow/components/nodes/SqlTransactionNode/EditSqlTransactionAttribute";
 import EditSqlAttribute from "@/pages/flow/components/nodes/SqlNode/EditSqlAttribute";
 import {newId} from "@/utils/id";
+import {
+    CaseNodeType,
+    CodeNodeType,
+    LoopNodeType,
+    NodeDefineType,
+    NodeType, NoteNodeType,
+    SqlNodeType, SqlTransactionNodeType,
+    StartNodeType, SubFlowNodeType
+} from "@/types/flow";
 
 // 节点类型 key 常量
 export const NODE_TYPE = {
@@ -52,6 +50,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
         defaultConfig: {
             id: newId(),
             type: NODE_TYPE.START,
+            position: {x: 0, y: 0},
             width: 220,
             data: {
                 title: '开始',
@@ -104,7 +103,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
             height: 30,
             draggable: false,
             data: {group: false, hidden: true},
-        }
+        } as NodeType<any>
     },
     [NODE_TYPE.LOOP_CONTINUE]: {
         icon: 'icon-continue',
@@ -115,7 +114,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
             position: {x: 0, y: 0},
             width: 150,
             data: {title: '继续循环', group: false},
-        }
+        } as NodeType<any>
     },
     [NODE_TYPE.LOOP_BREAK]: {
         icon: 'icon-break',
@@ -126,7 +125,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
             position: {x: 0, y: 0},
             width: 150,
             data: {title: '终止循环', group: false},
-        }
+        } as NodeType<any>
     },
     [NODE_TYPE.CODE]: {
         icon: 'icon-code',
@@ -151,9 +150,8 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
             position: {x: 0, y: 0},
             data: {
                 title: 'SQL脚本',
-                group: false,
             }
-        }
+        } as NodeType<SqlNodeType>
     },
     [NODE_TYPE.SQL_TRANSACTION]: {
         icon: 'icon-sql-transaction',
@@ -195,7 +193,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
                 title: '变量赋值',
                 group: false,
             }
-        }
+        } as NodeType<any>
     },
     [NODE_TYPE.NOTE]: {
         icon: 'icon-file',
