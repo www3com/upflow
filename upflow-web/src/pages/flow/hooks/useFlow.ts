@@ -151,7 +151,7 @@ export const useFlow = () => {
     }, []);
 
     const onValidConnection = useCallback((connection: Edge | Connection) => {
-        const target = snap.nodes.find((node: NodeType<any>) => node.id === connection.target);
+        const target = snap.nodes.find((node: any) => node.id === connection.target);
         if (!target) return false;
         const hasCycle = (node: Node, visited = new Set()) => {
             if (visited.has(node.id)) return false;

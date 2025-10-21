@@ -36,10 +36,7 @@
     flex-direction: column;
     border: var(--xy-node-border-default);
     color: var(--xy-node-color-default);
-    /* 拖动性能优化 */
-    will-change: transform;
-    transform: translateZ(0);
-    backface-visibility: hidden;
+    /* 避免缩放时子层被独立合成导致模糊：不使用 translateZ/backface */
 }
 
 /* 节点交叉样式 */
