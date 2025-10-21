@@ -12,16 +12,15 @@ const { useToken } = theme;
 
 interface EditCaseItemProps {
   value: Case;
-  onChange: (value: Case) => void;
   title: string;
   variablesWithNode: VariableWithNode[];
   onDelete?: () => void;
+  onChange: (value: Case) => void;
 }
-
-export default function EditCaseItem({ value, onChange, title, variablesWithNode, onDelete }: EditCaseItemProps) {
+const EditCaseItem: React.FC<EditCaseItemProps> = ({ value, title, variablesWithNode, onDelete, onChange }) => {
   const { token } = useToken();
   const [form] = Form.useForm();
-  const conditions = Form.useWatch('conditions', form);
+  const currentConditions = Form.useWatch('conditions', form);
   const [logicalOperator, setLogicalOperator] = useState<string>(value.opr || 'and');
 
   // 初始化表单数据
@@ -31,61 +30,63 @@ export default function EditCaseItem({ value, onChange, title, variablesWithNode
     });
   }, [value, form]);
 
-  // 监听表单变化并更新父组件
+  // 统一的更新Case函数
+  const updateCase = (newConditions?: any[], newOperator?: string) => {
+    const conditions = newConditions ?? form.getFieldValue('conditions') ?? [];
+    const operator = newOperator ?? logicalOperator;
+
+    const updatedCase: Case = {
+      ...value,
+      opr: operator,
+      conditions,
+    };
+    onChange(updatedCase);
+  };
+
+  // 表单变化处理
   const handleFormChange = () => {
-    const formConditions = form.getFieldValue('conditions') || [];
-    const updatedCase: Case = {
-      ...value,
-      opr: logicalOperator,
-      conditions: formConditions,
-    };
-    onChange(updatedCase);
+    updateCase();
   };
 
-  // 逻辑操作符切换函数
-  const handleLogicalOperatorToggle = () => {
+  // 逻辑操作符切换
+  const toggleLogicalOperator = () => {
     const newOperator = logicalOperator === 'and' ? 'or' : 'and';
+
     setLogicalOperator(newOperator);
-    // 立即更新父组件
-    const formConditions = form.getFieldValue('conditions') || [];
-    const updatedCase: Case = {
-      ...value,
-      opr: newOperator,
-      conditions: formConditions,
-    };
-    onChange(updatedCase);
+    updateCase(undefined, newOperator);
   };
 
-  // 添加条件的函数
-  const handleAddCondition = () => {
-    const formConditions = form.getFieldValue('conditions') || [];
-    const newFormCondition = {
-      varId: undefined,
-      opr: 'in',
-      value: '',
-    };
-    const newConditions = [...formConditions, newFormCondition];
-    form.setFieldsValue({
-      conditions: newConditions,
-    });
-    // 更新父组件
-    const updatedCase: Case = {
-      ...value,
-      opr: logicalOperator,
-      conditions: newConditions,
-    };
-    onChange(updatedCase);
+  // 添加条件
+  const addCondition = () => {
+    const currentConditions = form.getFieldValue('conditions') || [];
+    const newConditions = [
+      ...currentConditions,
+      {
+        varId: undefined,
+        opr: 'in',
+        value: '',
+      },
+    ];
+
+    form.setFieldsValue({ conditions: newConditions });
+    updateCase(newConditions);
   };
 
-  // 渲染单个条件项
-  const renderCondition = (field: any, remove: (name: number) => void) => {
+  // 删除条件
+  const removeCondition = (index: number) => {
+    // 延迟执行以确保表单更新完成
+    setTimeout(handleFormChange, 0);
+  };
+
+  // 渲染条件项
+  const renderConditionItem = (field: any, remove: (name: number) => void) => {
     const { key, name, ...restField } = field;
 
     return (
       <Flex key={key} align="center" gap={5}>
         <Flex vertical gap={1} className={styles.conditionContainer}>
-          {/* 第一行：变量和操作符 */}
-          <Flex align="center" gap={0} justify={'space-between'}>
+          {/* 变量选择和操作符 */}
+          <Flex align="center" gap={0} justify="space-between">
             <Form.Item {...restField} name={[name, 'varId']} style={{ marginBottom: 0 }}>
               <VariableSelect
                 variablesWithNode={variablesWithNode}
@@ -110,10 +111,9 @@ export default function EditCaseItem({ value, onChange, title, variablesWithNode
             </Form.Item>
           </Flex>
 
-          {/* 分隔线 */}
           <Divider style={{ margin: '4px 0' }} />
 
-          {/* 第二行：输入值 */}
+          {/* 输入值 */}
           <Form.Item {...restField} name={[name, 'value']} style={{ margin: 0 }}>
             <Input placeholder="输入值" onChange={handleFormChange} className={styles.transparentInput} size="small" />
           </Form.Item>
@@ -125,61 +125,72 @@ export default function EditCaseItem({ value, onChange, title, variablesWithNode
           icon={<DeleteOutlined />}
           onClick={() => {
             remove(name);
-            // 延迟执行以确保表单更新完成
-            setTimeout(handleFormChange, 0);
+            removeCondition(name);
           }}
         />
       </Flex>
     );
   };
 
-  return (
-    <Card
-      style={{ width: '100%', boxShadow: 'none' }}
-      size="small"
-      variant={'borderless'}
-      title={
-        <Flex justify="space-between" align="center">
-          <span style={{ fontWeight: 'bold' }}>{title}</span>
-          <Flex gap={5} align="center">
-            <Button type="text" size="small" icon={<PlusOutlined />} onClick={handleAddCondition} />
-            {onDelete && <Button type="text" icon={<DeleteOutlined />} size="small" onClick={onDelete} />}
-          </Flex>
+  // 渲染逻辑操作符按钮
+  const renderLogicalOperatorButton = () => {
+    if (!currentConditions?.length) return null;
+
+    return (
+      <>
+        <div className={styles.conditionsWrapperLine} style={{ borderColor: token.colorBorderSecondary }} />
+        <div className={styles.conditionsWrapperBtn}>
+          <Button
+            size="small"
+            type="dashed"
+            icon={<IconFont type="icon-qiehuan" />}
+            iconPosition="end"
+            disabled={currentConditions.length <= 1}
+            onClick={toggleLogicalOperator}
+          >
+            {logicalOperator.toUpperCase()}
+          </Button>
+        </div>
+      </>
+    );
+  };
+
+  // 渲染条件列表
+  const renderConditionsList = () => (
+    <Form.List name="conditions">
+      {(fields, { remove }) => (
+        <Flex vertical gap={5}>
+          {fields.length === 0 ? (
+            <span style={{ color: token.colorTextSecondary, fontStyle: 'italic' }}>暂无条件，点击 [+] 添加</span>
+          ) : (
+            fields.map((field) => renderConditionItem(field, remove))
+          )}
         </Flex>
-      }
-    >
+      )}
+    </Form.List>
+  );
+
+  // 渲染卡片标题
+  const renderCardTitle = () => (
+    <Flex justify="space-between" align="center">
+      <span style={{ fontWeight: 'bold' }}>{title}</span>
+      <Flex gap={5} align="center">
+        <Button type="text" size="small" icon={<PlusOutlined />} onClick={addCondition} />
+        {onDelete && <Button type="text" icon={<DeleteOutlined />} size="small" onClick={onDelete} />}
+      </Flex>
+    </Flex>
+  );
+
+  return (
+    <Card style={{ width: '100%', boxShadow: 'none' }} size="small" variant="borderless" title={renderCardTitle()}>
       <Form form={form} onValuesChange={handleFormChange}>
         <div className={styles.conditionsWrapper}>
-          {conditions?.length > 0 && (
-            <>
-              <div className={styles.conditionsWrapperLine} style={{ borderColor: token.colorBorderSecondary }}></div>
-              <div className={styles.conditionsWrapperBtn}>
-                <Button
-                  size="small"
-                  type="dashed"
-                  icon={<IconFont type={'icon-qiehuan'} />}
-                  iconPosition={'end'}
-                  disabled={conditions?.length <= 1}
-                  onClick={handleLogicalOperatorToggle}
-                >
-                  {logicalOperator.toUpperCase()}
-                </Button>
-              </div>
-            </>
-          )}
-          <Form.List name="conditions">
-            {(fields, { remove }) => (
-              <Flex vertical gap={5} align="center">
-                {fields.length === 0 ? (
-                  <span style={{ color: token.colorTextSecondary, fontStyle: 'italic' }}>暂无条件，点击 [+] 添加</span>
-                ) : (
-                  fields.map((field) => renderCondition(field, remove))
-                )}
-              </Flex>
-            )}
-          </Form.List>
+          {renderLogicalOperatorButton()}
+          {renderConditionsList()}
         </div>
       </Form>
     </Card>
   );
-}
+};
+
+export default EditCaseItem;

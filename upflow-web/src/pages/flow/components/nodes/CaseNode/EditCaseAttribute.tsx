@@ -8,59 +8,59 @@ import { useSnapshot } from 'valtio';
 import EditCaseItem from './EditCaseItem';
 import './styles.less';
 
-interface CaseNodeProps {
+interface EditCaseAttributeProps {
   node: NodeType<CaseNodeType>;
   onChange: (node: NodeType<CaseNodeType>) => void;
 }
 
-export default ({ node, onChange }: CaseNodeProps) => {
+const EditCaseAttribute: React.FC<EditCaseAttributeProps> = ({ node, onChange }) => {
   // 获取流程状态和可用变量
   const flowState = useSnapshot(state);
-  const variablesWithNode = getAvailableVariablesWithNode(node.id, flowState.nodes as NodeType<any>[], flowState.edges as EdgeType<any>[]);
+  const availableVariables = getAvailableVariablesWithNode(
+    node.id, 
+    flowState.nodes as NodeType<any>[], 
+    flowState.edges as EdgeType<any>[]
+  );
 
   const cases = node.data.cases || [];
 
-  const onAddCase = () => {
+  // 统一的节点数据更新函数
+  const updateNodeData = (updatedCases: Case[]) => {
+    const updatedNode = {
+      ...node,
+      data: {
+        ...node.data,
+        cases: updatedCases,
+      },
+    };
+    onChange(updatedNode);
+  };
+
+  const handleAddCase = () => {
     const newCase: Case = {
       id: newId(),
       opr: 'and',
       conditions: [],
     };
-
-    const updatedNode = {
-      ...node,
-      data: {
-        ...node.data,
-        cases: [...cases, newCase],
-      },
-    };
-    onChange(updatedNode);
+    updateNodeData([...cases, newCase]);
   };
 
-  const onDeleteCase = (index: number) => {
-    const newCases = cases.filter((_, i) => i !== index);
-    const updatedNode = {
-      ...node,
-      data: {
-        ...node.data,
-        cases: newCases,
-      },
-    };
-    onChange(updatedNode);
+  const handleDeleteCase = (index: number) => {
+    const updatedCases = cases.filter((_, i) => i !== index);
+    updateNodeData(updatedCases);
   };
 
-  const onCaseChange = (index: number, updatedCase: Case) => {
-    const newCases = [...cases];
-    newCases[index] = updatedCase;
-    const updatedNode = {
-      ...node,
-      data: {
-        ...node.data,
-        cases: newCases,
-      },
-    };
-    onChange(updatedNode);
+  const handleCaseChange = (index: number, updatedCase: Case) => {
+    const updatedCases = [...cases];
+    updatedCases[index] = updatedCase;
+    updateNodeData(updatedCases);
   };
+
+  const getCaseTitle = (index: number) => {
+    return cases.length === 1 ? 'IF' : `CASE ${index + 1}`;
+  };
+
+  const canDeleteCase = cases.length > 1;
 
   return (
     <div>
@@ -69,26 +69,36 @@ export default ({ node, onChange }: CaseNodeProps) => {
         bordered={false}
         dataSource={cases}
         footer={
-          <Button type="dashed" icon={<PlusOutlined />} style={{ width: '100%' }} size="small" onClick={onAddCase}>
+          <Button 
+            type="dashed" 
+            icon={<PlusOutlined />} 
+            className="addCaseButton"
+            size="small" 
+            onClick={handleAddCase}
+          >
             添加条件分支
           </Button>
         }
-        renderItem={(item: Case, index: number) => (
-          <List.Item key={item.id} style={{ padding: 0, margin: 0 }}>
+        renderItem={(caseItem: Case, index: number) => (
+          <List.Item key={caseItem.id} className="caseListItem">
             <EditCaseItem
-              value={item}
-              onChange={(updatedCase) => onCaseChange(index, updatedCase)}
-              title={cases.length === 1 ? 'IF' : `CASE ${index + 1}`}
-              variablesWithNode={variablesWithNode}
-              onDelete={cases.length > 1 ? () => onDeleteCase(index) : undefined}
+              value={caseItem}
+              onChange={(updatedCase) => handleCaseChange(index, updatedCase)}
+              title={getCaseTitle(index)}
+              variablesWithNode={availableVariables}
+              onDelete={canDeleteCase ? () => handleDeleteCase(index) : undefined}
             />
           </List.Item>
         )}
       />
-      <div style={{ marginTop: 16, padding: 8, backgroundColor: '#f5f5f5', borderRadius: 4 }}>
+      <div className="elseContainer">
         <strong>Else</strong>
-        <div style={{ fontSize: 12, color: '#666', marginTop: 4 }}>用于定义当 if 条件不满足时应执行的逻辑。</div>
+        <div className="elseDescription">
+          用于定义当 if 条件不满足时应执行的逻辑。
+        </div>
       </div>
     </div>
   );
 };
+
+export default EditCaseAttribute;
