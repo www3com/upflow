@@ -4,17 +4,7 @@ import NodePanel from '@/pages/flow/components/NodePanel';
 import { useFlow } from '@/pages/flow/hooks/useFlow';
 import { NODE_TYPE, NodeDefineTypes } from '@/pages/flow/nodeTypes';
 import { addNode, exportDSL, importDSL, init, saveFlow, state } from '@/states/flow';
-import {
-  Background,
-  BackgroundVariant,
-  Edge,
-  Node,
-  Panel,
-  ReactFlow,
-  ReactFlowProvider,
-  SelectionMode,
-  useReactFlow
-} from '@xyflow/react';
+import { Background, BackgroundVariant, Edge, Node, Panel, ReactFlow, ReactFlowProvider, SelectionMode, useReactFlow } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { Button, Space, Splitter } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
