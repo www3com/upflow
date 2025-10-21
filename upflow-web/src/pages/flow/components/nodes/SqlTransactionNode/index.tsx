@@ -1,7 +1,7 @@
 import {memo} from "react";
 import {Handle, Position} from "@xyflow/react";
-import {NodeType, SqlTransactionNodeType} from "@/typings";
 import GroupNodeWrapper from "@/pages/flow/components/GroupNodeWrapper";
+import {NodeType, SqlTransactionNodeType} from "@/types/flow";
 
 export default memo((node: NodeType<SqlTransactionNodeType>) => {
     return (

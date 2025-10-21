@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import {EdgeType, NodeType} from "@/typings";
+import {EdgeType, NodeType} from "@/types/flow";
 
 
 export interface FlowType {
