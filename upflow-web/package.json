@@ -2,25 +2,32 @@
   "private": true,
   "author": "Jason Wang <horse.devops@gmail.com>",
   "scripts": {
-    "dev": "umi dev",
-    "build": "umi build",
-    "postinstall": "umi setup",
-    "setup": "umi setup",
+    "dev": "max dev",
+    "build": "max build",
+    "format": "prettier --cache --write .",
+    "prepare": "husky",
+    "postinstall": "max setup",
+    "setup": "max setup",
     "start": "npm run dev"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
+    "@umijs/max": "^4.5.2",
     "@xyflow/react": "^12.8.6",
     "antd": "^5.27.6",
     "axios": "^1.12.2",
     "monaco-editor": "^0.54.0",
     "nanoid": "^5.1.6",
-    "umi": "^4.5.2",
     "valtio": "^2.1.8"
   },
   "devDependencies": {
     "@types/react": "^18.3.26",
     "@types/react-dom": "^18.3.7",
+    "husky": "^9",
+    "lint-staged": "^13.2.0",
+    "prettier": "^2.8.7",
+    "prettier-plugin-organize-imports": "^3.2.2",
+    "prettier-plugin-packagejson": "^2.4.3",
     "typescript": "^5.9.3"
   }
 }
