@@ -1,131 +1,94 @@
-import { memo, useEffect, useState, useCallback, useMemo } from "react";
-import { Panel, useReactFlow, useKeyPress } from "@xyflow/react";
-import {
-    FullscreenOutlined,
-    ZoomInOutlined,
-    ZoomOutOutlined
-} from "@ant-design/icons";
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { Panel, useKeyPress, useReactFlow } from '@xyflow/react';
+import { FullscreenOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
+import { Button, Divider, Dropdown, Flex, MenuProps } from 'antd';
+import styles from './index.less';
 
-import { Button, Divider, Dropdown, Flex, MenuProps } from "antd";
-
-const items: MenuProps['items'] = [
-    {
-        key: '2',
-        label: '200%',
-        extra: '⌘ 2',
-    }, {
-        key: '1',
-        label: '100%',
-        extra: '⌘ 1',
-    }, {
-        key: '0.75',
-        label: '75%',
-    }, {
-        key: '0.5',
-        label: '50%',
-        extra: '⌘ 5',
-    }, {
-        key: '0.25',
-        label: '25%',
-    }
+const ZOOM_LEVELS: MenuProps['items'] = [
+  { key: '2', label: '200%', extra: '⌘ 2' },
+  { key: '1', label: '100%', extra: '⌘ 1' },
+  { key: '0.75', label: '75%' },
+  { key: '0.5', label: '50%', extra: '⌘ 5' },
+  { key: '0.25', label: '25%' },
 ];
 
-interface ZoomControlProps {
-    currentZoom?: number;
-}
+const usePrevious = <T,>(value: T): T | undefined => {
+  const ref = useRef<T>();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+};
 
-export default memo(({ currentZoom }: ZoomControlProps) => {
+const ZoomControl = () => {
+  const { zoomIn, zoomOut, fitView, getZoom, zoomTo } = useReactFlow();
+  const [zoom, setZoom] = useState(getZoom);
 
-    const { zoomIn, zoomOut, fitView, getZoom, zoomTo } = useReactFlow();
-    const [zoom, setZoom] = useState(1);
+  const updateZoom = useCallback(() => {
+    setTimeout(() => setZoom(getZoom()), 250);
+  }, [getZoom]);
 
-    // 使用传入的 currentZoom 或者获取当前缩放值
-    useEffect(() => {
-        if (currentZoom !== undefined) {
-            setZoom(currentZoom);
-        } else {
-            setZoom(getZoom());
-        }
-    }, [currentZoom, getZoom]);
+  const handleZoomAction = useCallback(
+    (action: () => void) => {
+      action();
+      updateZoom();
+    },
+    [updateZoom],
+  );
 
-    // 处理菜单点击事件
-    const handleMenuClick: MenuProps['onClick'] = useCallback(({ key }: { key: string }) => {
-        const zoomLevel = parseFloat(key);
-        zoomTo(zoomLevel, { duration: 200 });
-        // 使用setTimeout确保zoomTo操作完成后再更新状态
-        setTimeout(() => {
-            setZoom(getZoom());
-        }, 250);
-    }, [zoomTo, getZoom]);
+  const onZoomIn = useCallback(() => handleZoomAction(() => zoomIn({ duration: 200 })), [handleZoomAction, zoomIn]);
+  const onZoomOut = useCallback(() => handleZoomAction(() => zoomOut({ duration: 200 })), [handleZoomAction, zoomOut]);
+  const onFitView = useCallback(() => handleZoomAction(() => fitView({ duration: 200 })), [handleZoomAction, fitView]);
+  const onZoomTo = useCallback((level: number) => handleZoomAction(() => zoomTo(level, { duration: 200 })), [handleZoomAction, zoomTo]);
 
-    // 键盘快捷键处理 - 修复性能问题
-    const cmd1Pressed = useKeyPress(['Meta+1', 'Ctrl+1']);
-    const cmd2Pressed = useKeyPress(['Meta+2', 'Ctrl+2']);
-    const cmd5Pressed = useKeyPress(['Meta+5', 'Ctrl+5']);
+  const handleMenuClick: MenuProps['onClick'] = useCallback(
+    ({ key }: { key: string }) => {
+      onZoomTo(parseFloat(key));
+    },
+    [onZoomTo],
+  );
 
-    // 优化的更新缩放状态函数
-    const updateZoomState = useCallback(() => {
-        setTimeout(() => setZoom(getZoom()), 250);
-    }, [getZoom]);
+  const cmd1Pressed = useKeyPress(['Meta+1', 'Ctrl+1']);
+  const cmd2Pressed = useKeyPress(['Meta+2', 'Ctrl+2']);
+  const cmd5Pressed = useKeyPress(['Meta+5', 'Ctrl+5']);
 
-    // 键盘快捷键映射表
-    const keyboardActions = useMemo(() => [
-        { pressed: cmd1Pressed, action: () => zoomTo(1, { duration: 200 }) },
-        { pressed: cmd2Pressed, action: () => zoomTo(2, { duration: 200 }) },
-        { pressed: cmd5Pressed, action: () => zoomTo(0.5, { duration: 200 }) },
-    ], [cmd1Pressed, cmd2Pressed, cmd5Pressed, zoomTo, fitView, zoomIn, zoomOut]);
+  const prevCmd1Pressed = usePrevious(cmd1Pressed);
+  const prevCmd2Pressed = usePrevious(cmd2Pressed);
+  const prevCmd5Pressed = usePrevious(cmd5Pressed);
 
-    // 处理键盘快捷键 - 优雅的实现
-    useEffect(() => {
-        const activeAction = keyboardActions.find(({ pressed }) => pressed);
-        if (activeAction) {
-            activeAction.action();
-            updateZoomState();
-        }
-    }, [keyboardActions, updateZoomState]);
+  useEffect(() => {
+    if (!prevCmd1Pressed && cmd1Pressed) {
+      onZoomTo(1);
+    }
+  }, [prevCmd1Pressed, cmd1Pressed, onZoomTo]);
 
+  useEffect(() => {
+    if (!prevCmd2Pressed && cmd2Pressed) {
+      onZoomTo(2);
+    }
+  }, [prevCmd2Pressed, cmd2Pressed, onZoomTo]);
 
-    // 优化的按钮点击事件处理函数
-    const onZoomIn = useCallback(() => {
-        zoomIn({ duration: 200, interpolate: 'smooth' });
-        // 使用setTimeout确保zoomIn操作完成后再更新状态
-        setTimeout(() => setZoom(getZoom()), 250);
-    }, [zoomIn, getZoom]);
+  useEffect(() => {
+    if (!prevCmd5Pressed && cmd5Pressed) {
+      onZoomTo(0.5);
+    }
+  }, [prevCmd5Pressed, cmd5Pressed, onZoomTo]);
 
-    const onZoomOut = useCallback(() => {
-        zoomOut({ duration: 200, interpolate: 'smooth' });
-        // 使用setTimeout确保zoomOut操作完成后再更新状态
-        setTimeout(() => setZoom(getZoom()), 250);
-    }, [zoomOut, getZoom]);
+  return (
+    <Panel position="bottom-left">
+      <Flex className={styles.panel}>
+        <Flex align="center">
+          <Button type="text" icon={<ZoomInOutlined />} onClick={onZoomIn} />
+          <Dropdown menu={{ items: ZOOM_LEVELS, onClick: handleMenuClick }}>
+            <span className={styles.zoomDisplay}>{`${(zoom * 100).toFixed(0)}%`}</span>
+          </Dropdown>
+          <Button type="text" icon={<ZoomOutOutlined />} onClick={onZoomOut} />
+        </Flex>
+        <Divider type="vertical" />
+        <Button type="text" icon={<FullscreenOutlined />} onClick={onFitView} />
+      </Flex>
+    </Panel>
+  );
+};
 
-    const onFitView = useCallback(() => {
-        fitView({ duration: 200, interpolate: 'smooth' });
-        // 使用setTimeout确保fitView操作完成后再更新状态
-        setTimeout(() => setZoom(getZoom()), 250);
-    }, [fitView, getZoom]);
-
-    // 优化的样式对象
-    const panelStyle = useMemo(() => ({
-        backgroundColor: "white",
-        borderRadius: "8px"
-    }), []);
-
-    const spanStyle = useMemo(() => ({
-        cursor: "pointer"
-    }), []);
-
-    return (
-        <Panel position="bottom-left">
-            <Flex gap={0} style={panelStyle} align="center">
-                <Flex align="center">
-                    <Button type={"text"} icon={<ZoomInOutlined />} onClick={onZoomIn} />
-                    <Dropdown menu={{ items, onClick: handleMenuClick }}>
-                        <span style={spanStyle}>{(zoom * 100).toFixed(0) + "%"}</span>
-                    </Dropdown>
-                    <Button type={"text"} icon={<ZoomOutOutlined />} onClick={onZoomOut} />
-                </Flex>
-                <Divider type="vertical" />
-                <Button type={"text"} icon={<FullscreenOutlined />} onClick={onFitView} />
-            </Flex>
-        </Panel>)
-});
+export default memo(ZoomControl);
