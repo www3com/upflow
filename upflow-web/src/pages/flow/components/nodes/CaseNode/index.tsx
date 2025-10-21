@@ -9,7 +9,7 @@
  * 5. 使用防抖机制优化DOM更新操作
  */
 
-import { CompareOprType } from '@/utils/constants';
+import { COMPARE_OPERATOR_TYPES } from '@/utils/constants';
 import { Handle, Position } from '@xyflow/react';
 import { Flex, Space, theme } from 'antd';
 import { memo, useCallback, useMemo } from 'react';
@@ -134,7 +134,7 @@ export const CaseSection = memo(
                   <span style={{ color: token.colorPrimary }}>{condition.varId}</span>
                 </>
               )}
-              <span className={styles.compareOpr}>{CompareOprType[condition.opr]}</span>
+              <span className={styles.compareOpr}>{COMPARE_OPERATOR_TYPES.find((op) => op.value === condition.opr)?.label}</span>
               <span>{condition.value}</span>
             </Space>
           </Flex>

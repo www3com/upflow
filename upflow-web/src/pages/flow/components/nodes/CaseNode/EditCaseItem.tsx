@@ -2,19 +2,13 @@ import IconFont from '@/components/IconFont';
 import VariableSelect from '@/components/VariableSelect';
 import { VariableWithNode } from '@/pages/flow/variables';
 import { Case } from '@/types/flow';
-import { CompareOprType } from '@/utils/constants';
+import { COMPARE_OPERATOR_TYPES } from '@/utils/constants';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Card, Divider, Flex, Form, Input, Select, theme } from 'antd';
 import { useEffect, useState } from 'react';
 import styles from './styles.less';
 
 const { useToken } = theme;
-
-// 操作符选项
-const OPERATOR_OPTIONS = Object.entries(CompareOprType).map(([value, label]) => ({
-  value,
-  label,
-}));
 
 interface EditCaseItemProps {
   value: Case;
@@ -27,6 +21,7 @@ interface EditCaseItemProps {
 export default function EditCaseItem({ value, onChange, title, variablesWithNode, onDelete }: EditCaseItemProps) {
   const { token } = useToken();
   const [form] = Form.useForm();
+  const conditions = Form.useWatch('conditions', form);
   const [logicalOperator, setLogicalOperator] = useState<string>(value.opr || 'and');
 
   // 初始化表单数据
@@ -104,13 +99,14 @@ export default function EditCaseItem({ value, onChange, title, variablesWithNode
               />
             </Form.Item>
             <Form.Item {...restField} name={[name, 'opr']} style={{ marginBottom: 0 }}>
-              <Select placeholder="操作符" variant="borderless" popupMatchSelectWidth={false} onChange={handleFormChange} size="small">
-                {OPERATOR_OPTIONS.map((option) => (
-                  <Select.Option key={option.value} value={option.value}>
-                    {option.label}
-                  </Select.Option>
-                ))}
-              </Select>
+              <Select
+                placeholder="操作符"
+                variant="borderless"
+                popupMatchSelectWidth={false}
+                onChange={handleFormChange}
+                size="small"
+                options={COMPARE_OPERATOR_TYPES}
+              />
             </Form.Item>
           </Flex>
 
@@ -144,12 +140,7 @@ export default function EditCaseItem({ value, onChange, title, variablesWithNode
       variant={'borderless'}
       title={
         <Flex justify="space-between" align="center">
-          <Flex gap={5} align="center">
-            <span style={{ fontWeight: 'bold' }}>{title}</span>
-            <Button size={'small'} type="dashed" icon={<IconFont type={'icon-qiehuan'} />} iconPosition={'end'} onClick={handleLogicalOperatorToggle}>
-              {logicalOperator.toUpperCase()}
-            </Button>
-          </Flex>
+          <span style={{ fontWeight: 'bold' }}>{title}</span>
           <Flex gap={5} align="center">
             <Button type="text" size="small" icon={<PlusOutlined />} onClick={handleAddCondition} />
             {onDelete && <Button type="text" icon={<DeleteOutlined />} size="small" onClick={onDelete} />}
@@ -158,17 +149,36 @@ export default function EditCaseItem({ value, onChange, title, variablesWithNode
       }
     >
       <Form form={form} onValuesChange={handleFormChange}>
-        <Form.List name="conditions">
-          {(fields, { remove }) => (
-            <Flex vertical gap={5}>
-              {fields.length === 0 ? (
-                <span style={{ color: token.colorTextSecondary, fontStyle: 'italic' }}>暂无条件，点击上方按钮添加</span>
-              ) : (
-                fields.map((field) => renderCondition(field, remove))
-              )}
-            </Flex>
+        <div className={styles.conditionsWrapper}>
+          {conditions?.length > 0 && (
+            <>
+              <div className={styles.conditionsWrapperLine} style={{ borderColor: token.colorBorderSecondary }}></div>
+              <div className={styles.conditionsWrapperBtn}>
+                <Button
+                  size="small"
+                  type="dashed"
+                  icon={<IconFont type={'icon-qiehuan'} />}
+                  iconPosition={'end'}
+                  disabled={conditions?.length <= 1}
+                  onClick={handleLogicalOperatorToggle}
+                >
+                  {logicalOperator.toUpperCase()}
+                </Button>
+              </div>
+            </>
           )}
-        </Form.List>
+          <Form.List name="conditions">
+            {(fields, { remove }) => (
+              <Flex vertical gap={5} align="center">
+                {fields.length === 0 ? (
+                  <span style={{ color: token.colorTextSecondary, fontStyle: 'italic' }}>暂无条件，点击 [+] 添加</span>
+                ) : (
+                  fields.map((field) => renderCondition(field, remove))
+                )}
+              </Flex>
+            )}
+          </Form.List>
+        </div>
       </Form>
     </Card>
   );

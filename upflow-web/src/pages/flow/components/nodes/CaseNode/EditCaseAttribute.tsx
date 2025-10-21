@@ -1,12 +1,12 @@
-import { Button, List } from 'antd';
+import { getAvailableVariablesWithNode } from '@/pages/flow/variables';
+import { state } from '@/states/flow';
+import { Case, CaseNodeType, EdgeType, NodeType } from '@/types/flow';
+import { newId } from '@/utils/id';
 import { PlusOutlined } from '@ant-design/icons';
+import { Button, List } from 'antd';
+import { useSnapshot } from 'valtio';
 import EditCaseItem from './EditCaseItem';
 import './styles.less';
-import { useSnapshot } from 'valtio';
-import { state } from '@/states/flow';
-import { getAvailableVariablesWithNode } from '@/pages/flow/variables';
-import { newId } from '@/utils/id';
-import { Case, CaseNodeType, EdgeType, NodeType } from '@/types/flow';
 
 interface CaseNodeProps {
   node: NodeType<CaseNodeType>;

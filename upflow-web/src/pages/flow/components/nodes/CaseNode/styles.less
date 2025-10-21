@@ -34,3 +34,35 @@
   border-radius: 6px;
   flex: 1;
 }
+
+.conditionsWrapper {
+  position: relative;
+  padding-left: 34px;
+
+  .conditionsWrapperLine {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 12px;
+    width: 16px;
+    height: calc(100% - 80px);
+    border: 1px solid;
+    border-right-width: 0;
+    border-radius: 8px 0 0 8px;
+  }
+
+  .conditionsWrapperBtn {
+    position: absolute;
+    top: 50%;
+    left: -14px;
+    transform: translateY(-50%);
+
+    :global {
+      .ant-btn {
+        font-size: 12px;;
+        padding: 0 3px;
+        gap: 2px;
+      }
+    }
+  }
+}
