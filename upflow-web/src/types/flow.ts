@@ -6,7 +6,7 @@ import { Edge, Node, XYPosition } from '@xyflow/react';
 export type ScriptLanguage = 'javascript' | 'python';
 
 /**
- * 开始节点
+ * 变量校验规则
  */
 export interface Rule {
   type: string;

@@ -1,7 +1,7 @@
-import React from 'react';
-import { VARIABLE_TYPES } from '@/utils/constants';
-import { Cascader } from 'antd';
 import { VariableKind, VariableNode } from '@/types/flow'; // 定义组件 Props 接口，简化对 Cascader 的依赖，避免复杂泛型带来的类型问题
+import { VARIABLE_TYPES } from '@/utils/constants';
+import { Cascader, ConfigProvider } from 'antd';
+import React from 'react';
 
 // 定义组件 Props 接口，简化对 Cascader 的依赖，避免复杂泛型带来的类型问题
 interface VariableTypeSelectProps {
@@ -74,7 +74,26 @@ const VariableTypeSelect: React.FC<VariableTypeSelectProps> = (props) => {
     }
   };
 
-  return <Cascader options={options} value={cascaderValue as any} onChange={handleChange} displayRender={displayRender} showSearch {...restProps} />;
+  return (
+    <ConfigProvider
+      theme={{
+        components: {
+          Cascader: {
+            dropdownHeight: 'auto',
+          },
+        },
+      }}
+    >
+      <Cascader
+        options={options}
+        value={cascaderValue as any}
+        onChange={handleChange}
+        displayRender={displayRender}
+        showSearch
+        {...restProps}
+      />
+    </ConfigProvider>
+  );
 };
 
 export default VariableTypeSelect;

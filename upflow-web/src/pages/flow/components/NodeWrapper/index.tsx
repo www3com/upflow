@@ -2,7 +2,13 @@ import IconFont from '@/components/IconFont';
 import { NodeDefineTypes } from '@/pages/flow/nodeTypes';
 import { cloneNode, deleteNode, extendNode, setHoveredNodeId } from '@/states/flow';
 import { NodeType } from '@/types/flow';
-import { CopyOutlined, DeleteOutlined, DownCircleOutlined, EllipsisOutlined, UpCircleOutlined } from '@ant-design/icons';
+import {
+  CopyOutlined,
+  DeleteOutlined,
+  DownCircleOutlined,
+  EllipsisOutlined,
+  UpCircleOutlined
+} from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Button, Dropdown, Flex, Space, theme } from 'antd';
 import React, { memo, useCallback, useMemo } from 'react';
@@ -39,7 +45,7 @@ const NodeWrapper: React.FC<NodeWrapperProps> = memo(({ node, children }) => {
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.stopPropagation();
       extendNode(node.id);
-      setHoveredNodeId(undefined);
+      setHoveredNodeId(null);
     },
     [node.id],
   );
@@ -69,7 +75,14 @@ const NodeWrapper: React.FC<NodeWrapperProps> = memo(({ node, children }) => {
   const expandButton = useMemo(() => {
     if (!node.data.group) return null;
 
-    return <Button type="text" size="small" icon={isExpanded ? <DownCircleOutlined /> : <UpCircleOutlined />} onClick={handleToggleExpand} />;
+    return (
+      <Button
+        type="text"
+        size="small"
+        icon={isExpanded ? <DownCircleOutlined /> : <UpCircleOutlined />}
+        onClick={handleToggleExpand}
+      />
+    );
   }, [isExpanded, node.data.group, handleToggleExpand]);
 
   const nodeIcon = useMemo(

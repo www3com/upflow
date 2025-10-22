@@ -90,13 +90,14 @@ export const VARIABLE_TYPES: VariableNode[] = [
   {
     label: 'Array',
     value: 'ARRAY',
+    tag: 'basic',
     children: [
-      { label: 'String', value: 'ARRAY_STRING' },
-      { label: 'Integer', value: 'ARRAY_INTEGER' },
-      { label: 'Long', value: 'ARRAY_LONG' },
-      { label: 'Decimal', value: 'ARRAY_DECIMAL' },
-      { label: 'Boolean', value: 'ARRAY_BOOLEAN' },
-      { label: 'Object', value: 'ARRAY_OBJECT' },
+      { label: 'String', value: 'ARRAY_STRING', tag: 'basic' },
+      { label: 'Integer', value: 'ARRAY_INTEGER', tag: 'basic' },
+      { label: 'Long', value: 'ARRAY_LONG', tag: 'basic' },
+      { label: 'Decimal', value: 'ARRAY_DECIMAL', tag: 'basic' },
+      { label: 'Boolean', value: 'ARRAY_BOOLEAN', tag: 'basic' },
+      { label: 'Object', value: 'ARRAY_OBJECT', tag: 'basic' },
       {
         label: 'File',
         value: 'FILE',
