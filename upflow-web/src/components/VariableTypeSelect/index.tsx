@@ -1,10 +1,11 @@
 import { VariableKind, VariableNode } from '@/types/flow'; // 定义组件 Props 接口，简化对 Cascader 的依赖，避免复杂泛型带来的类型问题
 import { VARIABLE_TYPES } from '@/utils/constants';
 import { Cascader, ConfigProvider } from 'antd';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 // 定义组件 Props 接口，简化对 Cascader 的依赖，避免复杂泛型带来的类型问题
 interface VariableTypeSelectProps {
+  basic?: boolean;
   options?: VariableNode[];
   value?: VariableKind;
   onChange?: (value: VariableKind, selectedOptions?: VariableNode[]) => void;
@@ -18,7 +19,41 @@ interface VariableTypeSelectProps {
 }
 
 const VariableTypeSelect: React.FC<VariableTypeSelectProps> = (props) => {
-  const { options = VARIABLE_TYPES, value, onChange, ...restProps } = props;
+  const { basic, options = VARIABLE_TYPES, value, onChange, ...restProps } = props;
+
+  const filteredOptions = useMemo(() => {
+    // 如果basic为空或false，返回全部节点
+    if (!basic) {
+      return options;
+    }
+
+    // 递归过滤树形结构，当basic为true时只保留tag为'basic'的节点
+    const filterTreeByBasic = (nodes: VariableNode[]): VariableNode[] => {
+      return nodes
+        .filter((node) => {
+          // 如果basic为true，只保留tag为'basic'的节点
+          return !(basic && node.tag !== 'basic');
+        })
+        .map((node) => {
+          // 如果节点有子节点，递归过滤子节点
+          if (node.children && node.children.length > 0) {
+            const filteredChildren = filterTreeByBasic(node.children);
+            // 如果过滤后子节点为空，且当前节点没有value，则过滤掉当前节点
+            if (filteredChildren.length === 0 && !node.value) {
+              return null;
+            }
+            return {
+              ...node,
+              children: filteredChildren,
+            };
+          }
+          return node;
+        })
+        .filter(Boolean) as VariableNode[];
+    };
+
+    return filterTreeByBasic(options);
+  }, [basic, options]);
 
   // 自定义 Cascader 显示渲染函数
   const displayRender = (labels: string[]) => {
@@ -54,7 +89,7 @@ const VariableTypeSelect: React.FC<VariableTypeSelectProps> = (props) => {
       return null;
     };
 
-    return findPath(options, variableType) || undefined;
+    return findPath(filteredOptions, variableType) || undefined;
   };
 
   // 将 Cascader 路径数组转换为 VariableDataType（取最后一个 value）
@@ -85,7 +120,7 @@ const VariableTypeSelect: React.FC<VariableTypeSelectProps> = (props) => {
       }}
     >
       <Cascader
-        options={options}
+        options={filteredOptions}
         value={cascaderValue as any}
         onChange={handleChange}
         displayRender={displayRender}

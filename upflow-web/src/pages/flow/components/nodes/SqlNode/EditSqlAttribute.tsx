@@ -1,13 +1,14 @@
-import React, { useEffect, useMemo } from 'react';
-import { Button, Card, Flex, Form, Input, List, Select, Space, theme } from 'antd';
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import VariableAvailableSelect from '@/components/VariableAvailableSelect';
-import { getAvailableVariablesWithNode } from '@/pages/flow/variables';
-import { useSnapshot } from 'valtio';
-import { state } from '@/states/flow';
 import MonacoEditor from '@/components/MonacoEditor';
+import VariableAvailableSelect from '@/components/VariableAvailableSelect';
+import { getAvailableVariables } from '@/pages/flow/variables';
+import { state } from '@/states/flow';
 import { EdgeType, NodeType, SqlNodeType } from '@/types/flow';
 import { VARIABLE_TYPES } from '@/utils/constants';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Card, Flex, Form, Input, List, theme } from 'antd';
+import { useEffect, useMemo } from 'react';
+import { useSnapshot } from 'valtio';
+import VariableTypeSelect from '@/components/VariableTypeSelect';
 
 const { useToken } = theme;
 
@@ -23,12 +24,11 @@ export default ({ node, onChange }: SqlNodeProps) => {
 
   // 初始化表单数据
   useEffect(() => {
-    const nodeData = node.data as SqlNodeType;
     const initialValues = {
-      input: nodeData.input || [],
-      content: nodeData.content || '',
+      input: node.data.input || [],
+      content: node.data.content || '',
       output: [
-        { type: nodeData.output?.[0]?.type || 'ARRAY_OBJECT' }, // rows 变量
+        { type: node.data.output?.[0]?.type || 'ARRAY_OBJECT' }, // rows 变量
         { type: 'INTEGER' }, // rowNum 变量，固定为整形
       ],
     };
@@ -37,7 +37,7 @@ export default ({ node, onChange }: SqlNodeProps) => {
 
   // 表单值变化处理
   const onValuesChange = (changedValues: any, allValues: any) => {
-    const updatedData = {
+    const updatedData: SqlNodeType = {
       ...node.data,
       input: allValues.input || [],
       content: allValues.content || '',
@@ -55,7 +55,7 @@ export default ({ node, onChange }: SqlNodeProps) => {
           value: '',
         },
       ],
-    } as SqlNodeType;
+    };
 
     const updatedNode = {
       ...node,
@@ -66,12 +66,12 @@ export default ({ node, onChange }: SqlNodeProps) => {
   };
 
   // 获取可用变量列表
-  const variablesWithNode = useMemo(() => {
-    return getAvailableVariablesWithNode(node.id, flowState.nodes as NodeType<SqlNodeType>[], flowState.edges as EdgeType<any>[]);
+  const availableVariables = useMemo(() => {
+    return getAvailableVariables(node.id, flowState.nodes as NodeType<SqlNodeType>[], flowState.edges as EdgeType<any>[]);
   }, [node.id, flowState.nodes, flowState.edges]);
 
   return (
-    <Form form={form} onValuesChange={onValuesChange} layout="vertical">
+    <Form form={form} onValuesChange={onValuesChange}>
       <Flex align="center" justify={'center'} vertical>
         {/* 输入变量 */}
         <Form.List name="input">
@@ -81,7 +81,9 @@ export default ({ node, onChange }: SqlNodeProps) => {
               style={{ width: '100%', boxShadow: 'none' }}
               size="small"
               variant="borderless"
-              extra={<Button type="text" icon={<PlusOutlined />} size="small" onClick={() => add({ name: '', value: undefined })} />}
+              extra={
+                <Button type="text" icon={<PlusOutlined />} size="small" onClick={() => add({ name: '', value: undefined })} />
+              }
             >
               {fields.length > 0 ? (
                 <List
@@ -96,7 +98,7 @@ export default ({ node, onChange }: SqlNodeProps) => {
                           <Input placeholder="变量名" />
                         </Form.Item>
                         <Form.Item {...field} name={[field.name, 'value']} style={{ marginBottom: 0, flex: 2 }}>
-                          <VariableAvailableSelect variablesWithNode={variablesWithNode} placeholder="选择变量值" />
+                          <VariableAvailableSelect variablesWithNode={availableVariables} placeholder="选择变量值" />
                         </Form.Item>
                         <Button
                           type="text"
@@ -109,7 +111,9 @@ export default ({ node, onChange }: SqlNodeProps) => {
                   )}
                 />
               ) : (
-                <div style={{ padding: '16px 0', textAlign: 'center', color: '#999', fontSize: '12px' }}>暂无输入变量，点击右上角按钮添加</div>
+                <div style={{ padding: '16px 0', textAlign: 'center', color: '#999', fontSize: '12px' }}>
+                  暂无输入变量，点击右上角按钮添加
+                </div>
               )}
             </Card>
           )}
@@ -131,25 +135,24 @@ export default ({ node, onChange }: SqlNodeProps) => {
 
         {/* 输出变量 - rows 可选择类型，rowNum 固定 */}
         <Card title="输出变量" style={{ width: '100%', boxShadow: 'none' }} size="small" variant="borderless">
-          <Space direction="vertical" style={{ width: '100%' }} size="small">
-            {/* rows 变量 - 类型可选择 */}
-            <Flex style={{ width: '100%' }} gap={8} align="center">
-              <div style={{ flex: 2, fontWeight: 500 }}>rows</div>
-              <div style={{ flex: 1 }}>
-                <Form.Item name={['output', 0, 'type']} style={{ marginBottom: 0 }}>
-                  <Select size="small" options={VARIABLE_TYPES} placeholder="选择类型" />
-                </Form.Item>
-              </div>
-              <div style={{ flex: 2, color: token.colorTextTertiary, fontSize: '12px' }}>SQL查询结果行数据</div>
-            </Flex>
-
-            {/* rowNum 变量 - 固定为 int 类型 */}
-            <Flex style={{ width: '100%' }} gap={8} align="center">
-              <div style={{ flex: 2, fontWeight: 500 }}>rowNum</div>
-              <div style={{ flex: 1, color: token.colorTextSecondary }}>整形</div>
-              <div style={{ flex: 2, color: token.colorTextTertiary, fontSize: '12px' }}>SQL查询结果行数</div>
-            </Flex>
-          </Space>
+          <Form.Item
+            label="rows"
+            labelCol={{ span: 6 }}
+            tooltip="SQL查询结果行数据"
+            layout="horizontal"
+            name={['output', 0, 'type']}
+          >
+            <VariableTypeSelect options={VARIABLE_TYPES} basic={true} placeholder={'请选择变量类型'} />
+          </Form.Item>
+          <Form.Item
+            label="rowNum"
+            labelCol={{ span: 6 }}
+            tooltip="SQL查询结果行数"
+            layout="horizontal"
+            name={['output', 1, 'rowNum']}
+          >
+            Integer
+          </Form.Item>
         </Card>
       </Flex>
     </Form>

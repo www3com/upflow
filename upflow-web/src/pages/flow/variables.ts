@@ -16,7 +16,12 @@ import { EdgeType, NodeType, Variable, VariableKind, VariableNode } from '@/type
  * @param visited 已访问的节点集合，用于避免循环引用
  * @returns 前置节点对象数组
  */
-const getPreviousNodes = (nodeId: string, edges: EdgeType<any>[], nodes: NodeType<any>[], visited: Set<string> = new Set()): NodeType<any>[] => {
+const getPreviousNodes = (
+  nodeId: string,
+  edges: EdgeType<any>[],
+  nodes: NodeType<any>[],
+  visited: Set<string> = new Set(),
+): NodeType<any>[] => {
   if (visited.has(nodeId)) {
     return [];
   }
@@ -43,7 +48,7 @@ const getPreviousNodes = (nodeId: string, edges: EdgeType<any>[], nodes: NodeTyp
   return previousNodes;
 };
 
-export interface VariableWithNode {
+export interface AvailableVariable {
   nodeName: string;
   nodeIcon: string;
   varId: string;
@@ -57,8 +62,12 @@ export interface VariableWithNode {
  * @param edges 流程中的所有边
  * @returns 包含节点信息的变量列表
  */
-export const getAvailableVariablesWithNode = (currentNodeId: string, nodes: NodeType<any>[], edges: EdgeType<any>[]): VariableWithNode[] => {
-  const variablesWithNode: VariableWithNode[] = [];
+export const getAvailableVariables = (
+  currentNodeId: string,
+  nodes: NodeType<any>[],
+  edges: EdgeType<any>[],
+): AvailableVariable[] => {
+  const variablesWithNode: AvailableVariable[] = [];
 
   // 获取当前节点的所有前置节点对象
   const previousNodes = getPreviousNodes(currentNodeId, edges, nodes);
@@ -167,7 +176,7 @@ export const getDefaultErrorMessage = (ruleType: string, value?: string): string
  * @param nodes 节点数组
  * @returns 变量信息对象，如果未找到则返回 null
  */
-export const getVariableInfoById = (variableId: string, nodes: Node[]): VariableWithNode | null => {
+export const getVariableInfoById = (variableId: string, nodes: Node[]): AvailableVariable | null => {
   // 遍历所有节点，查找包含指定变量ID的节点
   for (const node of nodes) {
     const nodeData = node.data || {};
@@ -184,7 +193,7 @@ export const getVariableInfoById = (variableId: string, nodes: Node[]): Variable
     };
 
     // 创建返回对象的辅助函数
-    const createVariableWithNode = (variable: Variable): VariableWithNode => {
+    const createVariableWithNode = (variable: Variable): AvailableVariable => {
       return {
         nodeName,
         nodeIcon,

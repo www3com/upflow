@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Card, Flex, Form, Input, Select } from 'antd';
 import VariableAvailableSelect from '@/components/VariableAvailableSelect';
-import { getAvailableVariablesWithNode } from '@/pages/flow/variables';
+import { getAvailableVariables } from '@/pages/flow/variables';
 import { useSnapshot } from 'valtio';
 import { state } from '@/states/flow';
 import { EdgeType, LoopNodeType, NodeType } from '@/types/flow';
@@ -65,7 +65,7 @@ export default ({ node, onChange }: LoopNodeProps) => {
 
   // 获取可用变量列表
   const variablesWithNode = useMemo(() => {
-    return getAvailableVariablesWithNode(node.id, flowState.nodes as NodeType<LoopNodeType>[], flowState.edges as EdgeType<any>[]);
+    return getAvailableVariables(node.id, flowState.nodes as NodeType<LoopNodeType>[], flowState.edges as EdgeType<any>[]);
   }, [node.id, flowState.nodes, flowState.edges]);
 
   return (

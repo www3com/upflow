@@ -1,4 +1,4 @@
-import { getAvailableVariablesWithNode } from '@/pages/flow/variables';
+import { getAvailableVariables } from '@/pages/flow/variables';
 import { state } from '@/states/flow';
 import { Case, CaseNodeType, EdgeType, NodeType } from '@/types/flow';
 import { newId } from '@/utils/id';
@@ -16,10 +16,10 @@ interface EditCaseAttributeProps {
 const EditCaseAttribute: React.FC<EditCaseAttributeProps> = ({ node, onChange }) => {
   // 获取流程状态和可用变量
   const flowState = useSnapshot(state);
-  const availableVariables = getAvailableVariablesWithNode(
-    node.id, 
-    flowState.nodes as NodeType<any>[], 
-    flowState.edges as EdgeType<any>[]
+  const availableVariables = getAvailableVariables(
+    node.id,
+    flowState.nodes as NodeType<any>[],
+    flowState.edges as EdgeType<any>[],
   );
 
   const cases = node.data.cases || [];
@@ -69,13 +69,7 @@ const EditCaseAttribute: React.FC<EditCaseAttributeProps> = ({ node, onChange })
         bordered={false}
         dataSource={cases}
         footer={
-          <Button 
-            type="dashed" 
-            icon={<PlusOutlined />} 
-            className="addCaseButton"
-            size="small" 
-            onClick={handleAddCase}
-          >
+          <Button type="dashed" icon={<PlusOutlined />} className="addCaseButton" size="small" onClick={handleAddCase}>
             添加条件分支
           </Button>
         }
@@ -93,9 +87,7 @@ const EditCaseAttribute: React.FC<EditCaseAttributeProps> = ({ node, onChange })
       />
       <div className="elseContainer">
         <strong>Else</strong>
-        <div className="elseDescription">
-          用于定义当 if 条件不满足时应执行的逻辑。
-        </div>
+        <div className="elseDescription">用于定义当 if 条件不满足时应执行的逻辑。</div>
       </div>
     </div>
   );

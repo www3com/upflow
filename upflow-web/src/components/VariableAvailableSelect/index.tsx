@@ -1,15 +1,15 @@
-import React, { useMemo } from 'react';
-import { Flex, Select, SelectProps, Space, theme } from 'antd';
 import IconFont from '@/components/IconFont';
-import { VariableWithNode } from '@/pages/flow/variables';
+import { AvailableVariable } from '@/pages/flow/variables';
 import { CloseCircleOutlined } from '@ant-design/icons';
+import { Flex, Select, SelectProps, Space, theme } from 'antd';
+import React, { useMemo } from 'react';
 
 const { useToken } = theme;
 
 // 变量标签组件
 interface VariableLabelProps {
   value: string | undefined;
-  variablesWithNode: VariableWithNode[];
+  variablesWithNode: AvailableVariable[];
 }
 
 const VariableLabel: React.FC<VariableLabelProps> = ({ value, variablesWithNode }) => {
@@ -40,10 +40,15 @@ const VariableLabel: React.FC<VariableLabelProps> = ({ value, variablesWithNode 
 export interface VariableAvailableSelectProps extends Omit<SelectProps, 'value' | 'onChange'> {
   value?: string;
   onChange?: (value: string) => void;
-  variablesWithNode: VariableWithNode[];
+  variablesWithNode: AvailableVariable[];
 }
 
-const VariableAvailableSelect: React.FC<VariableAvailableSelectProps> = ({ variablesWithNode, value, onChange, ...selectProps }) => {
+const VariableAvailableSelect: React.FC<VariableAvailableSelectProps> = ({
+  variablesWithNode,
+  value,
+  onChange,
+  ...selectProps
+}) => {
   const { token } = useToken();
 
   // 创建选项
@@ -56,7 +61,7 @@ const VariableAvailableSelect: React.FC<VariableAvailableSelectProps> = ({ varia
       }
       groups[nodeName].push(variable);
       return groups;
-    }, {} as Record<string, VariableWithNode[]>);
+    }, {} as Record<string, AvailableVariable[]>);
 
     // 转换为 options 格式
     return Object.entries(groupedVariables).map(([nodeName, nodeVariables]) => ({

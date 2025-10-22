@@ -1,6 +1,6 @@
 import IconFont from '@/components/IconFont';
 import VariableAvailableSelect from '@/components/VariableAvailableSelect';
-import { VariableWithNode } from '@/pages/flow/variables';
+import { AvailableVariable } from '@/pages/flow/variables';
 import { Case } from '@/types/flow';
 import { COMPARE_OPERATOR_TYPES } from '@/utils/constants';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
@@ -13,7 +13,7 @@ const { useToken } = theme;
 interface EditCaseItemProps {
   value: Case;
   title: string;
-  variablesWithNode: VariableWithNode[];
+  variablesWithNode: AvailableVariable[];
   onDelete?: () => void;
   onChange: (value: Case) => void;
 }

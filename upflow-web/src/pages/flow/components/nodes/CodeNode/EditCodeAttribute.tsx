@@ -1,6 +1,6 @@
 import MonacoEditor from '@/components/MonacoEditor';
 import VariableAvailableSelect from '@/components/VariableAvailableSelect';
-import { getAvailableVariablesWithNode } from '@/pages/flow/variables';
+import { getAvailableVariables } from '@/pages/flow/variables';
 import { state } from '@/states/flow';
 import { CodeNodeType, EdgeType, NodeType, SqlNodeType } from '@/types/flow';
 import { VARIABLE_TYPES } from '@/utils/constants';
@@ -52,7 +52,7 @@ export default ({ node, onChange }: ScriptNodeProps) => {
 
   // 获取可用变量列表
   const variablesWithNode = useMemo(() => {
-    return getAvailableVariablesWithNode(node.id, flowState.nodes as NodeType<SqlNodeType>[], flowState.edges as EdgeType<any>[]);
+    return getAvailableVariables(node.id, flowState.nodes as NodeType<SqlNodeType>[], flowState.edges as EdgeType<any>[]);
   }, [node.id, flowState.nodes, flowState.edges]);
 
   return (
@@ -66,7 +66,9 @@ export default ({ node, onChange }: ScriptNodeProps) => {
               style={{ width: '100%', boxShadow: 'none' }}
               size="small"
               variant="borderless"
-              extra={<Button type="text" icon={<PlusOutlined />} size="small" onClick={() => add({ name: '', value: undefined })} />}
+              extra={
+                <Button type="text" icon={<PlusOutlined />} size="small" onClick={() => add({ name: '', value: undefined })} />
+              }
             >
               {fields.length > 0 ? (
                 <List
@@ -94,7 +96,9 @@ export default ({ node, onChange }: ScriptNodeProps) => {
                   )}
                 />
               ) : (
-                <div style={{ padding: '16px 0', textAlign: 'center', color: '#999', fontSize: '12px' }}>暂无输入变量，点击右上角按钮添加</div>
+                <div style={{ padding: '16px 0', textAlign: 'center', color: '#999', fontSize: '12px' }}>
+                  暂无输入变量，点击右上角按钮添加
+                </div>
               )}
             </Card>
           )}
@@ -140,7 +144,9 @@ export default ({ node, onChange }: ScriptNodeProps) => {
               style={{ width: '100%', boxShadow: 'none' }}
               size="small"
               variant="borderless"
-              extra={<Button type="text" icon={<PlusOutlined />} size="small" onClick={() => add({ name: '', type: 'string' })} />}
+              extra={
+                <Button type="text" icon={<PlusOutlined />} size="small" onClick={() => add({ name: '', type: 'string' })} />
+              }
             >
               {fields.length > 0 ? (
                 <List
@@ -168,7 +174,9 @@ export default ({ node, onChange }: ScriptNodeProps) => {
                   )}
                 />
               ) : (
-                <div style={{ padding: '16px 0', textAlign: 'center', color: '#999', fontSize: '12px' }}>暂无输出变量，点击右上角按钮添加</div>
+                <div style={{ padding: '16px 0', textAlign: 'center', color: '#999', fontSize: '12px' }}>
+                  暂无输出变量，点击右上角按钮添加
+                </div>
               )}
             </Card>
           )}
