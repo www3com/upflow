@@ -1,4 +1,4 @@
-import { VariableType } from '@/types/flow';
+import { VariableNode } from '@/types/flow';
 
 export const COMPARE_OPERATOR_TYPES = [
   { value: 'in', label: '包含' },
@@ -67,19 +67,9 @@ export const VARIABLE_TYPE_RULES_MAP = {
 };
 
 /**
- * 变量类型树形节点接口
- */
-export interface VariableTypeNode {
-  label: string;
-  value?: VariableType;
-  tag?: string;
-  children?: VariableTypeNode[];
-}
-
-/**
  * 变量类型标签树形结构
  */
-export const VARIABLE_TYPES: VariableTypeNode[] = [
+export const VARIABLE_TYPES: VariableNode[] = [
   { label: 'String', value: 'STRING', tag: 'basic' },
   { label: 'Integer', value: 'INTEGER', tag: 'basic' },
   { label: 'Long', value: 'LONG', tag: 'basic' },

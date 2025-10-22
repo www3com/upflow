@@ -1,5 +1,5 @@
 import IconFont from '@/components/IconFont';
-import VariableSelect from '@/components/VariableSelect';
+import VariableAvailableSelect from '@/components/VariableAvailableSelect';
 import { VariableWithNode } from '@/pages/flow/variables';
 import { Case } from '@/types/flow';
 import { COMPARE_OPERATOR_TYPES } from '@/utils/constants';
@@ -88,7 +88,7 @@ const EditCaseItem: React.FC<EditCaseItemProps> = ({ value, title, variablesWith
           {/* 变量选择和操作符 */}
           <Flex align="center" gap={0} justify="space-between">
             <Form.Item {...restField} name={[name, 'varId']} style={{ marginBottom: 0 }}>
-              <VariableSelect
+              <VariableAvailableSelect
                 variablesWithNode={variablesWithNode}
                 variant="borderless"
                 size="small"
