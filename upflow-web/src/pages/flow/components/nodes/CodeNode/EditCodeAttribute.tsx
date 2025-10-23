@@ -1,5 +1,6 @@
 import MonacoEditor from '@/components/MonacoEditor';
 import VariableAvailableSelect from '@/components/VariableAvailableSelect';
+import VariableTypeSelect from '@/components/VariableTypeSelect';
 import { getAvailableVariables } from '@/pages/flow/variables';
 import { state } from '@/states/flow';
 import { CodeNodeType, EdgeType, NodeType, SqlNodeType } from '@/types/flow';
@@ -8,16 +9,16 @@ import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Card, Divider, Flex, Form, Input, List, Select, theme } from 'antd';
 import { useEffect, useMemo } from 'react';
 import { useSnapshot } from 'valtio';
-import VariableTypeSelect from '@/components/VariableTypeSelect';
+import styles from './styles.less';
 
 const { useToken } = theme;
 
-interface ScriptNodeProps {
+interface CodeNodeProps {
   node: NodeType<CodeNodeType>;
   onChange: (node: NodeType<CodeNodeType>) => void;
 }
 
-export default ({ node, onChange }: ScriptNodeProps) => {
+export default ({ node, onChange }: CodeNodeProps) => {
   const flowState = useSnapshot(state);
   const { token } = useToken();
   const [form] = Form.useForm();
@@ -28,10 +29,10 @@ export default ({ node, onChange }: ScriptNodeProps) => {
   // 初始化表单数据
   useEffect(() => {
     const initialValues = {
-      inputVariables: node.data.input || [],
+      input: node.data.input || [],
       language: node.data.language || 'javascript',
-      script: node.data.content || '',
-      outputVariables: node.data.output || [],
+      content: node.data.content || '',
+      output: node.data.output || [],
     };
 
     form.setFieldsValue(initialValues);
@@ -57,13 +58,13 @@ export default ({ node, onChange }: ScriptNodeProps) => {
 
   return (
     <Form form={form} onValuesChange={onValuesChange} layout="vertical">
-      <Flex align="center" justify={'center'} vertical>
+      <Flex className={styles.codeContainer}>
         {/* 输入变量 */}
         <Form.List name="input">
           {(fields, { add, remove }) => (
             <Card
               title="输入变量"
-              style={{ width: '100%', boxShadow: 'none' }}
+              className={styles.codeCard}
               size="small"
               variant="borderless"
               extra={
@@ -77,12 +78,20 @@ export default ({ node, onChange }: ScriptNodeProps) => {
                   split={false}
                   dataSource={fields}
                   renderItem={(field) => (
-                    <List.Item key={field.name} style={{ padding: '2px 0' }}>
-                      <Flex style={{ width: '100%' }} gap={8} align="center">
-                        <Form.Item {...field} name={[field.name, 'name']} style={{ marginBottom: 0, flex: 1 }}>
+                    <List.Item key={field.name} className={styles.codeVariableItem}>
+                      <Flex className={styles.codeInputRow}>
+                        <Form.Item
+                          {...field}
+                          name={[field.name, 'name']}
+                          className={`${styles.codeField} ${styles.codeFieldName}`}
+                        >
                           <Input placeholder="变量名" />
                         </Form.Item>
-                        <Form.Item {...field} name={[field.name, 'value']} style={{ marginBottom: 0, flex: 2 }}>
+                        <Form.Item
+                          {...field}
+                          name={[field.name, 'value']}
+                          className={`${styles.codeField} ${styles.codeFieldValue}`}
+                        >
                           <VariableAvailableSelect variablesWithNode={variablesWithNode} placeholder="选择变量值" />
                         </Form.Item>
                         <Button
@@ -96,9 +105,7 @@ export default ({ node, onChange }: ScriptNodeProps) => {
                   )}
                 />
               ) : (
-                <div style={{ padding: '16px 0', textAlign: 'center', color: '#999', fontSize: '12px' }}>
-                  暂无输入变量，点击右上角按钮添加
-                </div>
+                <div className={styles.codeEmptyState}>暂无输入变量，点击右上角按钮添加</div>
               )}
             </Card>
           )}
@@ -106,20 +113,19 @@ export default ({ node, onChange }: ScriptNodeProps) => {
 
         {/* 脚本编辑框 */}
         <div
+          className={styles.codeEditorContainer}
           style={{
-            width: '100%',
-            overflow: 'hidden',
             border: `1px solid ${token.colorBorderSecondary}`,
             borderRadius: token.borderRadius,
           }}
         >
           {/* 语言选择 */}
-          <Flex align="center" style={{ marginBottom: 8 }}>
-            <Form.Item name="language" style={{ marginBottom: 0, marginRight: 8 }}>
+          <Flex className={styles.codeLanguageBox}>
+            <Form.Item name="language" className={styles.codeFieldLanguage}>
               <Select
                 variant="borderless"
                 size={'small'}
-                style={{ width: 'auto' }}
+                className={styles.codeLanguageSelect}
                 placeholder="请选择语言"
                 options={[
                   { value: 'javascript', label: 'JavaScript' },
@@ -128,10 +134,10 @@ export default ({ node, onChange }: ScriptNodeProps) => {
               />
             </Form.Item>
           </Flex>
-          <Divider style={{ margin: '0 0 8px 0' }} />
+          <Divider className={styles.codeDivider} />
 
           {/* 代码编辑器 */}
-          <Form.Item name="script" style={{ marginBottom: 0 }}>
+          <Form.Item name="content" className={styles.codeFieldContent}>
             <MonacoEditor language={language} placeholder="请输入脚本代码..." height={400} />
           </Form.Item>
         </div>
@@ -141,7 +147,7 @@ export default ({ node, onChange }: ScriptNodeProps) => {
           {(fields, { add, remove }) => (
             <Card
               title="输出变量"
-              style={{ width: '100%', boxShadow: 'none' }}
+              className={styles.codeCard}
               size="small"
               variant="borderless"
               extra={
@@ -155,13 +161,21 @@ export default ({ node, onChange }: ScriptNodeProps) => {
                   split={false}
                   dataSource={fields}
                   renderItem={(field) => (
-                    <List.Item key={field.key} style={{ padding: '4px 0' }}>
-                      <Flex style={{ width: '100%' }} gap={8} align="center">
-                        <Form.Item {...field} name={[field.name, 'name']} style={{ marginBottom: 0, flex: 3 }}>
+                    <List.Item key={field.key} className={`${styles.codeVariableItem} ${styles.codeVariableItemOutput}`}>
+                      <Flex className={styles.codeInputRow}>
+                        <Form.Item
+                          {...field}
+                          name={[field.name, 'name']}
+                          className={`${styles.codeField} ${styles.codeFieldOutputName}`}
+                        >
                           <Input placeholder="变量名" />
                         </Form.Item>
-                        <Form.Item {...field} name={[field.name, 'type']} style={{ marginBottom: 0, flex: 2 }}>
-                          <VariableTypeSelect options={VARIABLE_TYPES} placeholder="请选择变量类型" />
+                        <Form.Item
+                          {...field}
+                          name={[field.name, 'type']}
+                          className={`${styles.codeField} ${styles.codeFieldOutputType}`}
+                        >
+                          <VariableTypeSelect options={VARIABLE_TYPES} basic={true} placeholder="请选择变量类型" />
                         </Form.Item>
                         <Button
                           type="text"
@@ -174,9 +188,7 @@ export default ({ node, onChange }: ScriptNodeProps) => {
                   )}
                 />
               ) : (
-                <div style={{ padding: '16px 0', textAlign: 'center', color: '#999', fontSize: '12px' }}>
-                  暂无输出变量，点击右上角按钮添加
-                </div>
+                <div className={styles.codeEmptyState}>暂无输出变量，点击右上角按钮添加</div>
               )}
             </Card>
           )}

@@ -1,7 +1,7 @@
-import { memo, useCallback, useEffect, useRef } from 'react';
-import { Panel, useKeyPress, useReactFlow, useStore } from '@xyflow/react';
 import { FullscreenOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
+import { Panel, useKeyPress, useReactFlow, useStore } from '@xyflow/react';
 import { Button, Divider, Dropdown, Flex, MenuProps } from 'antd';
+import { memo, useCallback, useEffect, useRef } from 'react';
 import styles from './index.less';
 
 const ZOOM_LEVELS: MenuProps['items'] = [
@@ -39,7 +39,10 @@ const ZoomControl = () => {
   const onZoomIn = useCallback(() => handleZoomAction(() => zoomIn({ duration: 200 })), [handleZoomAction, zoomIn]);
   const onZoomOut = useCallback(() => handleZoomAction(() => zoomOut({ duration: 200 })), [handleZoomAction, zoomOut]);
   const onFitView = useCallback(() => handleZoomAction(() => fitView({ duration: 200 })), [handleZoomAction, fitView]);
-  const onZoomTo = useCallback((level: number) => handleZoomAction(() => zoomTo(level, { duration: 200 })), [handleZoomAction, zoomTo]);
+  const onZoomTo = useCallback(
+    (level: number) => handleZoomAction(() => zoomTo(level, { duration: 200 })),
+    [handleZoomAction, zoomTo],
+  );
 
   const handleMenuClick: MenuProps['onClick'] = useCallback(
     ({ key }: { key: string }) => {
@@ -78,11 +81,11 @@ const ZoomControl = () => {
     <Panel position="bottom-left">
       <Flex className={styles.panel}>
         <Flex align="center">
-          <Button type="text" icon={<ZoomInOutlined />} onClick={onZoomIn} />
+          <Button type="text" icon={<ZoomOutOutlined />} onClick={onZoomOut} />
           <Dropdown menu={{ items: ZOOM_LEVELS, onClick: handleMenuClick }}>
             <span className={styles.zoomDisplay}>{`${(zoom * 100).toFixed(0)}%`}</span>
           </Dropdown>
-          <Button type="text" icon={<ZoomOutOutlined />} onClick={onZoomOut} />
+          <Button type="text" icon={<ZoomInOutlined />} onClick={onZoomIn} />
         </Flex>
         <Divider type="vertical" />
         <Button type="text" icon={<FullscreenOutlined />} onClick={onFitView} />

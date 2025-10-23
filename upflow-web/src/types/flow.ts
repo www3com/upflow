@@ -107,6 +107,17 @@ export interface StartNodeType {
 }
 
 /**
+ * 脚本节点类型
+ */
+export interface EndNodeType {
+  title?: string;
+  description?: string;
+  outputVars?: Variable[];
+  outputText?: string;
+  outputTextStream?: boolean;
+}
+
+/**
  * 条件分支 - 条件
  */
 export interface Condition {
