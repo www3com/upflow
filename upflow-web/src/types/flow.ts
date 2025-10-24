@@ -106,15 +106,21 @@ export interface StartNodeType {
   input?: Variable[];
 }
 
+export interface EndNodeOutput {
+  vars: Variable[];
+  wrapWithResult?: boolean;
+  isText?: boolean;
+  isStream?: boolean;
+  text?: string;
+}
+
 /**
  * 脚本节点类型
  */
 export interface EndNodeType {
   title?: string;
   description?: string;
-  outputVars?: Variable[];
-  outputText?: string;
-  outputTextStream?: boolean;
+  output?: EndNodeOutput;
 }
 
 /**
