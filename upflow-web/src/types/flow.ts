@@ -108,7 +108,9 @@ export interface StartNodeType {
 
 export interface EndNodeOutput {
   vars: Variable[];
-  wrapWithResult?: boolean;
+  isWrap?: boolean;
+  rCode?: number;
+  rMessage?: string;
   isText?: boolean;
   isStream?: boolean;
   text?: string;
