@@ -1,13 +1,22 @@
-import { datasourceState, deleteConnection, fetchConnections, openModal } from '@/states/datasource';
+import {
+  datasourceState,
+  deleteConnection,
+  fetchConnections,
+  openModal,
+  resetQueryParams,
+  updateQueryParams,
+} from '@/states/datasource';
 import { DatabaseConnection } from '@/types/datasource';
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Card, message, Popconfirm, Space, Table } from 'antd';
+import { DATABASE_TYPES } from '@/utils/constants';
+import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Flex, Form, Input, message, Popconfirm, Select, Space, Table } from 'antd';
 import React, { useEffect } from 'react';
 import { useSnapshot } from 'valtio';
 import ConnectionDrawer from './components/ConnectionDrawer';
 
 const DatasourcePage: React.FC = () => {
   const state = useSnapshot(datasourceState);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     fetchConnections();
@@ -29,6 +38,22 @@ const DatasourcePage: React.FC = () => {
 
   const handleAdd = () => {
     openModal();
+  };
+
+  const handleSearch = async () => {
+    const values = form.getFieldsValue();
+    const queryParams = {
+      name: values.name?.trim() || undefined,
+      type: values.type || undefined,
+    };
+    updateQueryParams(queryParams);
+    await fetchConnections(queryParams);
+  };
+
+  const handleReset = async () => {
+    form.resetFields();
+    resetQueryParams();
+    await fetchConnections({});
   };
 
   const columns = [
@@ -104,27 +129,46 @@ const DatasourcePage: React.FC = () => {
 
   return (
     <div style={{ padding: '24px' }}>
-      <Card
-        title="数据库链接管理"
-        extra={
-          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-            新增链接
-          </Button>
-        }
+      {/* 查询条件和操作按钮 */}
+      <Flex
+        justify="space-between"
+        align="center"
+        style={{ marginBottom: '16px', padding: '16px', backgroundColor: '#fafafa', borderRadius: '6px' }}
       >
-        <Table
-          columns={columns}
-          dataSource={state.connections}
-          rowKey="id"
-          loading={state.loading}
-          pagination={{
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total) => `共 ${total} 条记录`,
-          }}
-          scroll={{ x: 1200 }}
-        />
-      </Card>
+        <Form form={form} layout="inline">
+          <Form.Item name="name" label="连接名称">
+            <Input placeholder="请输入连接名称" style={{ width: 200 }} allowClear />
+          </Form.Item>
+          <Form.Item name="type" label="数据库类型">
+            <Select placeholder="请选择数据库类型" style={{ width: 150 }} allowClear options={DATABASE_TYPES} />
+          </Form.Item>
+          <Form.Item>
+            <Space>
+              <Button type="primary" icon={<SearchOutlined />} onClick={handleSearch}>
+                查询
+              </Button>
+              <Button onClick={handleReset}>重置</Button>
+            </Space>
+          </Form.Item>
+        </Form>
+
+        <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+          新增连接
+        </Button>
+      </Flex>
+
+      <Table
+        columns={columns}
+        dataSource={state.connections}
+        rowKey="id"
+        loading={state.loading}
+        pagination={{
+          showSizeChanger: true,
+          showQuickJumper: true,
+          showTotal: (total) => `共 ${total} 条记录`,
+        }}
+        scroll={{ x: 1200 }}
+      />
 
       <ConnectionDrawer />
     </div>

@@ -1,10 +1,9 @@
 import { addConnection, closeModal, datasourceState, updateConnection } from '@/states/datasource';
 import { DatabaseConnection } from '@/types/datasource';
+import { DATABASE_TYPES } from '@/utils/constants';
 import { Button, Drawer, Form, Input, message, Select, Space } from 'antd';
 import React, { useEffect } from 'react';
 import { useSnapshot } from 'valtio';
-
-const { Option } = Select;
 
 const ConnectionDrawer: React.FC = () => {
   const state = useSnapshot(datasourceState);
@@ -88,10 +87,7 @@ const ConnectionDrawer: React.FC = () => {
         </Form.Item>
 
         <Form.Item label="数据库类型" name="type">
-          <Select placeholder="请选择数据库类型（可选）" allowClear>
-            <Option value="mysql">MySQL</Option>
-            <Option value="postgresql">PostgreSQL</Option>
-          </Select>
+          <Select placeholder="请选择数据库类型" allowClear options={DATABASE_TYPES} />
         </Form.Item>
 
         <Form.Item
@@ -102,7 +98,7 @@ const ConnectionDrawer: React.FC = () => {
             { max: 200, message: '连接地址不能超过200个字符' },
           ]}
         >
-          <Input placeholder="例如: localhost:3306" />
+          <Input placeholder="例如: jdbc:mysql://localhost:3306/mydatabase?useSSL=false&serverTimezone=UTC" />
         </Form.Item>
 
         <Form.Item

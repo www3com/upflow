@@ -1,5 +1,15 @@
 import { VariableNode } from '@/types/flow';
 
+// 数据库类型选项
+export const DATABASE_TYPES = [
+  { label: 'MySQL', value: 'mysql' },
+  { label: 'PostgreSQL', value: 'postgresql' },
+  { label: 'Oracle', value: 'oracle' },
+  { label: 'SQL Server', value: 'sqlserver' },
+  { label: 'MongoDB', value: 'mongodb' },
+  { label: 'Redis', value: 'redis' },
+];
+
 export const COMPARE_OPERATOR_TYPES = [
   { value: 'in', label: '包含' },
   { value: 'not in', label: '不包含' },

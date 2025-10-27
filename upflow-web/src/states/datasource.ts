@@ -1,5 +1,5 @@
 import * as datasourceService from '@/services/datasource';
-import { DatabaseConnection } from '@/types/datasource';
+import { DatabaseConnection, DatabaseConnectionQuery } from '@/types/datasource';
 import { proxy } from 'valtio';
 
 // 数据库链接状态管理
@@ -8,6 +8,7 @@ interface DatasourceState {
   loading: boolean;
   open: boolean;
   editConnection: DatabaseConnection | null;
+  queryParams: DatabaseConnectionQuery;
 }
 
 export const datasourceState = proxy<DatasourceState>({
@@ -15,14 +16,26 @@ export const datasourceState = proxy<DatasourceState>({
   loading: false,
   open: false,
   editConnection: null,
+  queryParams: {},
 });
 
 // 获取数据库链接列表
-export const fetchConnections = async () => {
+export const fetchConnections = async (params?: DatabaseConnectionQuery) => {
   datasourceState.loading = true;
-  const response = await datasourceService.getConnections();
+  const queryParams = params || datasourceState.queryParams;
+  const response = await datasourceService.getConnections(queryParams);
   datasourceState.connections = response.data?.items || [];
   datasourceState.loading = false;
+};
+
+// 更新查询参数
+export const updateQueryParams = (params: Partial<DatabaseConnectionQuery>) => {
+  datasourceState.queryParams = { ...datasourceState.queryParams, ...params };
+};
+
+// 重置查询参数
+export const resetQueryParams = () => {
+  datasourceState.queryParams = {};
 };
 
 // 新增数据库链接
