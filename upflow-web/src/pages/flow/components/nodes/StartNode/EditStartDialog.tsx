@@ -1,12 +1,12 @@
-import React from 'react';
-import { Form, Input, Modal } from 'antd';
-import IconFont from '@/components/IconFont';
-import './styles.less';
-import { Variable } from '@/types/flow';
-import { ValidationRuleList } from './ValidationRuleList';
-import { VARIABLE_TYPE_RULES_MAP, VARIABLE_TYPES } from '@/utils/constants';
+import IconFont from '@/components/icon-font';
+import VariableTypeSelect from '@/components/variable-type-select';
+import { VARIABLE_TYPE_RULES_MAP, VARIABLE_TYPES } from '@/constants/flow';
+import { Variable } from '@/types/flow/nodes';
 import { newId } from '@/utils/id';
-import VariableTypeSelect from '@/components/VariableTypeSelect';
+import { Form, Input, Modal } from 'antd';
+import React from 'react';
+import './styles.less';
+import { ValidationRuleList } from './ValidationRuleList';
 
 interface EditStartDialogProps {
   open: boolean;

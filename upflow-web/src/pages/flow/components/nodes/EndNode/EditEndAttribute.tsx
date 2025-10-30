@@ -1,8 +1,8 @@
-import MonacoEditor from '@/components/MonacoEditor';
-import VariableAvailableSelect from '@/components/VariableAvailableSelect';
+import MonacoEditor from '@/components/monaco-editor';
+import VariableAvailableSelect from '@/components/variable-available-select';
 import { getAvailableVariables } from '@/pages/flow/variables';
-import { state } from '@/states/flow';
-import { EdgeType, EndNodeType, NodeType, SqlNodeType } from '@/types/flow';
+import { editFlowState } from '@/stores/flow/edit-flow';
+import { EdgeType, EndNodeType, NodeType, SqlNodeType } from '@/types/flow/nodes';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Card, Flex, Form, Input, List, Space, Switch, theme } from 'antd';
 import { useEffect, useMemo } from 'react';
@@ -17,7 +17,7 @@ interface EndNodeProps {
 }
 
 export default ({ node, onChange }: EndNodeProps) => {
-  const flowState = useSnapshot(state);
+  const flowState = useSnapshot(editFlowState);
   const { token } = useToken();
   const [form] = Form.useForm();
   const isWrap = Form.useWatch(['output', 'isWrap'], form);

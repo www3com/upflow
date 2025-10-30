@@ -2,9 +2,12 @@ import { defineConfig } from 'umi';
 
 export default defineConfig({
   routes: [
-    { path: '/', component: 'index' },
-    { path: '/flow', component: 'flow' },
-    { path: '/datasource', component: 'datasource' },
+    { path: '/', component: 'flow' },
+    { path: '/app', component: 'flow' },
+    { path: '/knowledge', component: 'knowledge' },
   ],
   npmClient: 'yarn',
+  mock: {
+    exclude: [],
+  },
 });

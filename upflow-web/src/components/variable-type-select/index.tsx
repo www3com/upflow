@@ -1,7 +1,7 @@
-import { VariableKind, VariableNode } from '@/types/flow'; // 定义组件 Props 接口，简化对 Cascader 的依赖，避免复杂泛型带来的类型问题
-import { VARIABLE_TYPES } from '@/utils/constants';
+import { VariableKind, VariableNode } from '@/types/flow/nodes'; // 定义组件 Props 接口，简化对 Cascader 的依赖，避免复杂泛型带来的类型问题 // 定义组件 Props 接口，简化对 Cascader 的依赖，避免复杂泛型带来的类型问题 // 定义组件 Props 接口，简化对 Cascader 的依赖，避免复杂泛型带来的类型问题
 import { Cascader, ConfigProvider } from 'antd';
 import React, { useMemo } from 'react';
+import { VARIABLE_TYPES } from '@/constants/flow'; // 定义组件 Props 接口，简化对 Cascader 的依赖，避免复杂泛型带来的类型问题 // 定义组件 Props 接口，简化对 Cascader 的依赖，避免复杂泛型带来的类型问题
 
 // 定义组件 Props 接口，简化对 Cascader 的依赖，避免复杂泛型带来的类型问题
 interface VariableTypeSelectProps {

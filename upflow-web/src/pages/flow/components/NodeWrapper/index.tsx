@@ -1,7 +1,7 @@
-import IconFont from '@/components/IconFont';
+import IconFont from '@/components/icon-font';
 import { NodeDefineTypes } from '@/pages/flow/nodeTypes';
-import { cloneNode, deleteNode, extendNode, setHoveredNodeId } from '@/states/flow';
-import { NodeType } from '@/types/flow';
+import { cloneNode, deleteNode, extendNode, setHoveredNodeId } from '@/stores/flow/edit-flow';
+import { NodeType } from '@/types/flow/nodes';
 import { CopyOutlined, DeleteOutlined, DownCircleOutlined, EllipsisOutlined, UpCircleOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Button, Dropdown, Flex, Space, theme } from 'antd';

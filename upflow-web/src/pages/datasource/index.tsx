@@ -5,9 +5,9 @@ import {
   openModal,
   resetQueryParams,
   updateQueryParams,
-} from '@/states/datasource';
-import { DatabaseConnection } from '@/types/datasource';
-import { DATABASE_TYPES } from '@/utils/constants';
+} from '@/stores/datasource';
+import { Connection } from '@/types/datasource';
+import { DATABASE_TYPES } from '@/constants/flow';
 import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Flex, Form, Input, message, Popconfirm, Select, Space, Table } from 'antd';
 import React, { useEffect } from 'react';
@@ -32,7 +32,7 @@ const DatasourcePage: React.FC = () => {
     }
   };
 
-  const handleEdit = (record: DatabaseConnection) => {
+  const handleEdit = (record: Connection) => {
     openModal(record);
   };
 
@@ -58,7 +58,7 @@ const DatasourcePage: React.FC = () => {
 
   const columns = [
     {
-      title: '连接 Key',
+      title: '连接标识符',
       dataIndex: 'key',
       key: 'key',
       width: 120,
@@ -77,7 +77,7 @@ const DatasourcePage: React.FC = () => {
       render: (type: string) => type?.toUpperCase() || '-',
     },
     {
-      title: '连接url',
+      title: 'JDBC连接地址',
       dataIndex: 'url',
       key: 'url',
       width: 200,
@@ -107,7 +107,7 @@ const DatasourcePage: React.FC = () => {
       title: '操作',
       key: 'action',
       width: 150,
-      render: (_: any, record: DatabaseConnection) => (
+      render: (_: any, record: Connection) => (
         <Space size="small">
           <Button type="link" size="small" icon={<EditOutlined />} onClick={() => handleEdit(record)}>
             编辑

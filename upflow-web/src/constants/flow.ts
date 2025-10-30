@@ -1,4 +1,4 @@
-import { VariableNode } from '@/types/flow';
+import { VariableNode } from '@/types/flow/nodes';
 
 // 数据库类型选项
 export const DATABASE_TYPES = [

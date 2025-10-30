@@ -1,7 +1,7 @@
-import { DatabaseConnection } from '@/types/datasource';
+import { Connection } from '@/types/datasource';
 
 // 模拟数据库链接数据
-let mockConnections: DatabaseConnection[] = [
+let mockConnections: Connection[] = [
   {
     id: '1',
     name: '主数据库',
@@ -51,7 +51,7 @@ export default {
 
   // 新增数据库链接
   'POST /api/datasource/connections': (req: any, res: any) => {
-    const newConnection: DatabaseConnection = {
+    const newConnection: Connection = {
       ...req.body,
       id: Date.now().toString(),
       createTime: new Date().toISOString(),

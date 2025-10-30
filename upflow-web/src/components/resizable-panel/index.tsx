@@ -9,13 +9,13 @@ interface ResizablePanelProps {
     isMaximized?: boolean;
 }
 
-export default ({
+const ResizablePanel: React.FC<ResizablePanelProps> = ({
                     children,
                     defaultWidth = 400,
                     minWidth = 200,
                     maxWidth = 1200,
                     isMaximized = false
-                }: ResizablePanelProps) => {
+                }) => {
     const [panelWidth, setPanelWidth] = useState(defaultWidth);
     const [dragging, setDragging] = useState(false);
     const panelRef = useRef<HTMLDivElement>(null);
@@ -53,3 +53,5 @@ export default ({
         </div>
     );
 }
+
+export default ResizablePanel;

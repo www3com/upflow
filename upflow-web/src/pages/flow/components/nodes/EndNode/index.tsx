@@ -1,5 +1,5 @@
 import NodeWrapper from '@/pages/flow/components/NodeWrapper';
-import { EndNodeType, NodeType } from '@/types/flow';
+import { EndNodeType, NodeType } from '@/types/flow/nodes';
 import { Handle, Position } from '@xyflow/react';
 import { memo } from 'react';
 

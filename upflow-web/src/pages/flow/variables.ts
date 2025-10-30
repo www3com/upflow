@@ -5,8 +5,8 @@ import {
   VALIDATION_RULE_TYPES,
   VARIABLE_TYPE_RULES_MAP,
   VARIABLE_TYPES
-} from '@/utils/constants';
-import { EdgeType, NodeType, Variable, VariableKind, VariableNode } from '@/types/flow';
+} from '@/constants/flow';
+import { EdgeType, NodeType, Variable, VariableKind, VariableNode } from '@/types/flow/nodes';
 
 /**
  * 递归获取指定节点的所有前置节点对象

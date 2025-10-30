@@ -1,13 +1,13 @@
-import { addConnection, closeModal, datasourceState, updateConnection } from '@/states/datasource';
-import { DatabaseConnection } from '@/types/datasource';
-import { DATABASE_TYPES } from '@/utils/constants';
+import { addConnection, closeModal, datasourceState, updateConnection } from '@/stores/datasource';
+import { Connection } from '@/types/datasource';
+import { DATABASE_TYPES } from '@/constants/flow';
 import { Button, Drawer, Form, Input, message, Select, Space } from 'antd';
 import React, { useEffect } from 'react';
 import { useSnapshot } from 'valtio';
 
 const ConnectionDrawer: React.FC = () => {
   const state = useSnapshot(datasourceState);
-  const [form] = Form.useForm<DatabaseConnection>();
+  const [form] = Form.useForm<Connection>();
 
   const isEdit = !!state.editConnection;
 
@@ -65,25 +65,25 @@ const ConnectionDrawer: React.FC = () => {
     >
       <Form form={form} layout="vertical" requiredMark={false}>
         <Form.Item
-          label="Key"
+          label="连接标识符"
           name="key"
           rules={[
-            { required: true, message: '请输入数据库连接 Key' },
-            { max: 50, message: '数据库连接 Key 不能超过50个字符' },
-            { pattern: /^[a-zA-Z0-9_-]+$/, message: '数据库连接 Key 只能包含字母、数字、下划线和横线' },
+            { required: true, message: '请输入连接标识符' },
+            { max: 50, message: '连接标识符不能超过50个字符' },
+            { pattern: /^[a-zA-Z0-9_-]+$/, message: '连接标识符只能包含字母、数字、下划线和横线' },
           ]}
         >
-          <Input placeholder="请输入数据库连接 Key" />
+          <Input placeholder="请输入唯一的连接标识符，如：mysql_prod_db" />
         </Form.Item>
         <Form.Item
-          label="名称"
+          label="连接名称"
           name="name"
           rules={[
-            { required: true, message: '请输入数据库连接名称' },
+            { required: true, message: '请输入连接名称' },
             { max: 50, message: '连接名称不能超过50个字符' },
           ]}
         >
-          <Input placeholder="请输入数据库连接名称" />
+          <Input placeholder="请输入便于识别的连接名称，如：生产环境MySQL数据库" />
         </Form.Item>
 
         <Form.Item label="数据库类型" name="type">
@@ -91,36 +91,36 @@ const ConnectionDrawer: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          label="连接url"
+          label="JDBC连接地址"
           name="url"
           rules={[
-            { required: true, message: '请输入连接地址' },
-            { max: 200, message: '连接地址不能超过200个字符' },
+            { required: true, message: '请输入JDBC连接地址' },
+            { max: 200, message: 'JDBC连接地址不能超过200个字符' },
           ]}
         >
-          <Input placeholder="例如: jdbc:mysql://localhost:3306/mydatabase?useSSL=false&serverTimezone=UTC" />
+          <Input placeholder="例如：jdbc:mysql://localhost:3306/mydatabase?useSSL=false&serverTimezone=UTC" />
         </Form.Item>
 
         <Form.Item
-          label="用户名"
+          label="数据库用户名"
           name="username"
           rules={[
-            { required: true, message: '请输入用户名' },
-            { max: 50, message: '用户名不能超过50个字符' },
+            { required: true, message: '请输入数据库用户名' },
+            { max: 50, message: '数据库用户名不能超过50个字符' },
           ]}
         >
-          <Input placeholder="请输入用户名" />
+          <Input placeholder="请输入数据库登录用户名" />
         </Form.Item>
 
         <Form.Item
-          label="密码"
+          label="数据库密码"
           name="password"
           rules={[
-            { required: true, message: '请输入密码' },
-            { max: 100, message: '密码不能超过100个字符' },
+            { required: true, message: '请输入数据库密码' },
+            { max: 100, message: '数据库密码不能超过100个字符' },
           ]}
         >
-          <Input.Password placeholder="请输入密码" />
+          <Input.Password placeholder="请输入数据库登录密码" />
         </Form.Item>
       </Form>
     </Drawer>

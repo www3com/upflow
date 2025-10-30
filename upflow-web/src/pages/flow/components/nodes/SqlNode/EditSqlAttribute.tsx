@@ -1,10 +1,10 @@
-import MonacoEditor from '@/components/MonacoEditor';
-import VariableAvailableSelect from '@/components/VariableAvailableSelect';
-import VariableTypeSelect from '@/components/VariableTypeSelect';
+import MonacoEditor from '@/components/monaco-editor';
+import VariableAvailableSelect from '@/components/variable-available-select';
+import VariableTypeSelect from '@/components/variable-type-select';
+import { VARIABLE_TYPES } from '@/constants/flow';
 import { getAvailableVariables } from '@/pages/flow/variables';
-import { state } from '@/states/flow';
-import { EdgeType, NodeType, SqlNodeType } from '@/types/flow';
-import { VARIABLE_TYPES } from '@/utils/constants';
+import { editFlowState } from '@/stores/flow/edit-flow';
+import { EdgeType, NodeType, SqlNodeType } from '@/types/flow/nodes';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Card, Flex, Form, Input, List } from 'antd';
 import { useEffect, useMemo } from 'react';
@@ -17,7 +17,7 @@ interface SqlNodeProps {
 }
 
 export default ({ node, onChange }: SqlNodeProps) => {
-  const flowState = useSnapshot(state);
+  const flowState = useSnapshot(editFlowState);
   const [form] = Form.useForm();
 
   // 初始化表单数据

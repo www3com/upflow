@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Card, Flex, Form, Input, Select } from 'antd';
-import VariableAvailableSelect from '@/components/VariableAvailableSelect';
+import VariableAvailableSelect from '@/components/variable-available-select';
 import { getAvailableVariables } from '@/pages/flow/variables';
 import { useSnapshot } from 'valtio';
-import { state } from '@/states/flow';
-import { EdgeType, LoopNodeType, NodeType } from '@/types/flow';
+import { editFlowState } from '@/stores/flow/edit-flow';
+import { EdgeType, LoopNodeType, NodeType } from '@/types/flow/nodes';
 
 interface LoopNodeProps {
   node: NodeType<LoopNodeType>;
@@ -18,7 +18,7 @@ const options = [
 ];
 
 export default ({ node, onChange }: LoopNodeProps) => {
-  const flowState = useSnapshot(state);
+  const flowState = useSnapshot(editFlowState);
   const [form] = Form.useForm();
   const [loopType, setLoopType] = useState<string>('');
 

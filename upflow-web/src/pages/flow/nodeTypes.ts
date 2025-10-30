@@ -29,7 +29,7 @@ import {
   SqlTransactionNodeType,
   StartNodeType,
   SubFlowNodeType,
-} from '@/types/flow';
+} from '@/types/flow/nodes';
 import { newId } from '@/utils/id';
 
 // 节点类型 key 常量

@@ -1,0 +1,71 @@
+// 主容器样式
+.homeContainer {
+  background-color: #fafafa;
+  height: 100vh;
+}
+
+// 头部区域样式
+.header {
+  width: 100%;
+  height: 60px;
+  padding: 0 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+// Logo 区域样式
+.logoArea {
+  flex: 1;
+  width: 200px;
+
+  .logoIcon {
+    font-size: 30px;
+    color: #333;
+  }
+}
+
+// Segmented 组件样式
+.segmented {
+  width: 240px;
+}
+
+// 用户区域样式
+.userArea {
+  flex: 1;
+}
+
+// iframe 样式
+.contentIframe {
+  width: 100%;
+  height: calc(100vh - 60px);
+  border: none;
+}
+
+// 原有的 workspace 样式保持不变
+.workspace {
+  width: auto;
+}
+
+.workspace :global(.ant-select-selector) {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.workspace :global(.ant-select-selector):hover {
+  background-color: #e3e3e3 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.workspace :global(.ant-select-selector):focus {
+  background-color: #e3e3e3 !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.workspace :global(.ant-select-focused) :global(.ant-select-selector) {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}

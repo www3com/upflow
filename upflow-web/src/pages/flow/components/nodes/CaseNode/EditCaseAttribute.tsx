@@ -1,6 +1,6 @@
 import { getAvailableVariables } from '@/pages/flow/variables';
-import { state } from '@/states/flow';
-import { Case, CaseNodeType, EdgeType, NodeType } from '@/types/flow';
+import { editFlowState } from '@/stores/flow/edit-flow';
+import { Case, CaseNodeType, EdgeType, NodeType } from '@/types/flow/nodes';
 import { newId } from '@/utils/id';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, List } from 'antd';
@@ -15,7 +15,7 @@ interface EditCaseAttributeProps {
 
 const EditCaseAttribute: React.FC<EditCaseAttributeProps> = ({ node, onChange }) => {
   // 获取流程状态和可用变量
-  const flowState = useSnapshot(state);
+  const flowState = useSnapshot(editFlowState);
   const availableVariables = getAvailableVariables(
     node.id,
     flowState.nodes as NodeType<any>[],

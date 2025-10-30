@@ -1,7 +1,7 @@
-import React, { DragEvent, memo } from 'react';
+import IconFont from '@/components/icon-font';
+import { NodeDefineType } from '@/types/flow/nodes';
 import { Flex } from 'antd';
-import IconFont from '@/components/IconFont';
-import { NodeDefineType } from '@/types/flow';
+import React, { DragEvent, memo } from 'react';
 import styles from './styles.less';
 
 // 常量定义
@@ -26,41 +26,32 @@ interface DraggableNodeItemProps {
  * 可拖拽节点项组件
  * 用于显示单个可拖拽的节点类型
  */
-const DraggableNodeItem: React.FC<DraggableNodeItemProps> = memo(({
-  nodeType,
-  nodeConfig,
-  isHovered,
-  onMouseEnter,
-  onMouseLeave,
-}) => {
-  // 拖拽开始事件处理
-  const handleDragStart = (event: DragEvent) => {
-    event.dataTransfer.setData(DRAG_DATA_TYPE, nodeType);
-    event.dataTransfer.effectAllowed = DRAG_EFFECT;
-  };
+const DraggableNodeItem: React.FC<DraggableNodeItemProps> = memo(
+  ({ nodeType, nodeConfig, isHovered, onMouseEnter, onMouseLeave }) => {
+    // 拖拽开始事件处理
+    const handleDragStart = (event: DragEvent) => {
+      event.dataTransfer.setData(DRAG_DATA_TYPE, nodeType);
+      event.dataTransfer.effectAllowed = DRAG_EFFECT;
+    };
 
-  return (
-    <Flex
-      vertical
-      draggable
-      align="center"
-      justify="center"
-      gap={ICON_GAP}
-      className={`${styles.draggableNode} ${isHovered ? styles.draggableNodeHovered : ''}`}
-      onDragStart={handleDragStart}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    >
-      <IconFont
-        type={nodeConfig.icon}
-        className={styles.nodeIcon}
-      />
-      <span className={styles.nodeTitle}>
-        {nodeConfig.defaultConfig?.data.title}
-      </span>
-    </Flex>
-  );
-});
+    return (
+      <Flex
+        vertical
+        draggable
+        align="center"
+        justify="center"
+        gap={ICON_GAP}
+        className={`${styles.draggableNode} ${isHovered ? styles.draggableNodeHovered : ''}`}
+        onDragStart={handleDragStart}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      >
+        <IconFont type={nodeConfig.icon} className={styles.nodeIcon} />
+        <span className={styles.nodeTitle}>{nodeConfig.defaultConfig?.data.title}</span>
+      </Flex>
+    );
+  },
+);
 
 DraggableNodeItem.displayName = 'DraggableNodeItem';
 

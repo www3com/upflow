@@ -4,11 +4,11 @@ import { Button, Form, Input, theme } from 'antd';
 import React, { ComponentType, useCallback, useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 
-import IconFont from '@/components/IconFont';
-import ResizablePanel from '@/components/ResizablePanel';
+import IconFont from '@/components/icon-font';
+import ResizablePanel from '@/components/resizable-panel';
 import { NodeDefineTypes } from '@/pages/flow/nodeTypes';
-import { state } from '@/states/flow';
-import { NodeType } from '@/types/flow';
+import { editFlowState } from '@/stores/flow/edit-flow';
+import { NodeType } from '@/types/flow/nodes';
 import styles from './styles.less';
 
 const { TextArea } = Input;
@@ -35,44 +35,29 @@ interface DescriptionSectionProps {
 }
 
 // 标题输入组件
-const TitleSection: React.FC<TitleSectionProps> = React.memo(
-  ({ config, token }) => (
-    <div className={styles.titleInputContainer}>
-      {config?.icon && (
-        <IconFont
-          type={config.icon}
-          style={{ color: token.colorPrimary }}
-          className={styles.panelIcon}
-        />
-      )}
-      <Form.Item name="title" style={{ margin: 0, flex: 1 }}>
-        <Input
-          variant="borderless"
-          className={styles.titleInput}
-          style={{ color: token.colorText }}
-          placeholder="输入标题"
-        />
-      </Form.Item>
-    </div>
-  ),
-);
+const TitleSection: React.FC<TitleSectionProps> = React.memo(({ config, token }) => (
+  <div className={styles.titleInputContainer}>
+    {config?.icon && <IconFont type={config.icon} style={{ color: token.colorPrimary }} className={styles.panelIcon} />}
+    <Form.Item name="title" style={{ margin: 0, flex: 1 }}>
+      <Input variant="borderless" className={styles.titleInput} style={{ color: token.colorText }} placeholder="输入标题" />
+    </Form.Item>
+  </div>
+));
 
 // 描述输入组件
-const DescriptionSection: React.FC<DescriptionSectionProps> = React.memo(
-  ({ token }) => (
-    <div className={styles.descriptionInputContainer}>
-      <Form.Item name="description" style={{ margin: 0 }}>
-        <TextArea
-          variant="borderless"
-          className={styles.descriptionInput}
-          style={{ color: token.colorTextSecondary, fontSize: '12px' }}
-          placeholder="输入描述"
-          autoSize={{ minRows: 1, maxRows: 4 }}
-        />
-      </Form.Item>
-    </div>
-  ),
-);
+const DescriptionSection: React.FC<DescriptionSectionProps> = React.memo(({ token }) => (
+  <div className={styles.descriptionInputContainer}>
+    <Form.Item name="description" style={{ margin: 0 }}>
+      <TextArea
+        variant="borderless"
+        className={styles.descriptionInput}
+        style={{ color: token.colorTextSecondary, fontSize: '12px' }}
+        placeholder="输入描述"
+        autoSize={{ minRows: 1, maxRows: 4 }}
+      />
+    </Form.Item>
+  </div>
+));
 
 // 工具栏组件
 const PanelToolbar: React.FC<{
@@ -96,19 +81,17 @@ export const AttributePanel: React.FC<AttributePanelProps> = () => {
   const { token } = useToken();
   const [form] = Form.useForm();
   const [isMaximized, setIsMaximized] = useState<boolean>(false);
-  const flowState = useSnapshot(state);
+  const flowState = useSnapshot(editFlowState);
 
   // 处理节点数据变更
   const handleNodeChange = useCallback((updatedNode: NodeType<any>) => {
-    const nodeIndex = state.nodes.findIndex(
-      (node) => node.id === updatedNode.id,
-    );
+    const nodeIndex = editFlowState.nodes.findIndex((node) => node.id === updatedNode.id);
     if (nodeIndex !== -1) {
-      state.nodes[nodeIndex] = {
-        ...state.nodes[nodeIndex],
+      editFlowState.nodes[nodeIndex] = {
+        ...editFlowState.nodes[nodeIndex],
         data: updatedNode.data,
       };
-      state.selectedNode = updatedNode;
+      editFlowState.selectedNode = updatedNode;
     }
   }, []);
 
@@ -117,15 +100,13 @@ export const AttributePanel: React.FC<AttributePanelProps> = () => {
     (changedValues: Record<string, any>) => {
       if (!flowState.selectedNode) return;
 
-      const nodeIndex = state.nodes.findIndex(
-        (node) => node.id === flowState.selectedNode!.id,
-      );
+      const nodeIndex = editFlowState.nodes.findIndex((node) => node.id === flowState.selectedNode!.id);
       if (nodeIndex === -1) return;
 
-      state.nodes[nodeIndex] = {
-        ...state.nodes[nodeIndex],
+      editFlowState.nodes[nodeIndex] = {
+        ...editFlowState.nodes[nodeIndex],
         data: {
-          ...state.nodes[nodeIndex].data,
+          ...editFlowState.nodes[nodeIndex].data,
           ...changedValues,
         },
       };
@@ -154,44 +135,24 @@ export const AttributePanel: React.FC<AttributePanelProps> = () => {
   }
 
   // 获取节点配置
-  const nodeConfig = NodeDefineTypes[
-    flowState.selectedNode.type!
-  ] as NodeConfig;
+  const nodeConfig = NodeDefineTypes[flowState.selectedNode.type!] as NodeConfig;
   const AttributeEditor = nodeConfig?.attributeEditor;
 
   // 生成面板样式类名
-  const panelClassName = `${styles.attributePanel} ${
-    isMaximized ? styles.maximized : ''
-  }`;
+  const panelClassName = `${styles.attributePanel} ${isMaximized ? styles.maximized : ''}`;
 
   return (
-    <Panel
-      hidden={!flowState.selectedNode}
-      position="top-right"
-      className={panelClassName}
-    >
-      <ResizablePanel
-        defaultWidth={500}
-        minWidth={200}
-        maxWidth={1200}
-        isMaximized={isMaximized}
-      >
+    <Panel hidden={!flowState.selectedNode} position="top-right" className={panelClassName}>
+      <ResizablePanel defaultWidth={500} minWidth={200} maxWidth={1200} isMaximized={isMaximized}>
         <div className={styles.panelLayout}>
           {/* 头部区域 */}
           <header className={styles.panelHeader}>
-            <Form
-              form={form}
-              layout="vertical"
-              onValuesChange={handleFormValuesChange}
-            >
+            <Form form={form} layout="vertical" onValuesChange={handleFormValuesChange}>
               <div className={styles.headerRow}>
                 <div className={styles.titleSection}>
                   <TitleSection config={nodeConfig} token={token} />
                 </div>
-                <PanelToolbar
-                  isMaximized={isMaximized}
-                  onToggleMaximize={toggleMaximize}
-                />
+                <PanelToolbar isMaximized={isMaximized} onToggleMaximize={toggleMaximize} />
               </div>
               <DescriptionSection token={token} />
             </Form>
@@ -199,12 +160,7 @@ export const AttributePanel: React.FC<AttributePanelProps> = () => {
 
           {/* 内容区域 */}
           <main className={styles.panelContent}>
-            {AttributeEditor && (
-              <AttributeEditor
-                node={flowState.selectedNode as NodeType<any>}
-                onChange={handleNodeChange}
-              />
-            )}
+            {AttributeEditor && <AttributeEditor node={flowState.selectedNode as NodeType<any>} onChange={handleNodeChange} />}
           </main>
         </div>
       </ResizablePanel>

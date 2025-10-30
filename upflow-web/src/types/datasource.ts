@@ -1,17 +1,17 @@
 // 数据库链接类型定义
-export interface DatabaseConnection {
+export interface Connection {
   id: string;
-  name: string;
   key: string;
+  name: string;
+  type: string;
   url: string;
   username: string;
   password: string;
-  type: string;
   createTime: string;
 }
 
 // 数据库链接列表查询参数
-export interface DatabaseConnectionQuery extends PageReq {
+export interface ConnectionReq extends PageReq {
   name?: string;
   type?: string;
 }

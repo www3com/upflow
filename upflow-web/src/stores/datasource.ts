@@ -1,14 +1,14 @@
-import * as datasourceService from '@/services/datasource';
-import { DatabaseConnection, DatabaseConnectionQuery } from '@/types/datasource';
+import * as datasourceService from '@/api/datasource';
+import { Connection, ConnectionReq } from '@/types/datasource';
 import { proxy } from 'valtio';
 
 // 数据库链接状态管理
 interface DatasourceState {
-  connections: DatabaseConnection[];
+  connections: Connection[];
   loading: boolean;
   open: boolean;
-  editConnection: DatabaseConnection | null;
-  queryParams: DatabaseConnectionQuery;
+  editConnection: Connection | null;
+  queryParams: ConnectionReq;
 }
 
 export const datasourceState = proxy<DatasourceState>({
@@ -20,7 +20,7 @@ export const datasourceState = proxy<DatasourceState>({
 });
 
 // 获取数据库链接列表
-export const fetchConnections = async (params?: DatabaseConnectionQuery) => {
+export const fetchConnections = async (params?: ConnectionReq) => {
   datasourceState.loading = true;
   const queryParams = params || datasourceState.queryParams;
   const response = await datasourceService.getConnections(queryParams);
@@ -29,7 +29,7 @@ export const fetchConnections = async (params?: DatabaseConnectionQuery) => {
 };
 
 // 更新查询参数
-export const updateQueryParams = (params: Partial<DatabaseConnectionQuery>) => {
+export const updateQueryParams = (params: Partial<ConnectionReq>) => {
   datasourceState.queryParams = { ...datasourceState.queryParams, ...params };
 };
 
@@ -39,14 +39,14 @@ export const resetQueryParams = () => {
 };
 
 // 新增数据库链接
-export const addConnection = async (connection: DatabaseConnection) => {
+export const addConnection = async (connection: Connection) => {
   const response = await datasourceService.createConnection(connection);
   datasourceState.connections.push(response.data);
   return response.data;
 };
 
 // 更新数据库链接
-export const updateConnection = async (id: string, connection: DatabaseConnection) => {
+export const updateConnection = async (id: string, connection: Connection) => {
   const response = await datasourceService.updateConnection(id, connection);
   const index = datasourceState.connections.findIndex((conn) => conn.id === id);
   if (index !== -1) {
@@ -66,7 +66,7 @@ export const deleteConnection = async (id: string) => {
 };
 
 // 打开新增/编辑弹窗
-export const openModal = (connection?: DatabaseConnection) => {
+export const openModal = (connection?: Connection) => {
   datasourceState.editConnection = connection || null;
   datasourceState.open = true;
 };

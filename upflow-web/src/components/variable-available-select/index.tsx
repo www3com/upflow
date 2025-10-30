@@ -1,4 +1,4 @@
-import IconFont from '@/components/IconFont';
+import IconFont from '@/components/icon-font';
 import { AvailableVariable } from '@/pages/flow/variables';
 import { CloseCircleOutlined } from '@ant-design/icons';
 import { Flex, Select, SelectProps, Space, theme } from 'antd';
@@ -36,7 +36,7 @@ const VariableLabel: React.FC<VariableLabelProps> = ({ value, variablesWithNode 
   );
 };
 
-// VariableAvailableSelect 组件属性接口
+// variable-available-select 组件属性接口
 export interface VariableAvailableSelectProps extends Omit<SelectProps, 'value' | 'onChange'> {
   value?: string;
   onChange?: (value: string) => void;

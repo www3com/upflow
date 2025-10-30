@@ -9,17 +9,17 @@
  * 5. 使用防抖机制优化DOM更新操作
  */
 
-import { COMPARE_OPERATOR_TYPES } from '@/utils/constants';
+import { COMPARE_OPERATOR_TYPES } from '@/constants/flow';
 import { Handle, Position } from '@xyflow/react';
 import { Flex, Space, theme } from 'antd';
 import { memo, useCallback, useMemo } from 'react';
 import styles from './styles.less';
 
-import IconFont from '@/components/IconFont';
+import IconFont from '@/components/icon-font';
 import NodeWrapper from '@/pages/flow/components/NodeWrapper';
 import { getVariableInfoById } from '@/pages/flow/variables';
-import { state } from '@/states/flow';
-import { Case, CaseNodeType, NodeType } from '@/types/flow';
+import { editFlowState } from '@/stores/flow/edit-flow';
+import { Case, CaseNodeType, NodeType } from '@/types/flow/nodes';
 import { useSnapshot } from 'valtio';
 import { useHandlePositions } from './useHandlePositions';
 
@@ -40,7 +40,15 @@ export default memo((node: NodeType<CaseNodeType>) => {
       // 使用固定的 id 命名规则
       const handleId = index === 0 ? `if-${item.id}` : `elif-${item.id}`;
 
-      return <CaseSection key={item.id} count={node.data.cases!.length} index={index} item={item} keywordRef={(el) => setElementRef(handleId, el)} />;
+      return (
+        <CaseSection
+          key={item.id}
+          count={node.data.cases!.length}
+          index={index}
+          item={item}
+          keywordRef={(el) => setElementRef(handleId, el)}
+        />
+      );
     });
   }, [node.data.cases, setElementRef]);
 
@@ -72,9 +80,19 @@ export default memo((node: NodeType<CaseNodeType>) => {
 
 // 优化的CasePart组件，使用React.memo避免不必要的重渲染
 export const CaseSection = memo(
-  ({ count, index, item, keywordRef }: { count: number; index: number; item: Case; keywordRef?: (el: HTMLSpanElement | null) => void }) => {
+  ({
+    count,
+    index,
+    item,
+    keywordRef,
+  }: {
+    count: number;
+    index: number;
+    item: Case;
+    keywordRef?: (el: HTMLSpanElement | null) => void;
+  }) => {
     const { token } = useToken();
-    const flowState = useSnapshot(state);
+    const flowState = useSnapshot(editFlowState);
 
     // 使用useMemo优化case标题计算
     const caseTitle = useMemo(() => {
@@ -113,7 +131,12 @@ export const CaseSection = memo(
         const variableInfo = getVariableInfoById(condition.varId, flowState.nodes as any[]);
 
         return (
-          <Flex key={`${condition.varId}-${condition.opr}-${condition.value}-${condIndex}`} align="center" gap={15} className={styles.conditionItem}>
+          <Flex
+            key={`${condition.varId}-${condition.opr}-${condition.value}-${condIndex}`}
+            align="center"
+            gap={15}
+            className={styles.conditionItem}
+          >
             {condIndex > 0 && (
               <span className={styles.logicalOpr} style={{ color: token.colorPrimary }}>
                 {logicalOperator}

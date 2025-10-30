@@ -1,7 +1,7 @@
-import React, { memo, useState } from 'react';
-import NodeWrapper from '@/pages/flow/components/NodeWrapper';
 import NodeResizeControl from '@/pages/flow/components/NodeResizeControl';
-import { NodeType } from '@/types/flow';
+import NodeWrapper from '@/pages/flow/components/NodeWrapper';
+import { NodeType } from '@/types/flow/nodes';
+import React, { memo, useState } from 'react';
 
 /**
  * 分组节点包装器的属性接口
@@ -24,15 +24,9 @@ const GroupNodeWrapper = memo<GroupNodeProps>(({ node, children }) => {
   const [hovered, setHovered] = useState(false);
 
   return (
-    <div
-      style={{ height: '100%', width: '100%' }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
+    <div style={{ height: '100%', width: '100%' }} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
       <NodeWrapper node={node}>
-        {node.data.group && node.data.expanded && hovered && (
-          <NodeResizeControl />
-        )}
+        {node.data.group && node.data.expanded && hovered && <NodeResizeControl />}
         {children}
       </NodeWrapper>
     </div>

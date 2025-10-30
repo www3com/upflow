@@ -1,39 +1,76 @@
-import React from "react";
-import {Button, Flex, Form, Select} from "antd";
-import {Node} from "@xyflow/react";
-import {useSnapshot} from "valtio";
-import {state} from "@/states/flow";
-import {SettingOutlined} from "@ant-design/icons";
+import DatasourcePage from '@/pages/datasource';
+import { datasourceState, fetchConnections } from '@/stores/datasource';
+import { editFlowState } from '@/stores/flow/edit-flow';
+import { SettingOutlined } from '@ant-design/icons';
+import { Node } from '@xyflow/react';
+import { Button, Drawer, Flex, Form, Select } from 'antd';
+import { useEffect, useState } from 'react';
+import { useSnapshot } from 'valtio';
 
 interface LoopNodeProps {
-    node: Node,
-    onChange: (node: Node) => void
+  node: Node;
+  onChange: (node: Node) => void;
 }
 
-export default ({node, onChange}: LoopNodeProps) => {
-    const flowState = useSnapshot(state);
-    const [form] = Form.useForm();
+export default () => {
+  const flowState = useSnapshot(editFlowState);
+  const dsState = useSnapshot(datasourceState);
+  const [form] = Form.useForm();
+  const [open, setOpen] = useState(false);
 
-    const handleConfigClick = () => {
-        // TODO: 实现配置功能
-        console.log('配置按钮被点击');
-    };
+  // 组件加载时获取数据源列表
+  useEffect(() => {
+    fetchConnections();
+  }, []);
 
+  const handleConfigClick = () => {
+    setOpen(true);
+  };
 
-    return <>
-        <Form form={form} layout="vertical">
-            <Form.Item
-                name="type"
-                label="数据库链接"
-                rules={[{required: true, message: '请选择循环类型'}]}
-            >
-                <Flex gap={3} align="center">
-                    <Select
-                        placeholder="请选择循环类型"
-                    />
-                    <Button type={"text"} onClick={handleConfigClick} icon={<SettingOutlined/>}/>
-                </Flex>
-            </Form.Item>
-        </Form>
+  const handleDrawerClose = () => {
+    setOpen(false);
+    // 关闭抽屉时重新获取数据源列表，以防有新增或修改
+    setTimeout(() => {
+      fetchConnections();
+    }, 100); // 添加小延迟确保 drawer 完全关闭后再刷新
+  };
+
+  // 将数据源转换为 Select 选项格式
+  const datasourceOptions = dsState.connections.map((conn) => ({
+    label: `${conn.name} (${conn.key})`,
+    value: conn.key,
+    key: conn.key,
+  }));
+
+  return (
+    <>
+      <Form form={form} layout="vertical">
+        <Form.Item name="type" label="数据库连接" rules={[{ required: true, message: '请选择数据库连接' }]}>
+          <Flex gap={3} align="center">
+            <Select
+              placeholder="请选择数据库连接"
+              options={datasourceOptions}
+              loading={dsState.loading}
+              showSearch
+              filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+            />
+            <Button type={'text'} onClick={handleConfigClick} icon={<SettingOutlined />} />
+          </Flex>
+        </Form.Item>
+      </Form>
+
+      <Drawer
+        title="数据源管理"
+        placement="right"
+        width="100vw"
+        height="100vh"
+        onClose={handleDrawerClose}
+        open={open}
+        destroyOnHidden
+        push={false}
+      >
+        <DatasourcePage />
+      </Drawer>
     </>
-}
+  );
+};

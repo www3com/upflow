@@ -1,8 +1,8 @@
-import IconFont from '@/components/IconFont';
-import VariableAvailableSelect from '@/components/VariableAvailableSelect';
+import IconFont from '@/components/icon-font';
+import VariableAvailableSelect from '@/components/variable-available-select';
+import { COMPARE_OPERATOR_TYPES } from '@/constants/flow';
 import { AvailableVariable } from '@/pages/flow/variables';
-import { Case } from '@/types/flow';
-import { COMPARE_OPERATOR_TYPES } from '@/utils/constants';
+import { Case } from '@/types/flow/nodes';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Card, Divider, Flex, Form, Input, Select, theme } from 'antd';
 import { useEffect, useState } from 'react';
