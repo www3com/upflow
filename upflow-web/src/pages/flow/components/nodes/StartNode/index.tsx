@@ -1,6 +1,6 @@
 import IconFont from '@/components/icon-font';
-import NodeResizeControl from '@/pages/flow/components/NodeResizeControl';
-import NodeWrapper from '@/pages/flow/components/NodeWrapper';
+import NodeResizeControl from '@/pages/flow/components/node-resize-control';
+import NodeWrapper from '@/pages/flow/components/node-wrapper';
 import { getVariableTypeLabel } from '@/pages/flow/variables';
 import { NodeType, StartNodeType } from '@/types/flow/nodes';
 import { Handle, Position } from '@xyflow/react';

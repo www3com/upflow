@@ -1,7 +1,6 @@
 import { NodeDefineTypes } from '@/pages/flow/nodeTypes';
 import { getAllChildrenIds, getNodeAbsolutePosition } from '@/pages/flow/util';
 import {
-  addNode,
   editFlowState,
   setEdges,
   setHoveredNodeId,
@@ -27,7 +26,7 @@ import { useSnapshot } from 'valtio';
 
 export const useFlow = () => {
   const snap = useSnapshot(editFlowState);
-  const { screenToFlowPosition, getIntersectingNodes } = useReactFlow();
+  const { getIntersectingNodes } = useReactFlow();
   const [dropNodeIds, setDropNodeIds] = useState<string[] | null>(null);
 
   const onNodesChange = useCallback(
@@ -93,22 +92,7 @@ export const useFlow = () => {
     [snap.edges],
   );
 
-  const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.dataTransfer!.dropEffect = 'move';
-  }, []);
 
-  const onDrop = useCallback(
-    (event: React.DragEvent<HTMLDivElement>) => {
-      event.preventDefault();
-      const nodeType = event.dataTransfer?.getData('application/reactflow');
-      if (typeof nodeType === 'undefined' || !nodeType) {
-        return;
-      }
-      addNode(nodeType, screenToFlowPosition({ x: event.clientX, y: event.clientY }));
-    },
-    [screenToFlowPosition],
-  );
 
   const onNodeDrag = useCallback(
     (event: any, draggedNode: Node) => {
@@ -219,8 +203,6 @@ export const useFlow = () => {
     onNodesChange,
     onEdgesChange,
     onConnect,
-    onDrop,
-    onDragOver,
     onNodeDrag,
     onNodeDragStop,
     onNodeMouseEnter,

@@ -106,7 +106,7 @@ export interface StartNodeType {
   input?: Variable[];
 }
 
-export interface EndNodeOutput {
+export interface EndNodeOutputType {
   vars: Variable[];
   isWrap?: boolean;
   rCode?: number;
@@ -122,7 +122,7 @@ export interface EndNodeOutput {
 export interface EndNodeType {
   title?: string;
   description?: string;
-  output?: EndNodeOutput;
+  output?: EndNodeOutputType;
 }
 
 /**

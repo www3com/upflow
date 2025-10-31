@@ -1,12 +1,12 @@
-import { Button, Flex, List, Space, theme } from 'antd';
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import IconFont from '@/components/icon-font';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Flex, List, Space, theme } from 'antd';
 import './styles.less';
 
 import EditStartDialog from '@/pages/flow/components/nodes/StartNode/EditStartDialog';
-import { useState } from 'react';
-import { NodeType, StartNodeType, Variable } from '@/types/flow/nodes';
 import { getVariableTypeLabel } from '@/pages/flow/variables';
+import { NodeType, StartNodeType, Variable } from '@/types/flow/nodes';
+import { useState } from 'react';
 
 const { useToken } = theme;
 

@@ -35,8 +35,10 @@ export default () => {
     }, 100); // 添加小延迟确保 drawer 完全关闭后再刷新
   };
 
+  console.log('datasourceOptions:', dsState);
+
   // 将数据源转换为 Select 选项格式
-  const datasourceOptions = dsState.connections.map((conn) => ({
+  const datasourceOptions = (dsState.asyncConnections.data || []).map((conn) => ({
     label: `${conn.name} (${conn.key})`,
     value: conn.key,
     key: conn.key,
@@ -50,7 +52,7 @@ export default () => {
             <Select
               placeholder="请选择数据库连接"
               options={datasourceOptions}
-              loading={dsState.loading}
+              loading={dsState.asyncConnections.loading}
               showSearch
               filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
             />

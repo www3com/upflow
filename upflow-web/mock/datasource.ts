@@ -40,10 +40,7 @@ export default {
     setTimeout(() => {
       res.json({
         code: 200,
-        data: {
-          total: mockConnections.length,
-          items: mockConnections,
-        },
+        data: mockConnections,
         message: 'success',
       });
     }, 300); // 模拟网络延迟

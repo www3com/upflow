@@ -1,8 +1,8 @@
 import {
   datasourceState,
-  deleteConnection,
   fetchConnections,
   openModal,
+  removeConnection,
   resetQueryParams,
   updateQueryParams,
 } from '@/stores/datasource';
@@ -24,7 +24,7 @@ const DatasourcePage: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteConnection(id);
+      await removeConnection(id);
       message.success('删除成功');
     } catch (error) {
       // request.ts 已处理错误提示
@@ -159,9 +159,9 @@ const DatasourcePage: React.FC = () => {
 
       <Table
         columns={columns}
-        dataSource={state.connections}
+        dataSource={state.asyncConnections.data || []}
         rowKey="id"
-        loading={state.loading}
+        loading={state.asyncConnections.loading}
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,

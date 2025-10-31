@@ -1,13 +1,8 @@
-import React, { useRef, useCallback } from 'react';
 import Editor from '@monaco-editor/react';
 import { theme } from 'antd';
+import React, { useCallback, useRef } from 'react';
 
 const { useToken } = theme;
-
-export interface CodeValue {
-  language: string;
-  script: string;
-}
 
 interface MonacoEditorProps {
   language?: string;
@@ -44,11 +39,14 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({
     }
   }, []);
 
-  const handleScriptChange = useCallback((newScript: string | undefined) => {
-    if (onChange) {
-      onChange(newScript || '');
-    }
-  }, [onChange]);
+  const handleScriptChange = useCallback(
+    (newScript: string | undefined) => {
+      if (onChange) {
+        onChange(newScript || '');
+      }
+    },
+    [onChange],
+  );
 
   const handleEditorDidMount = (editor: any, monaco: any) => {
     editorRef.current = editor;
@@ -70,7 +68,7 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({
         'editor.background': '#ffffff', // 编辑器背景色
       },
     });
-    
+
     monaco.editor.setTheme('custom-theme');
   };
 

@@ -1,31 +1,28 @@
 import * as datasourceService from '@/api/datasource';
+import { createConnection, deleteConnection, getConnections, updateConnection } from '@/api/datasource';
 import { Connection, ConnectionReq } from '@/types/datasource';
+import { AsyncState, createAsyncState, runAsync } from '@/utils/async-state';
 import { proxy } from 'valtio';
 
 // 数据库链接状态管理
 interface DatasourceState {
-  connections: Connection[];
-  loading: boolean;
+  asyncConnections: AsyncState<Connection[]>;
   open: boolean;
-  editConnection: Connection | null;
+  asyncCurrentConnection: AsyncState<Connection | void>;
   queryParams: ConnectionReq;
 }
 
 export const datasourceState = proxy<DatasourceState>({
-  connections: [],
-  loading: false,
+  asyncConnections: createAsyncState([]),
   open: false,
-  editConnection: null,
+  asyncCurrentConnection: createAsyncState(),
   queryParams: {},
 });
 
 // 获取数据库链接列表
 export const fetchConnections = async (params?: ConnectionReq) => {
-  datasourceState.loading = true;
   const queryParams = params || datasourceState.queryParams;
-  const response = await datasourceService.getConnections(queryParams);
-  datasourceState.connections = response.data?.items || [];
-  datasourceState.loading = false;
+  await runAsync(datasourceState.asyncConnections, getConnections, queryParams);
 };
 
 // 更新查询参数
@@ -40,39 +37,39 @@ export const resetQueryParams = () => {
 
 // 新增数据库链接
 export const addConnection = async (connection: Connection) => {
+  await runAsync(datasourceState.asyncCurrentConnection, createConnection, connection);
   const response = await datasourceService.createConnection(connection);
-  datasourceState.connections.push(response.data);
+  datasourceState.asyncConnections.data?.push(response.data!);
   return response.data;
 };
 
 // 更新数据库链接
-export const updateConnection = async (id: string, connection: Connection) => {
+export const editConnection = async (id: string, connection: Connection) => {
+  await runAsync(datasourceState.asyncCurrentConnection, updateConnection, id, connection);
   const response = await datasourceService.updateConnection(id, connection);
-  const index = datasourceState.connections.findIndex((conn) => conn.id === id);
-  if (index !== -1) {
-    datasourceState.connections[index] = response.data;
+  const index = datasourceState.asyncConnections.data?.findIndex((conn) => conn.id === id);
+  if (index && index !== -1) {
+    datasourceState.asyncConnections.data![index] = response.data!;
   }
-  return response.data;
 };
 
 // 删除数据库链接
-export const deleteConnection = async (id: string) => {
-  await datasourceService.deleteConnection(id);
-  const index = datasourceState.connections.findIndex((conn) => conn.id === id);
+export const removeConnection = async (id: string) => {
+  await runAsync(datasourceState.asyncCurrentConnection, deleteConnection, id);
+  const index = datasourceState.asyncConnections.data!.findIndex((conn) => conn.id === id);
   if (index !== -1) {
-    datasourceState.connections.splice(index, 1);
+    datasourceState.asyncConnections.data!.splice(index, 1);
   }
-  return true;
 };
 
 // 打开新增/编辑弹窗
 export const openModal = (connection?: Connection) => {
-  datasourceState.editConnection = connection || null;
+  datasourceState.asyncCurrentConnection.data = connection;
   datasourceState.open = true;
 };
 
 // 关闭弹窗
 export const closeModal = () => {
   datasourceState.open = false;
-  datasourceState.editConnection = null;
+  datasourceState.asyncCurrentConnection.data = null;
 };

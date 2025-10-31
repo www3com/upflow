@@ -1,4 +1,4 @@
-import { createFlow } from '@/stores/flow';
+import { addFlow } from '@/stores/flow';
 import { Form, Input, Modal } from 'antd';
 import React from 'react';
 
@@ -14,7 +14,7 @@ const EditFlowModal: React.FC<EditFlowModalProps> = ({ visible, onCancel, onSucc
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
-      await createFlow(values);
+      await addFlow(values);
       form.resetFields();
       onSuccess?.();
     } catch (error) {

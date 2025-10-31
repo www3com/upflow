@@ -2,7 +2,8 @@
   "private": true,
   "author": "Jason Wang <horse.devops@gmail.com>",
   "scripts": {
-    "dev": "max dev",
+    "dev": "MOCK=none max dev",
+    "dev:mock": "max dev",
     "build": "max build",
     "format": "prettier --cache --write .",
     "prepare": "husky",
@@ -12,10 +13,10 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
-    "@umijs/max": "^4.5.2",
+    "@umijs/max": "^4.5.3",
     "@xyflow/react": "^12.8.6",
     "antd": "^5.27.6",
-    "axios": "^1.12.2",
+    "axios": "^1.13.1",
     "monaco-editor": "^0.54.0",
     "nanoid": "^5.1.6",
     "valtio": "^2.1.8"

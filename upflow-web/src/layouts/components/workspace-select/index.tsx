@@ -1,23 +1,21 @@
-import { initWorkspace, switchWorkspace, workspaceState } from '@/stores/workspace';
+import styles from '@/layouts/styles.less';
+import { initWorkspace, switchWorkspace, workspaceState } from '@/stores/layout/workspace';
 import { AliwangwangOutlined, HomeOutlined } from '@ant-design/icons';
 import { Button, Divider, Flex, Select } from 'antd';
-import React, { useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useSnapshot } from 'valtio';
-import styles from '../../../pages/home/styles.less';
 
-interface WorkspaceSelectProps {
-  className?: string;
-}
+interface WorkspaceSelectProps {}
 
-const WorkspaceSelect: React.FC<WorkspaceSelectProps> = ({ className }) => {
-  const { workspaces, currentWorkspace, loading } = useSnapshot(workspaceState);
+const WorkspaceSelect: FC<WorkspaceSelectProps> = () => {
+  const { asyncWorkspaces, currWorkspace } = useSnapshot(workspaceState);
 
   useEffect(() => {
     initWorkspace();
   }, []);
 
   const handleWorkspaceChange = (workspaceId: string) => {
-    const workspace = workspaces.find((w) => w.id === workspaceId);
+    const workspace = asyncWorkspaces.data?.find((w) => w.id === workspaceId);
     if (workspace) {
       switchWorkspace(workspace);
     }
@@ -25,7 +23,7 @@ const WorkspaceSelect: React.FC<WorkspaceSelectProps> = ({ className }) => {
 
   // 确保options中包含当前选中的工作空间，即使在数据加载期间
   const selectOptions = React.useMemo(() => {
-    const options = workspaces.map((workspace) => ({
+    const options = asyncWorkspaces.data?.map((workspace) => ({
       value: workspace.id,
       label: (
         <Flex gap={4}>
@@ -36,28 +34,28 @@ const WorkspaceSelect: React.FC<WorkspaceSelectProps> = ({ className }) => {
     }));
 
     // 如果当前工作空间存在但不在options中（数据加载期间），添加它
-    if (currentWorkspace && !workspaces.find((w) => w.id === currentWorkspace.id)) {
-      options.unshift({
-        value: currentWorkspace.id,
+    if (currWorkspace && !asyncWorkspaces.data?.find((w) => w.id === currWorkspace.id)) {
+      options?.unshift({
+        value: currWorkspace.id,
         label: (
           <Flex gap={4}>
             <AliwangwangOutlined />
-            {currentWorkspace.name}
+            {currWorkspace.name}
           </Flex>
         ),
       });
     }
 
     return options;
-  }, [workspaces, currentWorkspace]);
+  }, [asyncWorkspaces, currWorkspace]);
 
   return (
     <Select
       size="small"
-      value={currentWorkspace?.id}
-      loading={loading}
+      value={currWorkspace?.id}
+      loading={asyncWorkspaces.loading}
       popupMatchSelectWidth={200}
-      className={`${styles.workspace} ${className || ''}`}
+      className={styles.workspace}
       onChange={handleWorkspaceChange}
       popupRender={(menu) => (
         <Flex vertical>

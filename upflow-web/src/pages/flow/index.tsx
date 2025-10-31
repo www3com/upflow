@@ -1,6 +1,5 @@
 import IconFont from '@/components/icon-font';
-import EditFlow from '@/pages/flow/components/edit-flow';
-import EditFlowModal from '@/pages/flow/components/edit-flow-modal';
+import EditFlowModal from '@/pages/flow/flow-modal';
 import { duplicateFlow, editFlowTag, fetchFlows, fetchTags, removeFlow, state } from '@/stores/flow';
 import { Flow } from '@/types/flow';
 import {
@@ -31,6 +30,7 @@ import {
 import dayjs from 'dayjs';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
+import FlowDrawer from './flow-drawer';
 import styles from './styles.less';
 
 type TagRender = SelectProps['tagRender'];
@@ -152,8 +152,8 @@ const FlowListPage: React.FC = () => {
               style={{ width: '200px' }}
               maxTagCount="responsive"
               placeholder="全部标签"
-              loading={snap.tag.loading}
-              options={(snap.tag.data && snap.tag.data?.map((tag) => ({ label: tag, value: tag }))) || []}
+              loading={snap.asyncTags.loading}
+              options={(snap.asyncTags.data && snap.asyncTags.data?.map((tag) => ({ label: tag, value: tag }))) || []}
             />
             <Search placeholder="名称" style={{ width: 200 }} />
             <Divider type="vertical" />
@@ -165,8 +165,8 @@ const FlowListPage: React.FC = () => {
             </Button>
           </Space>
         </Flex>
-        <Flex gap={10}>
-          {snap.flow.data?.map((flow) => (
+        <Flex gap={10} wrap>
+          {snap.asyncFlows.data?.map((flow) => (
             <Card
               key={flow.id}
               hoverable
@@ -207,7 +207,7 @@ const FlowListPage: React.FC = () => {
                     </Tag>
                   }
                   className={styles.tagSelect}
-                  options={snap.tag.data?.map((tag) => ({ label: tag, value: tag })) || []}
+                  options={snap.asyncTags.data?.map((tag) => ({ label: tag, value: tag })) || []}
                 />
 
                 <Button style={{ flexShrink: 0 }} type="text" icon={<EllipsisOutlined />} />
@@ -218,8 +218,7 @@ const FlowListPage: React.FC = () => {
         <EditFlowModal visible={modalOpen} onCancel={() => setModalOpen(false)} onSuccess={() => setModalOpen(false)} />
       </Flex>
 
-      {/* EditFlow 组件现在通过 props 控制显示状态 */}
-      <EditFlow open={editFlowOpen} flowId={editingFlowId} onSave={handleCloseEditFlow} onCancel={handleCloseEditFlow} />
+      <FlowDrawer getContainer={false} open={editFlowOpen} onClose={handleCloseEditFlow} />
     </>
   );
 };

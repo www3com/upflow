@@ -1,5 +1,5 @@
-import NodeResizeControl from '@/pages/flow/components/NodeResizeControl';
-import NodeWrapper from '@/pages/flow/components/NodeWrapper';
+import NodeResizeControl from '@/pages/flow/components/node-resize-control';
+import NodeWrapper from '@/pages/flow/components/node-wrapper';
 import { NodeType } from '@/types/flow/nodes';
 import React, { memo, useState } from 'react';
 

@@ -6,15 +6,15 @@ export interface AsyncState<T> {
   error: any;
 }
 
-export function createAsyncState<T>(): AsyncState<T> {
-  return { data: null, loading: false, error: null };
+export function createAsyncState<T>(initialData?: T): AsyncState<T> {
+  return { data: initialData ?? null, loading: false, error: null };
 }
 
 export async function runAsync<T, Args extends any[]>(
   state: AsyncState<T>,
   task: (...args: Args) => Promise<R<T>>,
   ...args: Args
-): Promise<T | undefined> {
+): Promise<T | null> {
   state.loading = true;
   state.error = null;
   try {
@@ -25,7 +25,7 @@ export async function runAsync<T, Args extends any[]>(
       if (result.code === 200) {
         // code 为 200 时，state.data 等于 R.data
         state.data = result.data || null;
-        return result.data;
+        return result.data !== undefined ? result.data : null;
       } else {
         // code 不为 200 时，抛出异常并弹出 message
         const errorMessage = result.message || '请求失败';

@@ -130,7 +130,7 @@ export const NodeDefineTypes: ObjectType<NodeDefineType> = {
       width: 30,
       height: 30,
       draggable: false,
-      data: { group: false, hidden: true },
+      data: { group: false },
     } as NodeType<any>,
   },
   [NODE_TYPE.LOOP_CONTINUE]: {

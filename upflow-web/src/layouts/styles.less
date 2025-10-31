@@ -1,10 +1,23 @@
-// 主容器样式
-.homeContainer {
+// 主布局容器样式
+.layoutContainer {
   background-color: #fafafa;
   height: 100vh;
 }
 
-// 头部区域样式
+// 布局头部容器样式
+.layoutHeaderContainer {
+  background-color: #fafafa;
+  padding: 0;
+  height: auto;
+  line-height: normal;
+}
+
+// 布局内容容器样式
+.layoutContentContainer {
+  overflow-y: auto;
+}
+
+// 应用头部区域样式
 .header {
   width: 100%;
   height: 60px;
@@ -12,7 +25,7 @@
   border-bottom: 1px solid #f0f0f0;
 }
 
-// Logo 区域样式
+// 应用Logo区域样式
 .logoArea {
   flex: 1;
   width: 200px;
@@ -23,21 +36,14 @@
   }
 }
 
-// Segmented 组件样式
-.segmented {
+// 页面切换组件样式
+.pageSegmented {
   width: 240px;
 }
 
-// 用户区域样式
-.userArea {
+// 用户操作区域样式
+.userOperationArea {
   flex: 1;
-}
-
-// iframe 样式
-.contentIframe {
-  width: 100%;
-  height: calc(100vh - 60px);
-  border: none;
 }
 
 // 原有的 workspace 样式保持不变
@@ -68,4 +74,10 @@
   border: none !important;
   box-shadow: none !important;
   outline: none !important;
+}
+
+.pageContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }

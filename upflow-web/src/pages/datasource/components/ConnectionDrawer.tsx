@@ -1,6 +1,6 @@
-import { addConnection, closeModal, datasourceState, updateConnection } from '@/stores/datasource';
-import { Connection } from '@/types/datasource';
 import { DATABASE_TYPES } from '@/constants/flow';
+import { addConnection, closeModal, datasourceState, editConnection } from '@/stores/datasource';
+import { Connection } from '@/types/datasource';
 import { Button, Drawer, Form, Input, message, Select, Space } from 'antd';
 import React, { useEffect } from 'react';
 import { useSnapshot } from 'valtio';
@@ -9,27 +9,27 @@ const ConnectionDrawer: React.FC = () => {
   const state = useSnapshot(datasourceState);
   const [form] = Form.useForm<Connection>();
 
-  const isEdit = !!state.editConnection;
+  const isEdit = !!state.asyncCurrentConnection.data;
 
   useEffect(() => {
     if (state.open) {
-      if (isEdit && state.editConnection) {
+      if (isEdit && state.asyncCurrentConnection.data) {
         // 编辑模式，填充表单数据
-        form.setFieldsValue(state.editConnection);
+        form.setFieldsValue(state.asyncCurrentConnection.data as Connection);
       } else {
         // 新增模式，重置表单
         form.resetFields();
       }
     }
-  }, [state.open, state.editConnection, isEdit, form]);
+  }, [state.open, state.asyncCurrentConnection.data, isEdit, form]);
 
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
 
-      if (isEdit && state.editConnection) {
+      if (isEdit && state.asyncCurrentConnection.data) {
         // 更新
-        await updateConnection(state.editConnection.id!, values);
+        await editConnection(state.asyncCurrentConnection.data.id!, values);
         message.success('更新成功');
         closeModal();
       } else {
@@ -52,7 +52,7 @@ const ConnectionDrawer: React.FC = () => {
       title={isEdit ? '编辑数据库连接' : '新增数据库连接'}
       open={state.open}
       onClose={handleCancel}
-      width={700}
+      width={'100%'}
       placement="right"
       destroyOnHidden
       extra={

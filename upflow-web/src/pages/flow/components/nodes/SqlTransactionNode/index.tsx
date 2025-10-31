@@ -1,4 +1,4 @@
-import GroupNodeWrapper from '@/pages/flow/components/GroupNodeWrapper';
+import GroupNodeWrapper from '@/pages/flow/components/group-node-wrapper';
 import { NodeType, SqlTransactionNodeType } from '@/types/flow/nodes';
 import { Handle, Position } from '@xyflow/react';
 import { memo } from 'react';

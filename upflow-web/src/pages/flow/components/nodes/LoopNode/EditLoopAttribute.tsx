@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Card, Flex, Form, Input, Select } from 'antd';
 import VariableAvailableSelect from '@/components/variable-available-select';
 import { getAvailableVariables } from '@/pages/flow/variables';
-import { useSnapshot } from 'valtio';
 import { editFlowState } from '@/stores/flow/edit-flow';
 import { EdgeType, LoopNodeType, NodeType } from '@/types/flow/nodes';
+import { Card, Flex, Form, Input, Select } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
+import { useSnapshot } from 'valtio';
 
 interface LoopNodeProps {
   node: NodeType<LoopNodeType>;

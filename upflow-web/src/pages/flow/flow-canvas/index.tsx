@@ -1,6 +1,6 @@
-import AttributePanel from '@/pages/flow/components/AttributePanel';
-import ContextMenu from '@/pages/flow/components/ContextMenu';
-import NodePanel from '@/pages/flow/components/NodePanel';
+import AttributePanel from '@/pages/flow/components/attribute-panel';
+import ContextMenu from '@/pages/flow/components/context-menu';
+import NodePanel from '@/pages/flow/components/node-panel';
 import { useFlow } from '@/pages/flow/hooks/useFlow';
 import { NODE_TYPE, NodeDefineTypes } from '@/pages/flow/nodeTypes';
 import { addNode, editFlowState, fetchFlow, saveFlow } from '@/stores/flow/edit-flow';
@@ -19,8 +19,8 @@ import '@xyflow/react/dist/style.css';
 import { Button, Space, Splitter } from 'antd';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useSnapshot } from 'valtio';
-import '../../xy-theme.css';
-import ZoomControl from '../ZoomControl';
+import ZoomControl from '../components/zoom-control';
+import '../xy-theme.css';
 
 interface EditFlowProps {
   flowId?: string;
@@ -29,10 +29,10 @@ interface EditFlowProps {
   open: boolean;
 }
 
-const EditFlow: React.FC<EditFlowProps> = memo((props) => {
+const Index: React.FC<EditFlowProps> = memo((props) => {
   const { open, flowId, onSave, onCancel } = props;
   const [loaded, setLoaded] = useState(false);
-  console.log('EditFlow props', props);
+  console.log('Index props', props);
 
   const handleClose = useCallback(() => {
     onCancel?.();
@@ -85,8 +85,6 @@ const EditFlowContent: React.FC<EditFlowProps & { visible: boolean; onClose: () 
       onNodesChange,
       onEdgesChange,
       onConnect,
-      onDrop,
-      onDragOver,
       onNodeDrag,
       onNodeDragStop,
       onNodeMouseEnter,
@@ -135,7 +133,7 @@ const EditFlowContent: React.FC<EditFlowProps & { visible: boolean; onClose: () 
     if (!visible) {
       return null;
     }
-    console.log('EditFlow', snap.nodes);
+    console.log('Index', snap.nodes);
     const overlayStyle: React.CSSProperties = {
       position: 'fixed',
       top: 0,
@@ -189,8 +187,6 @@ const EditFlowContent: React.FC<EditFlowProps & { visible: boolean; onClose: () 
               onNodesChange={onNodesChange}
               onEdgesChange={onEdgesChange}
               onConnect={onConnect}
-              onDrop={onDrop}
-              onDragOver={onDragOver}
               isValidConnection={onValidConnection}
               selectionMode={SelectionMode.Partial}
               selectNodesOnDrag={false}
@@ -228,4 +224,4 @@ const EditFlowContent: React.FC<EditFlowProps & { visible: boolean; onClose: () 
   },
 );
 
-export default EditFlow;
+export default Index;

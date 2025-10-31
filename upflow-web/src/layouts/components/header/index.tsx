@@ -1,9 +1,22 @@
 import IconFont from '@/components/icon-font';
 import WorkspaceSelect from '@/layouts/components/workspace-select';
+import styles from '@/layouts/styles.less';
 import { AppstoreOutlined, WalletOutlined } from '@ant-design/icons';
 import { Avatar, Divider, Flex, Segmented } from 'antd';
 import React from 'react';
-import styles from '../../../pages/home/styles.less';
+
+const options = [
+  {
+    label: '工坊',
+    value: 'app',
+    icon: <AppstoreOutlined />,
+  },
+  {
+    label: '知识库',
+    value: 'knowledge',
+    icon: <WalletOutlined />,
+  },
+];
 
 interface HeaderProps {
   currentPage: string;
@@ -17,20 +30,16 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => {
         <IconFont type="icon-agent" className={styles.logoIcon} />
         <span>知识罗盘</span>
       </Flex>
-
       <Segmented<string>
         block
         size="large"
-        className={styles.segmented}
+        className={styles.pageSegmented}
         shape={'round'}
         value={currentPage}
-        options={[
-          { label: '工坊', value: 'app', icon: <AppstoreOutlined /> },
-          { label: '知识库', value: 'knowledge', icon: <WalletOutlined /> },
-        ]}
+        options={options}
         onChange={onPageChange}
       />
-      <Flex className={styles.userArea} justify="end" align="center">
+      <Flex className={styles.userOperationArea} justify="end" align="center">
         <WorkspaceSelect />
         <Divider type="vertical" />
         <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />

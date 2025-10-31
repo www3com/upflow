@@ -1,27 +1,16 @@
-import { Outlet, useLocation, useNavigate } from 'umi';
-import styles from './index.less';
 import Header from '@/layouts/components/header';
-import { Flex } from 'antd';
-import { useEffect, useState, useMemo } from 'react';
+import { Layout as AntLayout } from 'antd';
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
+import { Outlet, useLocation, useNavigate } from 'umi';
+import styles from './styles.less';
 
-export default function Layout() {
+const { Header: AntHeader, Content } = AntLayout;
+
+const Layout: FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<string>('app');
-
-  // 获取URL查询参数中的layout值
-  const showLayout = useMemo(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const layoutParam = searchParams.get('layout');
-    
-    // 如果没有layout参数，默认显示header
-    if (layoutParam === null) {
-      return true;
-    }
-    
-    // layout=false时不显示header，其他情况都显示
-    return layoutParam !== 'false';
-  }, [location.search]);
 
   // 根据当前路由设置页面状态
   useEffect(() => {
@@ -44,11 +33,19 @@ export default function Layout() {
   };
 
   return (
-    <Flex vertical gap={10} justify="space-between" align="center" className={styles.homeContainer}>
-      {showLayout && <Header currentPage={currentPage} onPageChange={handlePageChange} />}
-      <div style={{ width: '100%' }}>
-        <Outlet />
-      </div>
-    </Flex>
+    <AntLayout className={styles.layoutContainer}>
+      {SHOW_HEADER && (
+        <AntHeader className={styles.layoutHeaderContainer}>
+          <Header currentPage={currentPage} onPageChange={handlePageChange} />
+        </AntHeader>
+      )}
+      <Content className={styles.layoutContentContainer}>
+        <div className={styles.pageContainer}>
+          <Outlet />
+        </div>
+      </Content>
+    </AntLayout>
   );
-}
+};
+
+export default Layout;

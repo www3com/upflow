@@ -20,11 +20,6 @@ interface PageRes<T> {
   items: T[];
 }
 
-interface ListItem {
-  label: string;
-  value: number | string;
-}
-
 interface R<T> {
   readonly code: number;
   readonly data?: T;
