@@ -46,6 +46,69 @@ export default {
     });
   },
 
+  // 获取工作流目录树
+  'GET /api/flows/folders': (req: any, res: any) => {
+    res.json({
+      code: 200,
+      msg: '',
+      data: [
+        {
+          id: 'folder-1',
+          name: '默认目录',
+          children: [
+            { id: 'folder-1-0', name: '风控系统' },
+            { id: 'folder-1-1', name: '发票' },
+          ],
+        },
+        {
+          id: 'folder-2',
+          name: '测试环境',
+          children: [
+            { id: 'folder-2-0', name: '风控系统' },
+            { id: 'folder-2-1', name: '易账阁' },
+          ],
+        },
+      ],
+    });
+  },
+
+  // 重命名工作流目录（mock）
+  'PUT /api/flows/folders': (req: any, res: any) => {
+    const { id, name } = req.body || {};
+    if (!id || !name) {
+      res.status(400).json({ code: 400, msg: '参数错误', data: null });
+      return;
+    }
+    res.json({ code: 200, msg: '重命名成功', data: { id, name } });
+  },
+
+  // 新建工作流目录（mock）
+  'POST /api/flows/folders': (req: any, res: any) => {
+    const { parentId, name } = req.body || {};
+    if (!name) {
+      res.status(400).json({ code: 400, msg: '名称不能为空', data: null });
+      return;
+    }
+    const newId = `folder-${Date.now()}`;
+    // 这里不维护内存树，仅返回创建成功的节点信息，前端自行更新树结构
+    res.json({
+      code: 200,
+      msg: '创建成功',
+      data: { id: newId, name, parentId },
+    });
+  },
+
+  // 删除工作流目录（mock）
+  'DELETE /api/flows/folders': (req: any, res: any) => {
+    const id = (req.query && req.query.id) || (req.body && req.body.id);
+    if (!id) {
+      res.status(400).json({ code: 400, msg: '缺少目录ID', data: null });
+      return;
+    }
+    // 简单返回删除成功，前端自行从树中移除
+    res.json({ code: 200, msg: '删除成功', data: null });
+  },
+
   // 获取工作流详情
   'GET /api/flows/detail': (req: any, res: any) => {
     const { id } = req.query;

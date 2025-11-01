@@ -1,22 +1,22 @@
-import ConditionNode from '@/pages/flow/components/nodes/CaseNode';
-import EditCaseNode from '@/pages/flow/components/nodes/CaseNode/EditCaseAttribute';
-import CodeNode from '@/pages/flow/components/nodes/CodeNode';
-import StartNode from '@/pages/flow/components/nodes/StartNode';
-import EditStartNode from '@/pages/flow/components/nodes/StartNode/EditStartAttribute';
+import ConditionNode from '@/pages/flow/flow-canvas/components/nodes/CaseNode';
+import EditCaseNode from '@/pages/flow/flow-canvas/components/nodes/CaseNode/EditCaseAttribute';
+import CodeNode from '@/pages/flow/flow-canvas/components/nodes/CodeNode';
+import StartNode from '@/pages/flow/flow-canvas/components/nodes/StartNode';
+import EditStartNode from '@/pages/flow/flow-canvas/components/nodes/StartNode/EditStartAttribute';
 
-import EditCodeAttribute from '@/pages/flow/components/nodes/CodeNode/EditCodeAttribute';
-import NoteNode from '@/pages/flow/components/nodes/CommentNode';
-import EndNode from '@/pages/flow/components/nodes/EndNode';
-import EditEndAttribute from '@/pages/flow/components/nodes/EndNode/EditEndAttribute';
-import GroupStartNode from '@/pages/flow/components/nodes/GroupStartNode';
-import LoopBreakNode from '@/pages/flow/components/nodes/LoopBreakNode';
-import LoopContinueNode from '@/pages/flow/components/nodes/LoopContinueNode';
-import LoopNode from '@/pages/flow/components/nodes/LoopNode';
-import EditLoopAttribute from '@/pages/flow/components/nodes/LoopNode/EditLoopAttribute';
-import SqlNode from '@/pages/flow/components/nodes/SqlNode';
-import EditSqlAttribute from '@/pages/flow/components/nodes/SqlNode/EditSqlAttribute';
-import SqlTransactionNode from '@/pages/flow/components/nodes/SqlTransactionNode';
-import EditSqlTransactionAttribute from '@/pages/flow/components/nodes/SqlTransactionNode/EditSqlTransactionAttribute';
+import EditCodeAttribute from '@/pages/flow/flow-canvas/components/nodes/CodeNode/EditCodeAttribute';
+import NoteNode from '@/pages/flow/flow-canvas/components/nodes/CommentNode';
+import EndNode from '@/pages/flow/flow-canvas/components/nodes/EndNode';
+import EditEndAttribute from '@/pages/flow/flow-canvas/components/nodes/EndNode/EditEndAttribute';
+import GroupStartNode from '@/pages/flow/flow-canvas/components/nodes/GroupStartNode';
+import LoopBreakNode from '@/pages/flow/flow-canvas/components/nodes/LoopBreakNode';
+import LoopContinueNode from '@/pages/flow/flow-canvas/components/nodes/LoopContinueNode';
+import LoopNode from '@/pages/flow/flow-canvas/components/nodes/LoopNode';
+import EditLoopAttribute from '@/pages/flow/flow-canvas/components/nodes/LoopNode/EditLoopAttribute';
+import SqlNode from '@/pages/flow/flow-canvas/components/nodes/SqlNode';
+import EditSqlAttribute from '@/pages/flow/flow-canvas/components/nodes/SqlNode/EditSqlAttribute';
+import SqlTransactionNode from '@/pages/flow/flow-canvas/components/nodes/SqlTransactionNode';
+import EditSqlTransactionAttribute from '@/pages/flow/flow-canvas/components/nodes/SqlTransactionNode/EditSqlTransactionAttribute';
 import {
   CaseNodeType,
   CodeNodeType,

@@ -1,0 +1,23 @@
+
+.folderTree {
+  // 保证标题与图标保持同行居中显示
+  :global(.ant-tree-title) {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+
+  // 缩小展开箭头与节点图标之间的间距
+  :global(.ant-tree-switcher) {
+    width: 6px; // 默认约 24px，缩小以减小空隙
+    margin-right: 4px; // 减少与内容区域的间距
+  }
+
+  // 缩小自定义图标与标题的间距
+  :global(.ant-tree-icon__customize) {
+    margin-right: 2px;
+  }
+
+}
+

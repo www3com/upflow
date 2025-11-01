@@ -1,6 +1,6 @@
-import AttributePanel from '@/pages/flow/components/attribute-panel';
-import ContextMenu from '@/pages/flow/components/context-menu';
-import NodePanel from '@/pages/flow/components/node-panel';
+import AttributePanel from '@/pages/flow/flow-canvas/components/attribute-panel';
+import ContextMenu from '@/pages/flow/flow-canvas/components/context-menu';
+import NodePanel from '@/pages/flow/flow-canvas/components/node-panel';
 import { useFlow } from '@/pages/flow/hooks/useFlow';
 import { NODE_TYPE, NodeDefineTypes } from '@/pages/flow/nodeTypes';
 import { addNode, editFlowState, fetchFlow, saveFlow } from '@/stores/flow/edit-flow';
@@ -19,8 +19,8 @@ import '@xyflow/react/dist/style.css';
 import { Button, Space, Splitter } from 'antd';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useSnapshot } from 'valtio';
-import ZoomControl from '../components/zoom-control';
 import '../xy-theme.css';
+import ZoomControl from './components/zoom-control';
 
 interface EditFlowProps {
   flowId?: string;

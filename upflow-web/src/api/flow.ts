@@ -40,3 +40,23 @@ export async function listFlowTags(): Promise<R<string[]>> {
 export async function updateFlowTag(data: UpdateFlowTagReq): Promise<R<void>> {
   return request.put('/flows/tags', data);
 }
+
+// 获取工作流目录树
+export async function listFlowFolders(): Promise<R<any[]>> {
+  return request.get('/flows/folders');
+}
+
+// 重命名工作流目录
+export async function renameFlowFolder(id: string, name: string): Promise<R<void>> {
+  return request.put('/flows/folders', { id, name });
+}
+
+// 新建工作流目录
+export async function createFlowFolder(parentId: string | undefined, name: string): Promise<R<{ id: string; name: string; parentId?: string }>> {
+  return request.post('/flows/folders', { parentId, name });
+}
+
+// 删除工作流目录
+export async function deleteFlowFolder(id: string): Promise<R<void>> {
+  return request.delete('/flows/folders', { id });
+}

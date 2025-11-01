@@ -1,16 +1,11 @@
 import IconFont from '@/components/icon-font';
+import FolderContextMenu from '@/pages/flow/components/folder-context-menu';
 import EditFlowModal from '@/pages/flow/flow-modal';
 import { duplicateFlow, editFlowTag, fetchFlows, fetchTags, removeFlow, state } from '@/stores/flow';
 import { Flow } from '@/types/flow';
-import {
-  CopyOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  EllipsisOutlined,
-  PlusOutlined,
-  TagOutlined
-} from '@ant-design/icons';
+import { CopyOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, PlusOutlined, TagOutlined } from '@ant-design/icons';
 
+import FolderTree from '@/pages/flow/components/folder-tree';
 import {
   Button,
   Card,
@@ -24,11 +19,13 @@ import {
   Select,
   SelectProps,
   Space,
+  Splitter,
   Tag,
+  TreeDataNode,
   Typography,
 } from 'antd';
 import dayjs from 'dayjs';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import FlowDrawer from './flow-drawer';
 import styles from './styles.less';
@@ -42,6 +39,9 @@ const FlowListPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editFlowOpen, setEditFlowOpen] = useState(false);
   const [editingFlowId, setEditingFlowId] = useState<string>('');
+
+  // 右键菜单ref
+  const contextMenuRef = useRef<{ handleRightClick: (info: { event: React.MouseEvent; node: TreeDataNode }) => void }>(null);
 
   useEffect(() => {
     fetchFlows();
@@ -101,6 +101,15 @@ const FlowListPage: React.FC = () => {
     setEditingFlowId('');
   }, []);
 
+  // 右键菜单事件处理
+  const handleTreeRightClick = useCallback((info: { event: React.MouseEvent; node: TreeDataNode }) => {
+    // 先选中当前节点
+    setSelectedKeys([info.node.key]);
+
+    // 调用右键菜单组件的handleRightClick方法
+    contextMenuRef.current?.handleRightClick(info);
+  }, []);
+
   const getDropdownItems = (flow: Flow) => [
     {
       key: 'edit',
@@ -135,90 +144,99 @@ const FlowListPage: React.FC = () => {
 
   return (
     <>
-      <Flex vertical gap={10} style={{ margin: '5px 10px 0px 10px' }}>
-        <Flex justify="space-between">
-          <Segmented<string>
-            block
-            style={{ width: '300px' }}
-            shape={'round'}
-            options={['全部', '工作流', '对话流', '智能体']}
-            onChange={(value) => {
-              console.log(value); // string
-            }}
-          />
-          <Space>
-            <Select
-              mode="tags"
-              style={{ width: '200px' }}
-              maxTagCount="responsive"
-              placeholder="全部标签"
-              loading={snap.asyncTags.loading}
-              options={(snap.asyncTags.data && snap.asyncTags.data?.map((tag) => ({ label: tag, value: tag }))) || []}
-            />
-            <Search placeholder="名称" style={{ width: 200 }} />
-            <Divider type="vertical" />
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>
-              新建应用
-            </Button>
-            <Button icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>
-              导入DSL文件
-            </Button>
-          </Space>
-        </Flex>
-        <Flex gap={10} wrap>
-          {snap.asyncFlows.data?.map((flow) => (
-            <Card
-              key={flow.id}
-              hoverable
-              style={{ width: '350px' }}
-              styles={{ body: { padding: '10px 10px 1px 10px', height: '100%' } }}
-            >
-              <Flex vertical onClick={() => handleEditFlow(flow as Flow)}>
-                <Flex align="center" gap={6}>
-                  <IconFont type="icon-flow" style={{ fontSize: '30px' }} />
-                  <Flex vertical gap={2}>
-                    <Text style={{ fontSize: '14px' }}>{flow.name}</Text>
-                    <Text style={{ fontSize: '12px' }} type="secondary">
-                      编辑于 {dayjs(flow.updatedTime).format('YYYY-MM-DD HH:mm')}
-                    </Text>
-                  </Flex>
-                </Flex>
-                <Paragraph
-                  type="secondary"
-                  ellipsis={{ rows: 2, tooltip: true }}
-                  style={{ marginTop: '16px', minHeight: '44px' }}
-                >
-                  {flow.description || '暂无描述'}
-                </Paragraph>
-              </Flex>
-              <Flex justify="space-between" align={'center'}>
+      <Splitter style={{ height: '100%', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+        <Splitter.Panel collapsible defaultSize={'10%'} min="6%" style={{ backgroundColor: 'white' }}>
+          <FolderTree />
+        </Splitter.Panel>
+        <Splitter.Panel>
+          <Flex vertical gap={10} style={{ margin: '5px 10px 0px 10px' }}>
+            <Flex justify="space-between">
+              <Segmented<string>
+                block
+                style={{ width: '300px' }}
+                shape={'round'}
+                options={['全部', '工作流', '对话流', '智能体']}
+                onChange={(value) => {
+                  console.log(value); // string
+                }}
+              />
+              <Space>
                 <Select
-                  mode="multiple"
+                  mode="tags"
+                  style={{ width: '200px' }}
                   maxTagCount="responsive"
-                  tagRender={tagRender}
-                  style={{ flex: 1 }}
-                  suffixIcon={null}
-                  value={flow.tags || []}
-                  onChange={(tags) => handleTagsChange(flow.id, [...tags])}
-                  placeholder={
-                    <Tag style={{ borderStyle: 'dashed' }}>
-                      <TagOutlined style={{ marginRight: '4px' }} />
-                      添加标签
-                    </Tag>
-                  }
-                  className={styles.tagSelect}
-                  options={snap.asyncTags.data?.map((tag) => ({ label: tag, value: tag })) || []}
+                  placeholder="全部标签"
+                  loading={snap.asyncTags.loading}
+                  options={(snap.asyncTags.data && snap.asyncTags.data?.map((tag) => ({ label: tag, value: tag }))) || []}
                 />
+                <Search placeholder="名称" style={{ width: 200 }} />
+                <Divider type="vertical" />
+                <Button type="primary" icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>
+                  新建应用
+                </Button>
+                <Button icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>
+                  导入DSL文件
+                </Button>
+              </Space>
+            </Flex>
+            <Flex gap={10} wrap>
+              {snap.asyncFlows.data?.map((flow) => (
+                <Card
+                  key={flow.id}
+                  hoverable
+                  style={{ width: '350px' }}
+                  styles={{ body: { padding: '10px 10px 1px 10px', height: '100%' } }}
+                >
+                  <Flex vertical onClick={() => handleEditFlow(flow as Flow)}>
+                    <Flex align="center" gap={6}>
+                      <IconFont type="icon-flow" style={{ fontSize: '30px' }} />
+                      <Flex vertical gap={2}>
+                        <Text style={{ fontSize: '14px' }}>{flow.name}</Text>
+                        <Text style={{ fontSize: '12px' }} type="secondary">
+                          编辑于 {dayjs(flow.updatedTime).format('YYYY-MM-DD HH:mm')}
+                        </Text>
+                      </Flex>
+                    </Flex>
+                    <Paragraph
+                      type="secondary"
+                      ellipsis={{ rows: 2, tooltip: true }}
+                      style={{ marginTop: '16px', minHeight: '44px' }}
+                    >
+                      {flow.description || '暂无描述'}
+                    </Paragraph>
+                  </Flex>
+                  <Flex justify="space-between" align={'center'}>
+                    <Select
+                      mode="multiple"
+                      maxTagCount="responsive"
+                      tagRender={tagRender}
+                      style={{ flex: 1 }}
+                      suffixIcon={null}
+                      value={flow.tags || []}
+                      onChange={(tags) => handleTagsChange(flow.id, [...tags])}
+                      placeholder={
+                        <Tag style={{ borderStyle: 'dashed' }}>
+                          <TagOutlined style={{ marginRight: '4px' }} />
+                          添加标签
+                        </Tag>
+                      }
+                      className={styles.tagSelect}
+                      options={snap.asyncTags.data?.map((tag) => ({ label: tag, value: tag })) || []}
+                    />
 
-                <Button style={{ flexShrink: 0 }} type="text" icon={<EllipsisOutlined />} />
-              </Flex>
-            </Card>
-          ))}
-        </Flex>
-        <EditFlowModal visible={modalOpen} onCancel={() => setModalOpen(false)} onSuccess={() => setModalOpen(false)} />
-      </Flex>
+                    <Button style={{ flexShrink: 0 }} type="text" icon={<EllipsisOutlined />} />
+                  </Flex>
+                </Card>
+              ))}
+            </Flex>
+            <EditFlowModal visible={modalOpen} onCancel={() => setModalOpen(false)} onSuccess={() => setModalOpen(false)} />
+          </Flex>
+          <FlowDrawer getContainer={false} open={editFlowOpen} onClose={handleCloseEditFlow} />
+        </Splitter.Panel>
+      </Splitter>
 
-      <FlowDrawer getContainer={false} open={editFlowOpen} onClose={handleCloseEditFlow} />
+      {/* 目录树右键菜单 */}
+      <FolderContextMenu />
     </>
   );
 };

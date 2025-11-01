@@ -1,4 +1,4 @@
-import GroupNodeWrapper from '@/pages/flow/components/group-node-wrapper';
+import GroupNodeWrapper from '@/pages/flow/flow-canvas/components/group-node-wrapper';
 import { LoopNodeType, NodeType } from '@/types/flow/nodes';
 import { Handle, Position } from '@xyflow/react';
 import { memo } from 'react';

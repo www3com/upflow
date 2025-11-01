@@ -31,3 +31,10 @@ export interface UpdateFlowTagReq {
   flowId: string;
   tags: string[];
 }
+
+// 工作流目录树节点
+export interface FlowFolder {
+  id: string;
+  name: string;
+  children?: FlowFolder[];
+}

@@ -1,4 +1,4 @@
-import NodeWrapper from '@/pages/flow/components/node-wrapper';
+import NodeWrapper from '@/pages/flow/flow-canvas/components/node-wrapper';
 import { NodeType } from '@/types/flow/nodes';
 import { Handle, Position } from '@xyflow/react';
 import { memo } from 'react';

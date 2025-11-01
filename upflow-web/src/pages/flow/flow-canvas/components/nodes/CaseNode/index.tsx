@@ -16,7 +16,7 @@ import { memo, useCallback, useMemo } from 'react';
 import styles from './styles.less';
 
 import IconFont from '@/components/icon-font';
-import NodeWrapper from '@/pages/flow/components/node-wrapper';
+import NodeWrapper from '@/pages/flow/flow-canvas/components/node-wrapper';
 import { getVariableInfoById } from '@/pages/flow/variables';
 import { editFlowState } from '@/stores/flow/edit-flow';
 import { Case, CaseNodeType, NodeType } from '@/types/flow/nodes';

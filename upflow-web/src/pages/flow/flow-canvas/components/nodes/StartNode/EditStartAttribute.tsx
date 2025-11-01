@@ -3,7 +3,7 @@ import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Flex, List, Space, theme } from 'antd';
 import './styles.less';
 
-import EditStartDialog from '@/pages/flow/components/nodes/StartNode/EditStartDialog';
+import EditStartDialog from '@/pages/flow/flow-canvas/components/nodes/StartNode/EditStartDialog';
 import { getVariableTypeLabel } from '@/pages/flow/variables';
 import { NodeType, StartNodeType, Variable } from '@/types/flow/nodes';
 import { useState } from 'react';
